@@ -1,0 +1,96 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  firstName String
+  lastName  String
+  email     String   @unique
+  password  String
+  games     Game[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Game {
+  id             String     @id @default(uuid())
+  gameNumbers    Json
+  matchedNumbers Json?
+  ticketPrice    Int?
+  result         GameResult @default(PENDING)
+  player         User       @relation(fields: [playerId], references: [id])
+  playerId       String
+  draw           Draw       @relation(fields: [drawId], references: [id])
+  drawId         String
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+}
+
+model Draw {
+  id            String     @id @default(uuid())
+  lotteryType   Lottery    @default(MEGASENA)
+  contestNumber Int
+  drawDate      DateTime
+  status        DrawStatus @default(PENDING)
+  drawnNumbers  Json?
+  prize         Json?
+  games         Game[]
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+}
+
+enum Lottery {
+  MEGASENA
+  QUINA
+  LOTOFACIL
+  TIMEMANIA
+  LOTOMANIA
+}
+
+enum GameResult {
+  WON_SENA
+  WON_QUINA
+  WON_QUADRA
+  LOST
+  PENDING
+}
+
+enum DrawStatus {
+  DRAWN
+  PENDING
+}
+
+// model Game {
+//   id              String      @id @default(uuid())
+//   lotteryType     Lottery     @default(MEGASENA) // Tipos de loteria
+//   gameNumbers     Json        // Números jogados
+//   ticketPrice     Int         // Preço do bilhete
+//   player          User        @relation(fields: [playerId], references: [id])
+//   playerId        String
+//   draw            Draw        @relation(fields: [drawId], references: [id])
+//   drawId          String
+//   prizeAmount     Int?        // Quantidade de premiação (opcional)
+//   status          GameStatus  // Status do jogo (ganhou, perdeu, pendente)
+//   createdAt       DateTime    @default(now())
+//   updatedAt       DateTime    @updatedAt
+// }
+
+// model Draw {
+//   id                String    @id @default(uuid())
+//   lotteryType       Lottery   @default(MEGASENA) // Tipo de loteria
+//   contestNumber     Int       // Número do concurso
+//   drawDate          DateTime  // Data do sorteio
+//   drawnNumbers      Json      // Números sorteados
+//   isAccumulated     Boolean   // Se o prêmio acumulou ou não
+//   winners           Int       // Número de ganhadores
+//   prizeAmount       Int       // Valor do prêmio
+//   games             Game[]    // Jogos associados a este sorteio
+//   createdAt         DateTime  @default(now())
+//   updatedAt         DateTime  @updatedAt
+// }
