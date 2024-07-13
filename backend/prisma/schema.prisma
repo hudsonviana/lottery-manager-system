@@ -19,17 +19,16 @@ model User {
 }
 
 model Game {
-  id             String     @id @default(uuid())
-  gameNumbers    Json
-  matchedNumbers Json?
-  ticketPrice    Int?
-  result         GameResult @default(PENDING)
-  player         User       @relation(fields: [playerId], references: [id])
-  playerId       String
-  draw           Draw       @relation(fields: [drawId], references: [id])
-  drawId         String
-  createdAt      DateTime   @default(now())
-  updatedAt      DateTime   @updatedAt
+  id          String     @id @default(uuid())
+  gameNumbers Json
+  ticketPrice Int?
+  result      GameResult @default(PENDING)
+  player      User       @relation(fields: [playerId], references: [id])
+  playerId    String
+  draw        Draw       @relation(fields: [drawId], references: [id])
+  drawId      String
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
 }
 
 model Draw {
@@ -40,6 +39,7 @@ model Draw {
   status        DrawStatus @default(PENDING)
   drawnNumbers  Json?
   prize         Json?
+  isAccumulated Boolean?   @default(false)
   games         Game[]
   createdAt     DateTime   @default(now())
   updatedAt     DateTime   @updatedAt
