@@ -46,6 +46,8 @@ model Draw {
   games         Game[]
   createdAt     DateTime   @default(now())
   updatedAt     DateTime   @updatedAt
+
+  @@index([contestNumber])
 }
 
 enum Role {
