@@ -1,7 +1,0 @@
-banco de dados
-
-* tabela: concursos:
-
-núm. concurso
-data/hora concurso
-apostas
