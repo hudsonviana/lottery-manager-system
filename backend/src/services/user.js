@@ -6,15 +6,15 @@ export const getAll = async () => {
   try {
     return await prisma.user.findMany();
   } catch (error) {
-    return false;
+    return { error: 'Ocorreu um erro ao consultar os usuários' };
   }
 };
 
-export const getOne = async (id) => {
+export const getOne = async ({ id, email }) => {
   try {
-    return await prisma.user.findUnique({ where: { id } });
+    return await prisma.user.findUnique({ where: { id, email } });
   } catch (error) {
-    return false;
+    return { error: 'Ocorreu um erro ao consultar um usuário' };
   }
 };
 
