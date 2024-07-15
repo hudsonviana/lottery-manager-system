@@ -20,14 +20,15 @@ export const getOne = async (id) => {
 
 export const store = async (data) => {
   try {
-    const existUser = await prisma.user.findUnique(data.email);
+    const checkExistUser = await prisma.user.findUnique({ where: { email: data.email } });
 
-    if (existUser) return false;
-    // Parei aqui
+    if (checkExistUser) {
+      return { error: 'Email já cadastrado no sistema' };
+    }
 
-    return await prisma.user.create({ data });
+    return await prisma.user.create({ data: data });
   } catch (error) {
-    return false;
+    return { error: 'Ocorreu um erro ao criar um usuário' };
   }
 };
 
