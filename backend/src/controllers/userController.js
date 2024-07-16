@@ -9,7 +9,7 @@ export const getAll = async (req, res) => {
     return res.status(500).json({ error: users.error });
   }
 
-  res.json({ users });
+  res.json({ users, auth: req.auth });
 };
 
 export const getUser = async (req, res) => {
@@ -26,5 +26,5 @@ export const getUser = async (req, res) => {
 
   const { password, ...userData } = user;
 
-  res.json({ user: userData });
+  res.json({ user: userData, auth: req.auth });
 };

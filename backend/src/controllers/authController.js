@@ -67,10 +67,11 @@ export const login = async (req, res) => {
     return res.status(401).json({ error: 'Credenciais inválidas' });
   }
 
-  const secret = process.env.SECRET_KEY;
-  const token = jwt.sign({ id: user.id }, secret);
+  const { password, ...auth } = user;
 
-  // const { password, ...userData } = user;
-  // res.json({ user: userData, token });
+  const secret = process.env.SECRET_KEY;
+  const token = jwt.sign({ auth }, secret);
+  // const token = jwt.sign({ id: user.id }, secret);
+
   res.json({ token });
 };
