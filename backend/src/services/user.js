@@ -2,17 +2,27 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-export const getAll = async () => {
+export const findAll = async () => {
   try {
-    return await prisma.user.findMany();
+    return await prisma.user.findMany({
+      omit: {
+        password: true,
+      },
+    });
   } catch (error) {
     return { error: 'Ocorreu um erro ao consultar os usuários' };
   }
 };
 
-export const getOne = async ({ id, email }) => {
+export const findOne = async ({ id, email }) => {
   try {
-    return await prisma.user.findUnique({ where: { id, email } });
+    return await prisma.user.findUnique({
+      where: { id, email },
+      omit: {
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
   } catch (error) {
     return { error: 'Ocorreu um erro ao consultar um usuário' };
   }
@@ -28,7 +38,7 @@ export const store = async (data) => {
 
     return await prisma.user.create({ data: data });
   } catch (error) {
-    return { error: 'Ocorreu um erro ao criar um usuário' };
+    return { error: 'Ocorreu um erro ao cadastrar o usuário' };
   }
 };
 
