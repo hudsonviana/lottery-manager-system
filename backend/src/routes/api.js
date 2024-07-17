@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import * as admin from '../middlewares/admin.js';
 import * as auth from '../middlewares/auth.js';
 import * as authController from '../controllers/authController.js';
 import * as userController from '../controllers/userController.js';
@@ -11,6 +12,6 @@ router.post('/auth/login', authController.login);
 router.get('/users', auth.authentication, userController.getAll);
 router.get('/users/:id', auth.authentication, userController.getUser);
 router.put('/users/:id', auth.authentication, userController.updateUser);
-router.delete('/users/:id', auth.authentication, userController.deleteUser);
+router.delete('/users/:id', admin.authentication, userController.deleteUser);
 
 export default router;
