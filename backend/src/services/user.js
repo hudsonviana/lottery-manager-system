@@ -50,4 +50,10 @@ export const update = async (data, id) => {
   }
 };
 
-export const destroy = async () => {};
+export const destroy = async (id) => {
+  try {
+    return await prisma.user.delete({ where: { id: id } });
+  } catch (error) {
+    return { error: 'Ocorreu um erro ao deletar o usuário' };
+  }
+};

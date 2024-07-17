@@ -62,3 +62,16 @@ export const updateUser = async (req, res) => {
 
   res.json({ user: updatedUser, auth });
 };
+
+export const deleteUser = async (req, res) => {
+  const auth = req.auth;
+  const { id } = req.params;
+
+  const deletedUser = await userService.destroy(id);
+
+  if (deletedUser.error) {
+    return res.status(500).json({ error: deletedUser.error });
+  }
+
+  res.json({ user: deletedUser, auth });
+};
