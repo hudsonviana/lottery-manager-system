@@ -24,7 +24,7 @@ export const findOne = async ({ id, email }) => {
       },
     });
   } catch (error) {
-    return { error: 'Ocorreu um erro ao consultar um usuário' };
+    return { error: 'Ocorreu um erro ao consultar o usuário' };
   }
 };
 
@@ -42,6 +42,12 @@ export const store = async (data) => {
   }
 };
 
-export const update = async () => {};
+export const update = async (data, id) => {
+  try {
+    return await prisma.user.update({ data: data, where: { id: id } });
+  } catch (error) {
+    return { error: 'Ocorreu um erro ao atualizar o usuário' };
+  }
+};
 
 export const destroy = async () => {};
