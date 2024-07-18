@@ -12,9 +12,10 @@ router.post('/auth/changepassword/:id', auth.authentication, authController.chan
 // router.post('/auth/forgotpassword', authController.forgotPassword);
 // router.post('/auth/resetpassword', authController.resetPassword);
 
-router.get('/users', admin.authentication, userController.getAll);
-router.get('/users/:id', admin.authentication, userController.getUser);
-router.put('/users/:id', admin.authentication, userController.updateUser);
+router.get('/users', admin.authentication, userController.getAllUsers);
+router.get('/users/:id', auth.authentication, userController.getUser);
+router.post('/users', admin.authentication, userController.addUser);
+router.put('/users/:id', auth.authentication, userController.updateUser);
 router.delete('/users/:id', admin.authentication, userController.deleteUser);
 
 export default router;
