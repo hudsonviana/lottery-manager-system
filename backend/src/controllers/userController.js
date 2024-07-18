@@ -1,5 +1,3 @@
-import 'dotenv/config';
-import bcrypt from 'bcrypt';
 import { z } from 'zod';
 
 import * as userService from '../services/user.js';

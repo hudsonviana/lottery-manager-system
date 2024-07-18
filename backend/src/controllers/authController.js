@@ -73,3 +73,45 @@ export const login = async (req, res) => {
 
   res.json({ token });
 };
+
+export const changePassword = async (req, res) => {
+  const auth = req.auth;
+  const { id } = req.params;
+
+  if (auth.id !== id) {
+    return res.status(403).json({ error: 'Acesso negado' });
+  }
+
+  const changePasswordSchema = z
+    .object({
+      password: z
+        .string({ message: 'A senha é obrigatória' })
+        .min(6, { message: 'A senha precisa conter pelo menos 6 caracteres' }),
+      confirmPassword: z.string({ message: 'A confirmação de senha é obrigatória' }),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+      message: 'Senhas não conferem',
+      path: ['confirmPassword'],
+    });
+
+  const body = changePasswordSchema.safeParse(req.body);
+
+  if (!body.success) {
+    return res.status(400).json({ errors: body.error.errors });
+  }
+
+  const salt = await bcrypt.genSalt();
+  const hashedPassword = await bcrypt.hash(body.data.password, salt);
+
+  const updatedUserPassword = await userService.update({ password: hashedPassword }, id);
+
+  if (updatedUserPassword.error) {
+    return res.status(500).json({ error: updatedUserPassword.error });
+  }
+
+  res.json({ user: updatedUserPassword, auth });
+};
+
+export const forgotPassword = async (req, res, next) => {};
+
+export const resetPassword = async (req, res, next) => {};
