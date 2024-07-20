@@ -9,13 +9,14 @@ const router = Router();
 router.post('/auth/register', authController.register);
 router.post('/auth/login', authController.login);
 router.post('/auth/changepassword/:id', auth.authentication, authController.changePassword);
-// router.post('/auth/forgotpassword', authController.forgotPassword);
-// router.post('/auth/resetpassword', authController.resetPassword);
+router.post('/auth/logout', auth.authentication, authController.logout);
 
 router.get('/users', admin.authentication, userController.getAllUsers);
 router.get('/users/:id', auth.authentication, userController.getUser);
 router.post('/users', admin.authentication, userController.addUser);
 router.put('/users/:id', auth.authentication, userController.updateUser);
 router.delete('/users/:id', admin.authentication, userController.deleteUser);
+
+router.get('/draws');
 
 export default router;
