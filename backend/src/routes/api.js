@@ -20,5 +20,8 @@ router.delete('/users/:id', admin.authentication, userController.deleteUser);
 
 router.get('/draws', auth.authentication, drawController.getAllDraws);
 router.get('/draws/:identifier', auth.authentication, drawController.getDraw);
+router.post('/draws', auth.authentication, drawController.addDraw);
 
 export default router;
+
+// https://servicebus2.caixa.gov.br/portaldeloterias/api/megasena/1234

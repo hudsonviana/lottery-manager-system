@@ -1,5 +1,6 @@
 import * as drawService from '../services/draw.js';
 import { isUUID } from '../utils/checkUuid.js';
+import { z } from 'zod';
 
 export const getAllDraws = async (req, res) => {
   const auth = req.auth;
@@ -15,16 +16,12 @@ export const getAllDraws = async (req, res) => {
 export const getDraw = async (req, res) => {
   const auth = req.auth;
   const { identifier } = req.params;
-  let id = undefined;
-  let contestNumber = undefined;
 
-  if (isUUID(identifier)) {
-    id = identifier;
-  } else {
-    contestNumber = parseInt(identifier);
-  }
+  const searchParams = isUUID(identifier)
+    ? { id: identifier }
+    : { contestNumber: parseInt(identifier) };
 
-  const draw = await drawService.findOne({ id, contestNumber });
+  const draw = await drawService.findOne(searchParams);
 
   if (!draw) {
     return res.status(404).json({ error: 'Sorteio não encontrado' });
@@ -35,4 +32,32 @@ export const getDraw = async (req, res) => {
   }
 
   res.json({ draw, auth });
+};
+
+export const addDraw = async (req, res) => {
+  const auth = req.auth;
+
+  const addDrawSchema = z.object({
+    lotteryType: z.enum(['MEGASENA', 'QUINA', 'LOTOFACIL', 'TIMEMANIA', 'LOTOMANIA']),
+    contestNumber: z.number(),
+    drawDate: z.string().datetime(),
+    status: z.enum(['DRAWN', 'PENDING']),
+    drawnNumbers: z.string(),
+    prize: z.string(),
+    accumulated: z.boolean(),
+  });
+
+  const body = addDrawSchema.safeParse(req.body);
+
+  if (!body.success) {
+    return res.status(400).json({ errors: body.error.errors });
+  }
+
+  const newDraw = await drawService.store(body.data);
+
+  if (newDraw.error) {
+    return res.status(500).json({ error: newDraw.error });
+  }
+
+  res.status(201).json({ draw: newDraw, auth });
 };
