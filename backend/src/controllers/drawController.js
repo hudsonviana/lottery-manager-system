@@ -34,17 +34,41 @@ export const getDraw = async (req, res) => {
   res.json({ draw, auth });
 };
 
+const parseDate = (dateString) => {
+  const [day, month, year] = dateString.split('/').map(Number);
+  const date = new Date(year, month - 1, day);
+  return date.toISOString();
+};
+
 export const addDraw = async (req, res) => {
   const auth = req.auth;
 
+  const prizeSchema = z.object({
+    descricaoFaixa: z.string(),
+    faixa: z.number().positive(),
+    numeroDeGanhadores: z.number().nonnegative(),
+    valorPremio: z.number().nonnegative(),
+  });
+
   const addDrawSchema = z.object({
-    lotteryType: z.enum(['MEGASENA', 'QUINA', 'LOTOFACIL', 'TIMEMANIA', 'LOTOMANIA']),
-    contestNumber: z.number(),
-    drawDate: z.string().datetime(),
-    status: z.enum(['DRAWN', 'PENDING']),
-    drawnNumbers: z.string(),
-    prize: z.string(),
-    accumulated: z.boolean(),
+    acumulado: z.boolean().optional(),
+    dataApuracao: z.string().refine(
+      (val) => {
+        const [day, month, year] = val.split('/');
+        return !isNaN(Date.parse(`${year}-${month}-${day}`));
+      },
+      {
+        message: 'Formato de data inválido',
+      }
+    ),
+    listaDezenas: z
+      .array(z.string().regex(/^\d{2}$/))
+      .length(6)
+      .optional(),
+    listaRateioPremio: z.array(prizeSchema).optional(),
+    numero: z.number().positive(),
+    tipoJogo: z.enum(['MEGA_SENA', 'QUINA', 'LOTOFACIL', 'TIMEMANIA', 'LOTOMANIA']).optional(),
+    status: z.enum(['PENDING', 'DRAWN']).optional(),
   });
 
   const body = addDrawSchema.safeParse(req.body);
@@ -53,7 +77,16 @@ export const addDraw = async (req, res) => {
     return res.status(400).json({ errors: body.error.errors });
   }
 
-  const newDraw = await drawService.store(body.data);
+  const drawData = {
+    lotteryType: body.data.tipoJogo,
+    contestNumber: body.data.numero,
+    drawDate: parseDate(body.data.dataApuracao),
+    drawnNumbers: body.data.listaDezenas,
+    prize: body.data.listaRateioPremio,
+    accumulated: body.data.acumulado,
+  };
+
+  const newDraw = await drawService.store(drawData);
 
   if (newDraw.error) {
     return res.status(500).json({ error: newDraw.error });

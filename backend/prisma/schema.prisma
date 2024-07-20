@@ -37,7 +37,7 @@ model Game {
 
 model Draw {
   id            String     @id @default(uuid())
-  lotteryType   Lottery    @default(MEGASENA)
+  lotteryType   Lottery    @default(MEGA_SENA)
   contestNumber Int        @unique
   drawDate      DateTime
   status        DrawStatus @default(PENDING)
@@ -57,7 +57,7 @@ enum Role {
 }
 
 enum Lottery {
-  MEGASENA
+  MEGA_SENA
   QUINA
   LOTOFACIL
   TIMEMANIA
