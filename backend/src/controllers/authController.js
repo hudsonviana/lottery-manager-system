@@ -112,17 +112,29 @@ export const changePassword = async (req, res) => {
   res.json({ user: updatedUserPassword, auth });
 };
 
-export const logout = async (req, res) => {
-  const token = req.headers['authorization'].split(' ')[1];
+// export const logout = async (req, res) => {
+//   const token = req.headers['authorization'].split(' ')[1];
 
-  try {
-    const decoded = jwt.verify(token, process.env.SECRET_KEY);
-    decoded.exp = Math.floor(Date.now() / 1000) - 1; // Data de expiração no passado
-    const updatedToken = jwt.sign(decoded, process.env.SECRET_KEY);
-    res.json({ message: 'Logout realizado com sucesso!', token: updatedToken });
-  } catch (error) {
-    res.status(400).json({ error: 'Invalid token' });
-  }
+//   try {
+//     const decoded = jwt.verify(token, process.env.SECRET_KEY);
+//     decoded.exp = Math.floor(Date.now() / 1000) - 1; // Data de expiração no passado
+//     const updatedToken = jwt.sign(decoded, process.env.SECRET_KEY);
+//     res.json({ message: 'Logout realizado com sucesso!', token: updatedToken });
+//   } catch (error) {
+//     res.status(400).json({ error: 'Invalid token' });
+//   }
+// };
+
+export const logout = async (req, res) => {
+  const auth = req.auth;
+
+  const authHeader = req.headers['authorization'];
+  jwt.sign(authHeader, '', { expiresIn: 1 }, (logout, err) => {
+    if (!logout) {
+      return res.send({ msg: err.message });
+    }
+    res.send({ status: 'deslogado', auth });
+  });
 };
 
 // export const forgotPassword = async (req, res, next) => {};

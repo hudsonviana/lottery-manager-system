@@ -19,6 +19,10 @@ export const getUser = async (req, res) => {
   const auth = req.auth;
   const { id } = req.params;
 
+  if (auth.role !== 'ADMIN' && auth.id !== id) {
+    return res.status(403).json({ error: 'Acesso negado' });
+  }
+
   const user = await userService.findOne({ id });
 
   if (!user) {
