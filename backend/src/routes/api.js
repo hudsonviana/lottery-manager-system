@@ -22,6 +22,9 @@ router.get('/draws', auth.authentication, drawController.getAllDraws);
 router.get('/draws/:identifier', auth.authentication, drawController.getDraw);
 router.post('/draws', auth.authentication, drawController.addDraw);
 router.put('/draws/:identifier', auth.authentication, drawController.updateDraw);
+router.delete('/draws/:identifier', auth.authentication, drawController.deleteDraw);
+
+
 
 export default router;
 

@@ -42,4 +42,10 @@ export const update = async (data, { id, contestNumber }) => {
   }
 };
 
-export const destroy = async () => {};
+export const destroy = async ({ id, contestNumber }) => {
+  try {
+    return await prisma.draw.delete({ where: { id, contestNumber } });
+  } catch (error) {
+    return { error: 'Ocorreu um erro ao deletar o sorteio' };
+  }
+};
