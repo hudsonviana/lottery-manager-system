@@ -25,7 +25,7 @@ export const store = async (data) => {
     });
 
     if (existingDraw) {
-      return { error: 'Sorteio já cadastrado no sistema' };
+      return { error: 'Sorteio já cadastrado no sistema', existingDraw };
     }
 
     return await prisma.draw.create({ data: data });

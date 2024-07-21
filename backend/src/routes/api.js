@@ -4,6 +4,7 @@ import * as auth from '../middlewares/auth.js';
 import * as authController from '../controllers/authController.js';
 import * as userController from '../controllers/userController.js';
 import * as drawController from '../controllers/drawController.js';
+import * as gameController from '../controllers/gameController.js';
 
 const router = Router();
 
@@ -24,7 +25,7 @@ router.post('/draws', auth.authentication, drawController.addDraw);
 router.put('/draws/:identifier', auth.authentication, drawController.updateDraw);
 router.delete('/draws/:identifier', auth.authentication, drawController.deleteDraw);
 
-
+router.post('/users/:playerId/games', auth.authentication, gameController.addGame);
 
 export default router;
 

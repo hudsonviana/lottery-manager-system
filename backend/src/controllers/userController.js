@@ -1,8 +1,7 @@
-import { z } from 'zod';
+import * as userService from '../services/user.js';
 import bcrypt from 'bcrypt';
 import crypto from 'crypto';
-
-import * as userService from '../services/user.js';
+import { z } from 'zod';
 
 export const getAllUsers = async (req, res) => {
   const auth = req.auth;
