@@ -30,9 +30,9 @@ export const findOne = async ({ id, email }) => {
 
 export const store = async (data) => {
   try {
-    const checkExistUser = await prisma.user.findUnique({ where: { email: data.email } });
+    const existingUser = await prisma.user.findUnique({ where: { email: data.email } });
 
-    if (checkExistUser) {
+    if (existingUser) {
       return { error: 'Email já cadastrado no sistema' };
     }
 

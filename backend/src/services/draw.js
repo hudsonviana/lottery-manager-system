@@ -20,11 +20,11 @@ export const findOne = async ({ id, contestNumber }) => {
 
 export const store = async (data) => {
   try {
-    const checkExistDraw = await prisma.draw.findUnique({
+    const existingDraw = await prisma.draw.findUnique({
       where: { contestNumber: data.contestNumber },
     });
 
-    if (checkExistDraw) {
+    if (existingDraw) {
       return { error: 'Sorteio já cadastrado no sistema' };
     }
 
@@ -34,6 +34,12 @@ export const store = async (data) => {
   }
 };
 
-export const update = async () => {};
+export const update = async (data, { id, contestNumber }) => {
+  try {
+    return await prisma.draw.update({ data: data, where: { id, contestNumber } });
+  } catch (error) {
+    return { error: 'Ocorreu um erro ao atualizar o sorteio' };
+  }
+};
 
 export const destroy = async () => {};
