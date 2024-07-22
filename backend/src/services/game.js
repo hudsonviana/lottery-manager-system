@@ -3,7 +3,13 @@ import * as drawService from '../services/draw.js';
 
 const prisma = new PrismaClient();
 
-export const findAll = async () => {};
+export const findAll = async (playerId) => {
+  try {
+    return await prisma.game.findMany({ where: { playerId } });
+  } catch (error) {
+    return { error: 'Ocorreu um erro ao consultar os sorteios' };
+  }
+};
 
 export const findOne = async () => {};
 

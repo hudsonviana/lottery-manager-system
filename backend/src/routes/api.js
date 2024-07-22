@@ -25,7 +25,9 @@ router.post('/draws', auth.authentication, drawController.addDraw);
 router.put('/draws/:identifier', auth.authentication, drawController.updateDraw);
 router.delete('/draws/:identifier', auth.authentication, drawController.deleteDraw);
 
+router.get('/users/:playerId/games', auth.authentication, gameController.getAllGames);
 router.post('/users/:playerId/games', auth.authentication, gameController.addGame);
+
 
 export default router;
 

@@ -2,6 +2,18 @@ import * as gameService from '../services/game.js';
 import { validateDateFormat, parseDate } from '../utils/drawHelpers.js';
 import { z } from 'zod';
 
+export const getAllGames = async (req, res) => {
+  const auth = req.auth;
+  const { playerId } = req.params;
+  const games = await gameService.findAll(playerId);
+
+  if (games.error) {
+    return res.status(500).json({ error: games.error });
+  }
+
+  res.json({ games, auth });
+};
+
 export const addGame = async (req, res) => {
   const auth = req.auth;
   const { playerId } = req.params;
