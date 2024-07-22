@@ -16,26 +16,6 @@ export const store = async ({ gameData, drawData }) => {
   } catch (error) {
     return { error: 'Ocorreu um erro ao cadastrar o jogo' };
   }
-
-  // try {
-  //   const result = await prisma.game.create({
-  //     data: {
-  //       ...gameData,
-  //       draw: {
-  //         create: {
-  //           ...drawData,
-  //         },
-  //       },
-  //     },
-  //     include: {
-  //       draw: true,
-  //     },
-  //   });
-
-  //   return result;
-  // } catch (error) {
-  //   return { error: 'Ocorreu um erro ao cadastrar o jogo' };
-  // }
 };
 
 export const update = async () => {};

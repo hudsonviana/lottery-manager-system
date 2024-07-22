@@ -1,5 +1,5 @@
 import * as gameService from '../services/game.js';
-import { validateDateFormat } from '../utils/drawHelpers.js';
+import { validateDateFormat, parseDate } from '../utils/drawHelpers.js';
 import { z } from 'zod';
 
 export const addGame = async (req, res) => {
@@ -23,8 +23,7 @@ export const addGame = async (req, res) => {
 
   const addGameSchema = z.object({
     gameNumbers: gameNumbersSchema,
-    ticketPrice: z.number().optional(),
-    // result: z.enum(['PENDING', 'WON', 'LOST']).default('PENDING'),
+    ticketPrice: z.number().nonnegative().optional(),
     contestNumber: z.number().positive(),
     drawDate: z.string().refine(validateDateFormat, { message: 'Formato de data inválido' }),
     lotteryType: z.enum(['MEGA_SENA', 'QUINA', 'LOTOFACIL', 'TIMEMANIA', 'LOTOMANIA']),
@@ -44,7 +43,7 @@ export const addGame = async (req, res) => {
 
   const drawData = {
     contestNumber: body.data.contestNumber,
-    drawDate: body.data.drawDate,
+    drawDate: parseDate(body.data.drawDate),
     lotteryType: body.data.lotteryType,
   };
 

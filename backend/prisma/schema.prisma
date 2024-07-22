@@ -25,7 +25,7 @@ model User {
 model Game {
   id          String     @id @default(uuid())
   gameNumbers Json
-  ticketPrice Decimal?   @db.Decimal(10, 2)
+  ticketPrice Float?
   result      GameResult @default(PENDING)
   player      User       @relation(fields: [playerId], references: [id])
   playerId    String
