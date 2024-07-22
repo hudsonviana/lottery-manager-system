@@ -5,7 +5,15 @@ const prisma = new PrismaClient();
 
 export const findAll = async (playerId) => {
   try {
-    return await prisma.game.findMany({ where: { playerId } });
+    const games = await prisma.game.findMany({
+      where: { playerId },
+      omit: { playerId: true, drawId: true },
+      include: {
+        player: { omit: { password: true, createdAt: true, updatedAt: true } },
+        draw: { omit: { createdAt: true, updatedAt: true } },
+      },
+    });
+    return games;
   } catch (error) {
     return { error: 'Ocorreu um erro ao consultar os sorteios' };
   }
