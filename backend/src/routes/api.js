@@ -21,13 +21,13 @@ router.delete('/users/:id', admin.authentication, userController.deleteUser);
 
 router.get('/draws', auth.authentication, drawController.getAllDraws);
 router.get('/draws/:identifier', auth.authentication, drawController.getDraw);
+router.get('/draws/:identifier/games', auth.authentication, drawController.getDrawGames);
 router.post('/draws', auth.authentication, drawController.addDraw);
 router.put('/draws/:identifier', auth.authentication, drawController.updateDraw);
 router.delete('/draws/:identifier', auth.authentication, drawController.deleteDraw);
 
 router.get('/users/:playerId/games', auth.authentication, gameController.getAllGames);
 router.post('/users/:playerId/games', auth.authentication, gameController.addGame);
-
 
 export default router;
 
