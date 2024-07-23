@@ -10,35 +10,48 @@ export const findAll = async () => {
   }
 };
 
-// export const findOne = async ({ id, contestNumber }) => {
-//   try {
-//     return await prisma.draw.findUnique({ where: { id, contestNumber } });
-//   } catch (error) {
-//     return { error: 'Ocorreu um erro ao consultar o sorteio' };
-//   }
-// };
-
-// export const findGamesByDraw = async () => {
-//   try {
-    
-//   } catch (error) {
-    
-//   }
-// };
-
-export const findOne = async ({ id, contestNumber }, withGames) => {
+export const findOne = async ({ id, contestNumber }) => {
   try {
-    if (withGames) {
-      return await prisma.draw.findUnique({
-        where: { id, contestNumber },
-        include: { games: true },
-      });
-    }
     return await prisma.draw.findUnique({ where: { id, contestNumber } });
   } catch (error) {
     return { error: 'Ocorreu um erro ao consultar o sorteio' };
   }
 };
+
+export const findGamesByDraw = async ({ id, contestNumber }) => {
+  try {
+    return await prisma.draw.findUnique({
+      where: { id, contestNumber },
+      omit: { createdAt: true, updatedAt: true },
+      include: {
+        games: {
+          include: {
+            player: {
+              omit: { password: true, createdAt: true, updatedAt: true },
+            },
+          },
+          omit: { playerId: true, drawId: true },
+        },
+      },
+    });
+  } catch (error) {
+    return { error: 'Ocorreu um erro ao consultar o sorteio com os jogos' };
+  }
+};
+
+// export const findOne = async ({ id, contestNumber }, withGames) => {
+//   try {
+//     if (withGames) {
+//       return await prisma.draw.findUnique({
+//         where: { id, contestNumber },
+//         include: { games: true },
+//       });
+//     }
+//     return await prisma.draw.findUnique({ where: { id, contestNumber } });
+//   } catch (error) {
+//     return { error: 'Ocorreu um erro ao consultar o sorteio' };
+//   }
+// };
 
 export const store = async (data) => {
   try {

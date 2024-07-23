@@ -42,17 +42,17 @@ export const getDrawGames = async (req, res) => {
     ? { id: identifier }
     : { contestNumber: parseInt(identifier) };
 
-  const draw = await drawService.findOne(searchParams, { withGames: true });
+  const drawWithGames = await drawService.findGamesByDraw(searchParams);
 
-  if (!draw) {
+  if (!drawWithGames) {
     return res.status(404).json({ error: 'Sorteio não encontrado' });
   }
 
-  if (draw?.error) {
-    return res.status(500).json({ error: draw.error });
+  if (drawWithGames?.error) {
+    return res.status(500).json({ error: drawWithGames.error });
   }
 
-  res.json({ draw, auth });
+  res.json({ drawWithGames, auth });
 };
 
 export const addDraw = async (req, res) => {
