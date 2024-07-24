@@ -15,18 +15,19 @@ router.put('/auth/logout', auth.authentication, authController.logout);
 
 router.get('/users', admin.authentication, userController.getAllUsers);
 router.get('/users/:id', auth.authentication, userController.getUser);
+router.get('/users/:id/games', auth.authentication, userController.getUserGames);
 router.post('/users', admin.authentication, userController.addUser);
 router.put('/users/:id', auth.authentication, userController.updateUser);
 router.delete('/users/:id', admin.authentication, userController.deleteUser);
 
 router.get('/draws', auth.authentication, drawController.getAllDraws);
 router.get('/draws/:identifier', auth.authentication, drawController.getDraw);
-router.get('/draws/:identifier/games', auth.authentication, drawController.getDrawGames);
+router.get('/draws/:identifier/games', admin.authentication, drawController.getDrawGames);
 router.post('/draws', auth.authentication, drawController.addDraw);
 router.put('/draws/:identifier', auth.authentication, drawController.updateDraw);
 router.delete('/draws/:identifier', auth.authentication, drawController.deleteDraw);
 
-router.get('/users/:playerId/games', auth.authentication, gameController.getAllGames);
+router.get('/users/:playerId/gamess', auth.authentication, gameController.getAllGames);
 router.post('/users/:playerId/games', auth.authentication, gameController.addGame);
 
 export default router;

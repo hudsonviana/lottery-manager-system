@@ -18,13 +18,33 @@ export const findOne = async ({ id, email }) => {
   try {
     return await prisma.user.findUnique({
       where: { id, email },
-      omit: {
-        createdAt: true,
-        updatedAt: true,
-      },
     });
   } catch (error) {
     return { error: 'Ocorreu um erro ao consultar o usuário' };
+  }
+};
+
+export const findGamesByUser = async ({ id, email }) => {
+  try {
+    return await prisma.user.findUnique({
+      where: { id, email },
+      omit: {
+        password: true,
+      },
+      include: {
+        games: {
+          omit: {
+            playerId: true,
+            drawId: true,
+          },
+          include: {
+            draw: true,
+          },
+        },
+      },
+    });
+  } catch (error) {
+    return { error: 'Ocorreu um erro ao consultar os jogos do usuário' };
   }
 };
 

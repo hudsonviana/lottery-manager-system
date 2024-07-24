@@ -37,6 +37,23 @@ export const getUser = async (req, res) => {
   res.json({ user: userData, auth });
 };
 
+export const getUserGames = async (req, res) => {
+  const auth = req.auth;
+  const { id } = req.params;
+
+  if (auth.role !== 'ADMIN' && auth.id !== id) {
+    return res.status(403).json({ error: 'Acesso negado' });
+  }
+
+  const userGames = await userService.findGamesByUser({ id });
+
+  if (userGames.error) {
+    return res.status(500).json({ error: userGames.error });
+  }
+
+  res.json({ userGames, auth });
+};
+
 export const addUser = async (req, res) => {
   const auth = req.auth;
 
