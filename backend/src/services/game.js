@@ -3,9 +3,32 @@ import * as drawService from '../services/draw.js';
 
 const prisma = new PrismaClient();
 
-export const findAll = async (playerId) => {
+export const findAll = async () => {
   try {
-    const games = await prisma.game.findMany({
+    return await prisma.game.findMany({
+      omit: {
+        playerId: true,
+        drawId: true,
+      },
+      include: {
+        player: {
+          omit: {
+            password: true,
+            createdAt: true,
+            updatedAt: true,
+          },
+        },
+        draw: true,
+      },
+    });
+  } catch (error) {
+    return { error: 'Ocorreu um erro ao consultar os sorteios' };
+  }
+};
+
+export const findAllGamesWithUserAndDraw = async (playerId) => {
+  try {
+    return await prisma.game.findMany({
       where: { playerId },
       omit: { playerId: true, drawId: true },
       include: {
@@ -13,7 +36,6 @@ export const findAll = async (playerId) => {
         draw: { omit: { createdAt: true, updatedAt: true } },
       },
     });
-    return games;
   } catch (error) {
     return { error: 'Ocorreu um erro ao consultar os sorteios' };
   }
