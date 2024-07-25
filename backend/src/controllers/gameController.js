@@ -4,6 +4,7 @@ import { z } from 'zod';
 
 export const getAllGames = async (req, res) => {
   const auth = req.auth;
+
   const games = await gameService.findAll();
 
   if (games.error) {
@@ -14,8 +15,21 @@ export const getAllGames = async (req, res) => {
 };
 
 export const getGame = async (req, res) => {
+  const auth = req.auth;
+  const { id } = req.params;
 
-}
+  const game = await gameService.findOne(id);
+
+  if (!game) {
+    return res.status(404).json({ error: 'Jogo não encontrado' });
+  }
+
+  if (game?.error) {
+    return res.status(500).json({ error: game.error });
+  }
+
+  res.json({ game, auth });
+};
 
 export const addGame = async (req, res) => {
   const auth = req.auth;

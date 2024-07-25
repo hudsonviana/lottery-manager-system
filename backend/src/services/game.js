@@ -26,7 +26,29 @@ export const findAll = async () => {
   }
 };
 
-export const findOne = async () => {};
+export const findOne = async (id) => {
+  try {
+    return await prisma.game.findUnique({
+      where: { id },
+      omit: {
+        playerId: true,
+        drawId: true,
+      },
+      include: {
+        player: {
+          omit: {
+            password: true,
+            createdAt: true,
+            updatedAt: true,
+          },
+        },
+        draw: true,
+      },
+    });
+  } catch (error) {
+    return { error: 'Ocorreu um erro ao consultar o jogo' };
+  }
+};
 
 export const store = async ({ gameData, drawData }) => {
   try {
@@ -42,7 +64,6 @@ export const store = async ({ gameData, drawData }) => {
 export const update = async () => {};
 
 export const destroy = async () => {};
-
 
 // export const findAllGamesWithUserAndDraw = async (playerId) => {
 //   try {

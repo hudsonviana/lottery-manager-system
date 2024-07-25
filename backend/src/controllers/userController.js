@@ -47,7 +47,11 @@ export const getUserGames = async (req, res) => {
 
   const userGames = await userService.findGamesByUser({ id });
 
-  if (userGames.error) {
+  if (!userGames) {
+    return res.status(404).json({ error: 'Usuário não encontrado' });
+  }
+
+  if (userGames?.error) {
     return res.status(500).json({ error: userGames.error });
   }
 
