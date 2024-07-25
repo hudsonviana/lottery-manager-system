@@ -4,8 +4,7 @@ import { z } from 'zod';
 
 export const getAllGames = async (req, res) => {
   const auth = req.auth;
-  const { playerId } = req.params;
-  const games = await gameService.findAll(playerId);
+  const games = await gameService.findAll();
 
   if (games.error) {
     return res.status(500).json({ error: games.error });
@@ -13,6 +12,10 @@ export const getAllGames = async (req, res) => {
 
   res.json({ games, auth });
 };
+
+export const getGame = async (req, res) => {
+
+}
 
 export const addGame = async (req, res) => {
   const auth = req.auth;

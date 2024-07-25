@@ -22,22 +22,7 @@ export const findAll = async () => {
       },
     });
   } catch (error) {
-    return { error: 'Ocorreu um erro ao consultar os sorteios' };
-  }
-};
-
-export const findAllGamesWithUserAndDraw = async (playerId) => {
-  try {
-    return await prisma.game.findMany({
-      where: { playerId },
-      omit: { playerId: true, drawId: true },
-      include: {
-        player: { omit: { password: true, createdAt: true, updatedAt: true } },
-        draw: { omit: { createdAt: true, updatedAt: true } },
-      },
-    });
-  } catch (error) {
-    return { error: 'Ocorreu um erro ao consultar os sorteios' };
+    return { error: 'Ocorreu um erro ao consultar os jogos' };
   }
 };
 
@@ -57,3 +42,19 @@ export const store = async ({ gameData, drawData }) => {
 export const update = async () => {};
 
 export const destroy = async () => {};
+
+
+// export const findAllGamesWithUserAndDraw = async (playerId) => {
+//   try {
+//     return await prisma.game.findMany({
+//       where: { playerId },
+//       omit: { playerId: true, drawId: true },
+//       include: {
+//         player: { omit: { password: true, createdAt: true, updatedAt: true } },
+//         draw: { omit: { createdAt: true, updatedAt: true } },
+//       },
+//     });
+//   } catch (error) {
+//     return { error: 'Ocorreu um erro ao consultar os sorteios' };
+//   }
+// };

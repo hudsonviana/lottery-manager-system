@@ -28,7 +28,7 @@ router.put('/draws/:identifier', auth.authentication, drawController.updateDraw)
 router.delete('/draws/:identifier', auth.authentication, drawController.deleteDraw);
 
 router.get('/games', admin.authentication, gameController.getAllGames);
-router.get('/games/:id', auth.authentication, gameController.getAllGames);
+router.get('/games/:id', auth.authentication, gameController.getGame);
 router.post('/users/:playerId/games', auth.authentication, gameController.addGame);
 
 export default router;
