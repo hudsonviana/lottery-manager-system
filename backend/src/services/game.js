@@ -71,21 +71,12 @@ export const store = async ({ gameData, drawData }) => {
   }
 };
 
-export const update = async () => {};
+export const update = async (data, { playerId, id }) => {
+  try {
+    return await prisma.game.update({ data, where: { playerId, id } });
+  } catch (error) {
+    return { error: 'Ocorreu um erro ao atualizar o jogo' };
+  }
+};
 
 export const destroy = async () => {};
-
-// export const findAllGamesWithUserAndDraw = async (playerId) => {
-//   try {
-//     return await prisma.game.findMany({
-//       where: { playerId },
-//       omit: { playerId: true, drawId: true },
-//       include: {
-//         player: { omit: { password: true, createdAt: true, updatedAt: true } },
-//         draw: { omit: { createdAt: true, updatedAt: true } },
-//       },
-//     });
-//   } catch (error) {
-//     return { error: 'Ocorreu um erro ao consultar os sorteios' };
-//   }
-// };

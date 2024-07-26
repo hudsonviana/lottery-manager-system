@@ -109,3 +109,49 @@ export const addGame = async (req, res) => {
 
   res.status(201).json({ game: newGame, auth });
 };
+
+export const updateGame = async (req, res) => {
+  const auth = req.auth;
+  const { playerId, id } = req.params;
+
+  if (auth.role !== 'ADMIN' && auth.id !== playerId) {
+    return res.status(403).json({ error: 'Acesso negado' });
+  }
+
+  const gameNumbersSchema = z
+    .object({
+      gameA: z
+        .array(z.string().regex(/^\d{2}$/))
+        .min(6)
+        .max(9),
+      gameB: z
+        .array(z.string().regex(/^\d{2}$/))
+        .min(0)
+        .max(9),
+      gameC: z
+        .array(z.string().regex(/^\d{2}$/))
+        .min(0)
+        .max(9),
+    })
+    .optional();
+
+  const updateGameSchema = z.object({
+    gameNumbers: gameNumbersSchema,
+    ticketPrice: z.number().nonnegative().optional(),
+    result: z.enum(['WON_SIX_NUM', 'WON_FIVE_NUM', 'WON_FOUR_NUM', 'LOST', 'PENDING']).optional(),
+  });
+
+  const body = updateGameSchema.safeParse(req.body);
+
+  if (!body.success) {
+    return res.status(400).json({ errors: body.error.errors });
+  }
+
+  const updatedGame = await gameService.update(body.data, { playerId, id });
+
+  if (updatedGame?.error) {
+    return res.status(500).json({ error: updatedGame.error });
+  }
+
+  res.json({ game: updatedGame, auth });
+};
