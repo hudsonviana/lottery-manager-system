@@ -26,10 +26,10 @@ export const findAll = async () => {
   }
 };
 
-export const findOne = async (id) => {
+export const findOne = async ({ id, playerId }) => {
   try {
     return await prisma.game.findUnique({
-      where: { id },
+      where: { id, playerId },
       omit: {
         playerId: true,
         drawId: true,
@@ -47,6 +47,16 @@ export const findOne = async (id) => {
     });
   } catch (error) {
     return { error: 'Ocorreu um erro ao consultar o jogo' };
+  }
+};
+
+export const findGameByUser = async ({ playerId, id }) => {
+  try {
+    return await prisma.game.findUnique({
+      where: { id },
+    });
+  } catch (error) {
+    return { error: 'Ocorreu um erro ao consultar o jogo do usuário' };
   }
 };
 

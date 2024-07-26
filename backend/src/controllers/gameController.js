@@ -18,7 +18,7 @@ export const getGame = async (req, res) => {
   const auth = req.auth;
   const { id } = req.params;
 
-  const game = await gameService.findOne(id);
+  const game = await gameService.findOne({ id });
 
   if (!game) {
     return res.status(404).json({ error: 'Jogo não encontrado' });
@@ -31,9 +31,34 @@ export const getGame = async (req, res) => {
   res.json({ game, auth });
 };
 
+export const getUserGame = async (req, res) => {
+  const auth = req.auth;
+  const { playerId, id } = req.params;
+
+  if (auth.role !== 'ADMIN' && auth.id !== playerId) {
+    return res.status(403).json({ error: 'Acesso negado' });
+  }
+
+  const game = await gameService.findOne({ playerId, id });
+
+  if (!game) {
+    return res.status(404).json({ error: 'Jogo não encontrado para o usuário' });
+  }
+
+  if (game?.error) {
+    return res.status(500).json({ error: game.error });
+  }
+
+  res.json({ game, auth });
+};
+
 export const addGame = async (req, res) => {
   const auth = req.auth;
   const { playerId } = req.params;
+
+  if (auth.role !== 'ADMIN' && auth.id !== playerId) {
+    return res.status(403).json({ error: 'Acesso negado' });
+  }
 
   const gameNumbersSchema = z.object({
     gameA: z
