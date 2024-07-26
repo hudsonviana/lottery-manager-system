@@ -32,6 +32,7 @@ router.get('/games/:id', admin.authentication, gameController.getGame);
 router.get('/users/:playerId/games/:id', auth.authentication, gameController.getUserGame);
 router.post('/users/:playerId/games', auth.authentication, gameController.addGame);
 router.put('/users/:playerId/games/:id', auth.authentication, gameController.updateGame);
+router.delete('/users/:playerId/games/:id', auth.authentication, gameController.deleteGame);
 
 export default router;
 

@@ -155,3 +155,20 @@ export const updateGame = async (req, res) => {
 
   res.json({ game: updatedGame, auth });
 };
+
+export const deleteGame = async (req, res) => {
+  const auth = req.auth;
+  const { playerId, id } = req.params;
+
+  if (auth.role !== 'ADMIN' && auth.id !== playerId) {
+    return res.status(403).json({ error: 'Acesso negado' });
+  }
+
+  const deletedGame = await gameService.destroy({ playerId, id });
+
+  if (deletedGame.error) {
+    return res.status(500).json({ error: deletedGame.error });
+  }
+
+  res.json({ game: deletedGame, auth });
+};

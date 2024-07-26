@@ -79,4 +79,10 @@ export const update = async (data, { playerId, id }) => {
   }
 };
 
-export const destroy = async () => {};
+export const destroy = async ({ playerId, id }) => {
+  try {
+    return await prisma.game.delete({ where: { playerId, id } });
+  } catch (error) {
+    return { error: 'Ocorreu um erro ao deletar o jogo' };
+  }
+};
