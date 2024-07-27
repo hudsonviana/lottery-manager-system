@@ -50,16 +50,6 @@ export const findOne = async ({ id, playerId }) => {
   }
 };
 
-export const findGameByUser = async ({ playerId, id }) => {
-  try {
-    return await prisma.game.findUnique({
-      where: { id },
-    });
-  } catch (error) {
-    return { error: 'Ocorreu um erro ao consultar o jogo do usuário' };
-  }
-};
-
 export const store = async ({ gameData, drawData }) => {
   try {
     const draw = await drawService.store(drawData);
