@@ -51,20 +51,6 @@ export const findGamesByDraw = async ({ id, contestNumber }) => {
   }
 };
 
-// export const findOne = async ({ id, contestNumber }, withGames) => {
-//   try {
-//     if (withGames) {
-//       return await prisma.draw.findUnique({
-//         where: { id, contestNumber },
-//         include: { games: true },
-//       });
-//     }
-//     return await prisma.draw.findUnique({ where: { id, contestNumber } });
-//   } catch (error) {
-//     return { error: 'Ocorreu um erro ao consultar o sorteio' };
-//   }
-// };
-
 export const store = async (data) => {
   try {
     const existingDraw = await prisma.draw.findUnique({
