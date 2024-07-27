@@ -4,7 +4,7 @@ const App = () => {
   useEffect(() => {
     const fetchTeste = async () => {
       try {
-        const resp = await fetch('/api');
+        const resp = await fetch('http://localhost:3333/api');
         const data = await resp.json();
         console.log(data);
       } catch (error) {
