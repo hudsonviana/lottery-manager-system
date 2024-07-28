@@ -31,10 +31,14 @@ const Login = () => {
     const data = await login(credentials);
 
     if (data.error) {
-      setErrorAlert([data.error]);
-    } else if (data.errors) {
-      setErrorAlert(data.errors.map((error) => error.message));
+      return setErrorAlert([data.error]);
     }
+
+    if (data.errors) {
+      return setErrorAlert(data.errors.map((error) => error.message));
+    }
+
+    console.log(data);
   };
 
   return (
