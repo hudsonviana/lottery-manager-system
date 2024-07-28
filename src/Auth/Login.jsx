@@ -15,7 +15,7 @@ import { Label } from '@/components/ui/label';
 
 const Login = () => {
   const [credentials, setCredentials] = useState({});
-  const mutation = useLogin();
+  const { mutateAsync: login, isPending } = useLogin();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -24,8 +24,7 @@ const Login = () => {
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-    const data = await mutation.mutateAsync(credentials);
-
+    const data = await login(credentials);
     console.log(data);
   };
 
@@ -63,7 +62,7 @@ const Login = () => {
             </div>
           </CardContent>
           <CardFooter className="flex flex-col gap-3">
-            <Button type="submit" className="w-full">
+            <Button type="submit" className="w-full" disabled={isPending}>
               Entrar
             </Button>
             <CardDescription>
@@ -75,6 +74,7 @@ const Login = () => {
           </CardFooter>
         </form>
       </Card>
+      {JSON.stringify(isPending)}
     </div>
   );
 };
