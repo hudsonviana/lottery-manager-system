@@ -45,8 +45,8 @@ export const register = async (req, res) => {
 
 export const login = async (req, res) => {
   const credentialsSchema = z.object({
-    email: z.string({ message: 'O email é obrigatório' }),
-    password: z.string({ message: 'A senha é obrigatória' }),
+    email: z.string().min(1, { message: 'O email é obrigatório' }),
+    password: z.string().min(1, { message: 'A senha é obrigatória' }),
   });
 
   const body = credentialsSchema.safeParse(req.body);

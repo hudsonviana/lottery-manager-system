@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useLogin } from '@/api/mutations';
+import { useLogin } from '@/hooks/api/mutations';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -12,20 +12,29 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { AlertCircle } from 'lucide-react';
 
 const Login = () => {
-  const [credentials, setCredentials] = useState({});
+  const [credentials, setCredentials] = useState({ email: '', password: '' });
+  const [errorAlert, setErrorAlert] = useState('');
   const { mutateAsync: login, isPending } = useLogin();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setCredentials((prev) => ({ ...prev, [name]: value }));
+    setErrorAlert('');
   };
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     const data = await login(credentials);
-    console.log(data);
+
+    if (data.error) {
+      setErrorAlert([data.error]);
+    } else if (data.errors) {
+      setErrorAlert(data.errors.map((error) => error.message));
+    }
   };
 
   return (
@@ -74,7 +83,18 @@ const Login = () => {
           </CardFooter>
         </form>
       </Card>
-      {JSON.stringify(isPending)}
+
+      {errorAlert && (
+        <Alert variant="destructive" className="my-4">
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle>Erro</AlertTitle>
+          <AlertDescription>
+            {errorAlert.map((errorMsg, index) => (
+              <p key={index}>• {errorMsg}</p>
+            ))}
+          </AlertDescription>
+        </Alert>
+      )}
     </div>
   );
 };
