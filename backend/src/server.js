@@ -7,8 +7,14 @@ import https from 'https';
 import siteRoutes from './routes/site.js';
 import apiRoutes from './routes/api.js';
 
+const corsOptions = {
+  origin: 'http://localhost:5173', // Specify the allowed origin
+  credentials: true, // Allow credentials
+};
+
 const app = express();
-app.use(cors());
+// app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

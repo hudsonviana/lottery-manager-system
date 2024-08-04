@@ -6,10 +6,10 @@ export const authentication = async (req, res, next) => {
     return res.status(401).json({ error: 'Acesso negado' });
   }
 
-  const token = req.headers.authorization.split(' ')[1];
+  const accessToken = req.headers.authorization.split(' ')[1];
 
   try {
-    const decoded = jwt.verify(token, process.env.SECRET_KEY);
+    const decoded = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET_KEY);
 
     if (decoded.auth.role !== 'ADMIN') {
       return res.status(403).json({ error: 'Acesso negado, administrador apenas' });

@@ -38,7 +38,7 @@ const Login = () => {
       return setErrorAlert(data.errors.map((error) => error.message));
     }
 
-    console.log(data);
+    // console.log(data);
   };
 
   return (

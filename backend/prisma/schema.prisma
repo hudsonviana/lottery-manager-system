@@ -9,15 +9,16 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  firstName String
-  lastName  String?
-  email     String   @unique
-  password  String
-  role      Role     @default(USER)
-  games     Game[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id           String   @id @default(uuid())
+  firstName    String
+  lastName     String?
+  email        String   @unique
+  password     String
+  role         Role     @default(USER)
+  refreshToken String?
+  games        Game[]
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
   @@unique([firstName, lastName])
 }

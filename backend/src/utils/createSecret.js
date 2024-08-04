@@ -11,5 +11,5 @@ export const createResetPasswordToken = () => {
 
 // createResetPasswordToken();
 
-// const secretToken = generateSecretToken(32); // Generate a 32-byte (64 hex characters) secret token
-// console.log(secretToken);
+const secretToken = generateSecretToken(32); // Generate a 32-byte (64 hex characters) secret token
+console.log(secretToken);

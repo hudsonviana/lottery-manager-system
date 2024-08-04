@@ -67,11 +67,20 @@ export const login = async (req, res) => {
     return res.status(401).json({ error: 'Credenciais inválidas' });
   }
 
-  const { password, ...auth } = user;
+  const { refreshToken: ignore, password, createdAt, updatedAt, ...auth } = user;
 
-  const token = jwt.sign({ auth }, process.env.SECRET_KEY, { expiresIn: '1d' });
+  const accessToken = jwt.sign({ auth }, process.env.ACCESS_TOKEN_SECRET_KEY, { expiresIn: '15m' });
+  const refreshToken = jwt.sign({ id: user.id }, process.env.REFRESH_TOKEN_SECRET_KEY, {
+    expiresIn: '1d',
+  });
 
-  res.json({ token });
+  const storeRefreshToken = await userService.update({ refreshToken }, user.id);
+
+  if (storeRefreshToken.error) {
+    return res.status(500).json({ error: 'Erro ao gravar o refresh Token' });
+  }
+
+  res.json({ auth, accessToken, refreshToken });
 };
 
 export const changePassword = async (req, res) => {
@@ -112,6 +121,40 @@ export const changePassword = async (req, res) => {
   res.json({ user: updatedUserPassword, auth });
 };
 
+// esta função não é compatível com a funcionalidade de refresh Token
+export const validateToken = async (req, res) => {
+  const token = req.body.token;
+  try {
+    const decoded = jwt.verify(token, process.env.SECRET_KEY_ACCESS);
+    return res.json({ user: decoded.auth });
+  } catch (error) {
+    res.status(401).json({ error: 'Token inválido' });
+  }
+};
+
+// esta função não é compatível com a funcionalidade de refresh Token
+export const logout = async (req, res) => {
+  const auth = req.auth;
+
+  const authHeader = req.headers['authorization'];
+  jwt.sign(authHeader, '', { expiresIn: 1 }, (logout, err) => {
+    if (!logout) {
+      return res.send({ msg: err.message });
+    }
+    res.send({ status: 'deslogado', auth });
+  });
+};
+
+export const refreshToken = async (req, res) => {
+  const auth = req.body.user;
+  try {
+    const updatedToken = jwt.sign({ auth }, process.env.SECRET_KEY_ACCESS, { expiresIn: '1d' });
+    res.json({ accessToken: updatedToken });
+  } catch (error) {
+    res.status(403).json({ error: 'Token inválido' });
+  }
+};
+
 // export const logout = async (req, res) => {
 //   const token = req.headers['authorization'].split(' ')[1];
 
@@ -124,18 +167,6 @@ export const changePassword = async (req, res) => {
 //     res.status(400).json({ error: 'Invalid token' });
 //   }
 // };
-
-export const logout = async (req, res) => {
-  const auth = req.auth;
-
-  const authHeader = req.headers['authorization'];
-  jwt.sign(authHeader, '', { expiresIn: 1 }, (logout, err) => {
-    if (!logout) {
-      return res.send({ msg: err.message });
-    }
-    res.send({ status: 'deslogado', auth });
-  });
-};
 
 // export const forgotPassword = async (req, res, next) => {};
 

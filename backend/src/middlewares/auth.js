@@ -2,15 +2,14 @@ import 'dotenv/config';
 import jwt from 'jsonwebtoken';
 
 export const authentication = async (req, res, next) => {
-
   if (!req.headers.authorization) {
     return res.status(401).json({ error: 'Acesso negado' });
   }
 
-  const token = req.headers.authorization.split(' ')[1];
+  const accessToken = req.headers.authorization.split(' ')[1];
 
   try {
-    const decoded = jwt.verify(token, process.env.SECRET_KEY);
+    const decoded = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET_KEY);
     req.auth = decoded.auth;
     next();
   } catch (error) {
