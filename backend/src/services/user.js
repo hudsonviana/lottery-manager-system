@@ -24,6 +24,16 @@ export const findOne = async ({ id, email }) => {
   }
 };
 
+export const findByToken = async ({ id, refreshToken }) => {
+  try {
+    return await prisma.user.findUnique({
+      where: { id, refreshToken },
+    });
+  } catch (error) {
+    return { error: 'Token não encontrado' };
+  }
+};
+
 export const findGamesByUser = async ({ id, email }) => {
   try {
     return await prisma.user.findUnique({

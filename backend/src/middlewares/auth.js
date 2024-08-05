@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 
 export const authentication = async (req, res, next) => {
   if (!req.headers.authorization) {
-    return res.status(401).json({ error: 'Acesso negado' });
+    return res.status(401).json({ error: 'Token inválido' });
   }
 
   const accessToken = req.headers.authorization.split(' ')[1];

@@ -9,11 +9,11 @@ import * as gameController from '../controllers/gameController.js';
 const router = Router();
 
 router.post('/auth/register', authController.register);
-router.post('/auth/validate', authController.validateToken);
-router.post('/auth/refresh', authController.refreshToken);
 router.post('/auth/login', authController.login);
+router.post('/auth/refresh', authController.refreshToken);
 router.post('/auth/:id/changepassword', auth.authentication, authController.changePassword);
-router.put('/auth/logout', auth.authentication, authController.logout);
+// router.put('/auth/logout', auth.authentication, authController.logout);
+// router.post('/auth/validate', authController.validateToken);
 
 router.get('/users', admin.authentication, userController.getAllUsers);
 router.get('/users/:id', auth.authentication, userController.getUser);

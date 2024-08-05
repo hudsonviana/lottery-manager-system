@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 
 export const authentication = async (req, res, next) => {
   if (!req.headers.authorization) {
-    return res.status(401).json({ error: 'Acesso negado' });
+    return res.status(401).json({ error: 'Token inválido' });
   }
 
   const accessToken = req.headers.authorization.split(' ')[1];
@@ -12,7 +12,7 @@ export const authentication = async (req, res, next) => {
     const decoded = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET_KEY);
 
     if (decoded.auth.role !== 'ADMIN') {
-      return res.status(403).json({ error: 'Acesso negado, administrador apenas' });
+      return res.status(403).json({ error: 'Acesso negado: administrador apenas' });
     }
 
     req.auth = decoded.auth;
