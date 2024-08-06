@@ -69,10 +69,6 @@ export const login = async (req, res) => {
 
   const { refreshToken: ignore, password, createdAt, updatedAt, ...auth } = user;
 
-  // const accessToken = jwt.sign({ auth }, process.env.ACCESS_TOKEN_SECRET_KEY, { expiresIn: '15m' });
-  // const refreshToken = jwt.sign({ id: user.id }, process.env.REFRESH_TOKEN_SECRET_KEY, {
-  //   expiresIn: '1d',
-  // });
   const accessToken = generateAccessToken(auth);
   const refreshToken = generateRefreshToken(user.id);
 
@@ -127,7 +123,7 @@ export const refreshToken = async (req, res) => {
   const refreshToken = req.body.refreshToken;
 
   if (!refreshToken) {
-    return res.status(403).json({ error: 'Token não detectado' });
+    return res.status(401).json({ error: 'Token não detectado' });
   }
 
   try {
@@ -136,26 +132,25 @@ export const refreshToken = async (req, res) => {
     const user = await userService.findByToken({ id, refreshToken });
 
     if (!user) {
-      res.status(403).json({ error: 'Token inválido' });
+      res.status(401).json({ error: 'Token inválido' });
     }
 
     const { refreshToken: ignore, password, createdAt, updatedAt, ...auth } = user;
 
-    // const newAccessToken = jwt.sign({ auth }, process.env.ACCESS_TOKEN_SECRET_KEY, { expiresIn: '15m' });
     const newAccessToken = generateAccessToken(auth);
 
     res.json({ accessToken: newAccessToken });
   } catch (error) {
-    res.status(403).json({ error: 'Token inválido' });
+    res.status(401).json({ error: 'Token inválido' });
   }
 };
 
 const generateAccessToken = (auth) => {
-  return jwt.sign({ auth }, process.env.ACCESS_TOKEN_SECRET_KEY, { expiresIn: '1m' });
+  return jwt.sign({ auth }, process.env.ACCESS_TOKEN_SECRET_KEY, { expiresIn: '10m' });
 };
 
 const generateRefreshToken = (id) => {
-  return jwt.sign({ id }, process.env.REFRESH_TOKEN_SECRET_KEY, { expiresIn: '2m' });
+  return jwt.sign({ id }, process.env.REFRESH_TOKEN_SECRET_KEY, { expiresIn: '1h' });
 };
 
 // esta função não é compatível com a funcionalidade de refresh Token
