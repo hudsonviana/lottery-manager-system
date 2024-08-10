@@ -120,11 +120,17 @@ export const changePassword = async (req, res) => {
 };
 
 export const refreshToken = async (req, res) => {
-  const refreshToken = req.body.refreshToken;
+  const refreshTokenSchema = z.object({
+    refreshToken: z.string({ message: 'Token não detectado' }),
+  });
 
-  if (!refreshToken) {
-    return res.status(401).json({ error: 'Token não detectado' });
+  const body = refreshTokenSchema.safeParse(req.body);
+
+  if (!body.success) {
+    return res.status(400).json({ errors: body.error.errors });
   }
+
+  const { refreshToken } = body.data;
 
   try {
     const { id } = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET_KEY);
@@ -132,7 +138,7 @@ export const refreshToken = async (req, res) => {
     const user = await userService.findByToken({ id, refreshToken });
 
     if (!user) {
-      res.status(401).json({ error: 'Token inválido' });
+      res.status(401).json({ error: 'Refresh Token inválido' });
     }
 
     const { refreshToken: ignore, password, createdAt, updatedAt, ...auth } = user;
@@ -141,7 +147,35 @@ export const refreshToken = async (req, res) => {
 
     res.json({ accessToken: newAccessToken });
   } catch (error) {
-    res.status(401).json({ error: 'Token inválido' });
+    res.status(401).json({ error: 'Refresh Token inválido' });
+  }
+};
+
+export const logout = async (req, res) => {
+  const logoutSchema = z.object({
+    id: z
+      .string({ message: 'Identificador do usuário não detectado' })
+      .uuid({ message: 'Identificador do usuário inválido' }),
+  });
+
+  const body = logoutSchema.safeParse(req.body);
+
+  if (!body.success) {
+    return res.status(400).json({ errors: body.error.errors });
+  }
+
+  const { id } = body.data;
+
+  try {
+    const revokeRefreshToken = await userService.update({ refreshToken: null }, id);
+
+    if (revokeRefreshToken.error) {
+      res.status(500).json({ error: 'Erro ao remover Refresh Token' });
+    }
+
+    res.json({ logout: true });
+  } catch (error) {
+    res.status(500).json({ error: 'Erro ao fazer o logout' });
   }
 };
 
