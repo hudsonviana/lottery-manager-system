@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useLogin } from '@/hooks/api/mutations';
 import { Button } from '@/components/ui/button';
 import {
@@ -16,29 +16,36 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { AlertCircle } from 'lucide-react';
 
 const Login = () => {
-  const [credentials, setCredentials] = useState({ email: '', password: '' });
+  const [formData, setFormData] = useState({ email: '', password: '' });
   const [errorAlert, setErrorAlert] = useState('');
-  const { mutateAsync: login, isPending } = useLogin();
+  const { mutateAsync: signIn, isPending } = useLogin();
+
+  const navigate = useNavigate();
+  // const location = useLocation();
+  // const from = location.state?.from?.pathname || '/';
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setCredentials((prev) => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
     setErrorAlert('');
   };
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-    const data = await login(credentials);
+    // setErrorAlert('');
 
-    if (data.error) {
-      return setErrorAlert([data.error]);
+    const { email, password } = formData;
+
+    const data = await signIn({ email, password });
+
+    if (data?.error) {
+      return setErrorAlert(data?.error);
     }
 
-    if (data.errors) {
-      return setErrorAlert(data.errors.map((error) => error.message));
+    if (data?.accessToken) {
+      // navigate(from, { replace: true });
+      navigate('/register');
     }
-
-    // console.log(data);
   };
 
   return (
@@ -91,7 +98,7 @@ const Login = () => {
       {errorAlert && (
         <Alert variant="destructive" className="my-4">
           <AlertCircle className="h-4 w-4" />
-          <AlertTitle>Erro</AlertTitle>
+          <AlertTitle>Acesso negado</AlertTitle>
           <AlertDescription>
             {errorAlert.map((errorMsg, index) => (
               <p key={index}>• {errorMsg}</p>

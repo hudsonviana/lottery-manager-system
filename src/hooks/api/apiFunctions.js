@@ -1,18 +1,12 @@
-import axios from 'axios';
+import { apiClient } from '@/api/apiClient';
+import { handleError } from '@/helpers/handleError';
 
-const serverPort = 3333;
-const URL = `http://localhost:${serverPort}/api`;
-const apiClient = axios.create({
-  baseURL: URL,
-  headers: { 'Content-Type': 'application/json' },
-});
-
-export const login = async (credentials) => {
+export const login = async ({ email, password }) => {
   try {
-    const res = await apiClient.post('/auth/login', credentials);
-    return res.data;
+    const response = await apiClient.post('/auth/login', { email, password });
+    return response.data;
   } catch (error) {
-    return error.response.data;
+    return handleError(error);
   }
 };
 

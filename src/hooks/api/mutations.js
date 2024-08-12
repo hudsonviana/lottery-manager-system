@@ -1,16 +1,25 @@
 import { useMutation } from '@tanstack/react-query';
-import { login } from './api';
+import { jwtDecode } from 'jwt-decode';
+import { login } from './apiFunctions';
+import { useAuth } from '../useAuth';
 
 export const useLogin = () => {
-  return useMutation({
-    mutationFn: (credentials) => login(credentials),
-    onSuccess: (data) => {
-      console.log('success do mutation:', data);
+  const { setAuth } = useAuth();
 
-      // gravar token no localstorage
+  return useMutation({
+    mutationFn: ({ email, password }) => login({ email, password }),
+    onSuccess: (data) => {
+      if (!data.error) {
+        const { accessToken, refreshToken } = data;
+        const decoded = jwtDecode(accessToken);
+        const user = decoded.auth;
+
+        setAuth({ user, accessToken });
+        localStorage.setItem('refreshToken', refreshToken);
+      } else {
+        localStorage.removeItem('refreshToken');
+      }
     },
-    // onSettled: (data) => {
-    //   console.log('setteld do mutation:', data);
-    // },
+    onSettled: (data) => {},
   });
 };
