@@ -8,7 +8,8 @@ import siteRoutes from './routes/site.js';
 import apiRoutes from './routes/api.js';
 
 const corsOptions = {
-  origin: 'http://localhost:5173', // Specify the allowed origin
+  // origin: 'http://localhost:5173', // Specify the allowed origin
+  origin: 'http://localhost:3000', // Specify the allowed origin
   credentials: true, // Allow credentials
 };
 

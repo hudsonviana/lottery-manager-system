@@ -44,7 +44,7 @@ const Login = () => {
 
     if (data?.accessToken) {
       // navigate(from, { replace: true });
-      navigate('/register');
+      navigate('/dashboard');
     }
   };
 

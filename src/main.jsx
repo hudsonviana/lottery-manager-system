@@ -2,28 +2,35 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthProvider.jsx';
-import App from './App.jsx';
+import MainLayout from './pages/layouts/MainLayout.jsx';
 import ErrorPage from './pages/ErrorPage.jsx';
+import Index from './pages/Index.jsx';
 import Login from './pages/Login.jsx';
 import Register from './pages/Register.jsx';
+import Dashboard from './Dashboard.jsx';
+import Profile from './pages/Profile.jsx';
 import './index.css';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { Home } from 'lucide-react';
 
 const queryClient = new QueryClient();
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <App />,
+    element: <MainLayout />,
     errorElement: <ErrorPage />,
     children: [
+      { index: true, element: <Home /> },
+      { path: '/login', element: <Login /> },
+      { path: '/register', element: <Register /> },
       {
-        errorElement: <ErrorPage />,
+        path: '/dashboard',
+        element: <Dashboard />,
         children: [
-          { index: true, element: <Login /> },
-          { path: '/login', index: true, element: <Login /> },
-          { path: '/register', element: <Register /> },
+          { index: true, element: <Index /> },
+          { path: '/dashboard/profile', element: <Profile /> },
         ],
       },
     ],
