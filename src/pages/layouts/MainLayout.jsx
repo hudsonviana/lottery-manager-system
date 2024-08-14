@@ -1,14 +1,15 @@
 import { Outlet } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
-import { useAuth } from '@/hooks/useAuth';
+// import { useAuth } from '@/hooks/useAuth';
 import './MainLayout.css';
 
 const MainLayout = () => {
-  const { auth } = useAuth();
+  // const { auth } = useAuth();
 
   return (
     <>
-      {!auth?.user && <Navbar />}
+      {/* {!auth?.user && <Navbar />} */}
+      <Navbar />
       <Outlet />
     </>
   );

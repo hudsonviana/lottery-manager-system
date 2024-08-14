@@ -9,10 +9,10 @@ import Login from './pages/Login.jsx';
 import Register from './pages/Register.jsx';
 import Dashboard from './Dashboard.jsx';
 import Profile from './pages/Profile.jsx';
+import Home from './pages/Home.jsx';
 import './index.css';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { Home } from 'lucide-react';
 
 const queryClient = new QueryClient();
 
@@ -25,14 +25,14 @@ const router = createBrowserRouter([
       { index: true, element: <Home /> },
       { path: '/login', element: <Login /> },
       { path: '/register', element: <Register /> },
-      {
-        path: '/dashboard',
-        element: <Dashboard />,
-        children: [
-          { index: true, element: <Index /> },
-          { path: '/dashboard/profile', element: <Profile /> },
-        ],
-      },
+    ],
+  },
+  {
+    path: '/dashboard',
+    element: <Dashboard />,
+    children: [
+      { index: true, element: <Index /> },
+      { path: '/dashboard/profile', element: <Profile /> },
     ],
   },
 ]);
