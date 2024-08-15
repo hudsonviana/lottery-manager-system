@@ -7,7 +7,7 @@ import ErrorPage from './pages/ErrorPage.jsx';
 import Index from './pages/Index.jsx';
 import Login from './pages/Login.jsx';
 import Register from './pages/Register.jsx';
-import Dashboard from './Dashboard.jsx';
+import Dashboard from './pages/Dashboard.jsx';
 import Profile from './pages/Profile.jsx';
 import Home from './pages/Home.jsx';
 import './index.css';

@@ -1,10 +1,9 @@
-import React from 'react'
 
 const Index = () => {
   return (
-    <p id='zero-state'>
+    <div>
       Index
-    </p>
+    </div>
   )
 }
 

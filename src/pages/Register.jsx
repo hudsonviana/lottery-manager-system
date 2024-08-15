@@ -16,7 +16,7 @@ const Register = () => {
     <div className="grid place-content-center my-8">
       <Card className="w-[350px]">
         <CardHeader>
-          <CardTitle>Cadastrar usuário</CardTitle>
+          <CardTitle>Criar conta</CardTitle>
           <CardDescription>
             Forneça os dados para criar a conta.
           </CardDescription>

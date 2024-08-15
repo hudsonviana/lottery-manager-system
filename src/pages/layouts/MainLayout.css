@@ -96,18 +96,40 @@ button:active {
 } */
 
 #navbar-menu {
-  background-color: yellow;
+  /* background-color: yellow;
   display: flex;
   flex-direction: row;
   gap: 1rem;
-  max-height: 2rem;
+  max-height: 2rem; */
+  background-color: rgb(37, 37, 19);
+  height: fit-content !important;
+  padding: 0 10px;
+  /* display: flex;
+  gap: 10px; */
 }
 
-#navbar-menu .active {
-  color: #3992ff;
+#navbar-menu a {
+  display: inline;
+  color: #fff;
+  padding: 0 10px;
+}
+
+#navbar-menu a:hover {
+  background-color: #918e8e;
+  /* background: #e3e3e3; */
+}
+
+#navbar-menu a.active {
+  background: hsl(224, 98%, 58%);
 }
 
 #root {
+  /* display: flex; */
+  height: 100%;
+  width: 100%;
+}
+
+#root-dashboard {
   display: flex;
   height: 100%;
   width: 100%;
@@ -122,8 +144,8 @@ button:active {
 }
 
 #sidebar > * {
-  padding-left: 2rem;
-  padding-right: 2rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
 }
 
 #sidebar h1 {
@@ -230,7 +252,7 @@ i {
 
   white-space: pre;
   padding: 0.5rem;
-  border-radius: 8px;
+  border-radius: 6px;
   color: inherit;
   text-decoration: none;
   gap: 1rem;

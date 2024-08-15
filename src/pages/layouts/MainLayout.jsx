@@ -10,7 +10,9 @@ const MainLayout = () => {
     <>
       {/* {!auth?.user && <Navbar />} */}
       <Navbar />
-      <Outlet />
+      <div className="detail">
+        <Outlet />
+      </div>
     </>
   );
 };

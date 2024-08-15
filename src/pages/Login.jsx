@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { useLogin } from '@/hooks/api/mutations';
+import { Link, useNavigate } from 'react-router-dom';
+import { useLogin } from '@/hooks/useLogin';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -21,8 +21,6 @@ const Login = () => {
   const { mutateAsync: signIn, isPending } = useLogin();
 
   const navigate = useNavigate();
-  // const location = useLocation();
-  // const from = location.state?.from?.pathname || '/';
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -32,19 +30,14 @@ const Login = () => {
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-    // setErrorAlert('');
 
     const { email, password } = formData;
 
-    const data = await signIn({ email, password });
-
-    if (data?.error) {
-      return setErrorAlert(data?.error);
-    }
-
-    if (data?.accessToken) {
-      // navigate(from, { replace: true });
+    try {
+      await signIn({ email, password });
       navigate('/dashboard');
+    } catch ({ error }) {
+      setErrorAlert(error);
     }
   };
 
@@ -83,7 +76,7 @@ const Login = () => {
           </CardContent>
           <CardFooter className="flex flex-col gap-3">
             <Button type="submit" className="w-full" disabled={isPending}>
-              Entrar
+              {isPending ? 'Aguarde...' : 'Entrar'}
             </Button>
             <CardDescription>
               Não tem cadastro?{' '}
