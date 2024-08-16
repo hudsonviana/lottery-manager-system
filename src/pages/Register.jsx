@@ -13,8 +13,8 @@ import { Link } from 'react-router-dom';
 
 const Register = () => {
   return (
-    <div className="grid place-content-center my-8">
-      <Card className="w-[350px]">
+    <div className="grid place-content-center">
+      <Card className="w-[400px]">
         <CardHeader>
           <CardTitle>Criar conta</CardTitle>
           <CardDescription>
@@ -40,7 +40,6 @@ const Register = () => {
                     id="last-name"
                     name="lastName"
                     placeholder="Sobrenome"
-                    required
                   />
                 </div>
               </div>

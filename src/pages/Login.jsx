@@ -42,8 +42,8 @@ const Login = () => {
   };
 
   return (
-    <div className="grid place-content-center my-8">
-      <Card className="w-[350px]">
+    <div className="grid place-content-center">
+      <Card className="w-[400px]">
         <CardHeader>
           <CardTitle>Acessar Sistema</CardTitle>
           <CardDescription>Entre com o email e senha.</CardDescription>
