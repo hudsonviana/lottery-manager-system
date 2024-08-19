@@ -4,7 +4,7 @@ const Navbar = () => {
   return (
     <nav id="navbar-menu">
       <div id="nav-logo">
-        SGL &nbsp;<p>&nbsp;Sistema de Gerenciamento de Loteria</p>
+        SGL<p>&nbsp;&nbsp;Sistema de Gerenciamento de Loteria</p>
       </div>
       <div id="nav-links">
         <NavLink to={'/'}>Home</NavLink>

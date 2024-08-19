@@ -8,9 +8,7 @@ const Sidebar = ({ user }) => {
       <div>Dashboard: Olá, {user?.firstName}!</div>
 
       <nav>
-        <NavLink to={'/dashboard'} end>
-          Dashboard
-        </NavLink>
+        <NavLink to={'/dashboard'} end>Dashboard</NavLink>
         <NavLink to={'/dashboard/profile'}>Perfil</NavLink>
       </nav>
     </>

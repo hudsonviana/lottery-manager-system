@@ -43,6 +43,8 @@ export const register = async (req, res) => {
   res.status(201).json({ user: newUser });
 };
 
+// Ver: https://chatgpt.com/c/b831e9da-977c-4f1f-9d64-89e83dcfb472
+
 export const login = async (req, res) => {
   const credentialsSchema = z.object({
     email: z.string().min(1, { message: 'O email é obrigatório' }),
@@ -79,44 +81,6 @@ export const login = async (req, res) => {
   }
 
   res.json({ accessToken, refreshToken });
-};
-
-export const changePassword = async (req, res) => {
-  const auth = req.auth;
-  const { id } = req.params;
-
-  if (auth.id !== id) {
-    return res.status(403).json({ error: 'Acesso negado' });
-  }
-
-  const changePasswordSchema = z
-    .object({
-      password: z
-        .string({ message: 'A senha é obrigatória' })
-        .min(6, { message: 'A senha precisa conter pelo menos 6 caracteres' }),
-      confirmPassword: z.string({ message: 'A confirmação de senha é obrigatória' }),
-    })
-    .refine((data) => data.password === data.confirmPassword, {
-      message: 'Senhas não conferem',
-      path: ['confirmPassword'],
-    });
-
-  const body = changePasswordSchema.safeParse(req.body);
-
-  if (!body.success) {
-    return res.status(400).json({ errors: body.error.errors });
-  }
-
-  const salt = await bcrypt.genSalt();
-  const hashedPassword = await bcrypt.hash(body.data.password, salt);
-
-  const updatedUserPassword = await userService.update({ password: hashedPassword }, id);
-
-  if (updatedUserPassword.error) {
-    return res.status(500).json({ error: updatedUserPassword.error });
-  }
-
-  res.json({ user: updatedUserPassword, auth });
 };
 
 export const refreshToken = async (req, res) => {
@@ -179,8 +143,46 @@ export const logout = async (req, res) => {
   }
 };
 
+export const changePassword = async (req, res) => {
+  const auth = req.auth;
+  const { id } = req.params;
+
+  if (auth.id !== id) {
+    return res.status(403).json({ error: 'Acesso negado' });
+  }
+
+  const changePasswordSchema = z
+    .object({
+      password: z
+        .string({ message: 'A senha é obrigatória' })
+        .min(6, { message: 'A senha precisa conter pelo menos 6 caracteres' }),
+      confirmPassword: z.string({ message: 'A confirmação de senha é obrigatória' }),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+      message: 'Senhas não conferem',
+      path: ['confirmPassword'],
+    });
+
+  const body = changePasswordSchema.safeParse(req.body);
+
+  if (!body.success) {
+    return res.status(400).json({ errors: body.error.errors });
+  }
+
+  const salt = await bcrypt.genSalt();
+  const hashedPassword = await bcrypt.hash(body.data.password, salt);
+
+  const updatedUserPassword = await userService.update({ password: hashedPassword }, id);
+
+  if (updatedUserPassword.error) {
+    return res.status(500).json({ error: updatedUserPassword.error });
+  }
+
+  res.json({ user: updatedUserPassword, auth });
+};
+
 const generateAccessToken = (auth) => {
-  return jwt.sign({ auth }, process.env.ACCESS_TOKEN_SECRET_KEY, { expiresIn: '10m' });
+  return jwt.sign({ auth }, process.env.ACCESS_TOKEN_SECRET_KEY, { expiresIn: '5m' });
 };
 
 const generateRefreshToken = (id) => {
