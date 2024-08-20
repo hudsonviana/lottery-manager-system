@@ -4,12 +4,13 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthProvider.jsx';
 import MainLayout from './pages/layouts/MainLayout.jsx';
 import ErrorPage from './pages/ErrorPage.jsx';
-import Index from './pages/Index.jsx';
+import Home from './pages/Home.jsx';
 import Login from './pages/Login.jsx';
 import Register from './pages/Register.jsx';
-import Dashboard from './pages/Dashboard.jsx';
-import Profile from './pages/Profile.jsx';
-import Home from './pages/Home.jsx';
+import Dashboard from './pages/dashboard/Dashboard.jsx';
+import Index from './pages/dashboard/Index.jsx';
+import Profile from './pages/dashboard/Profile.jsx';
+import Admin from './pages/dashboard/Admin.jsx';
 import './index.css';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -33,6 +34,7 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <Index /> },
       { path: '/dashboard/profile', element: <Profile /> },
+      { path: '/dashboard/admin', element: <Admin /> },
     ],
   },
 ]);

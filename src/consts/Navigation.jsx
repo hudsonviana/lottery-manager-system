@@ -1,10 +1,7 @@
 import {
   HiOutlineViewGrid,
-  HiOutlineCube,
-  HiOutlineShoppingCart,
-  HiOutlineUsers,
-  HiOutlineDocumentText,
-  HiOutlineAnnotation,
+  HiOutlineKey,
+  HiOutlineUser,
   HiOutlineQuestionMarkCircle,
   HiOutlineCog,
 } from 'react-icons/hi';
@@ -14,38 +11,23 @@ export const DASHBOARD_SIDEBAR_LINKS = [
     key: 'dashboard',
     label: 'Dashboard',
     path: '/dashboard',
+    roles: ['USER', 'ADMIN'],
     icon: <HiOutlineViewGrid />,
   },
   {
     key: 'profile',
     label: 'Perfil',
     path: '/dashboard/profile',
-    icon: <HiOutlineCube />,
+    roles: ['USER', 'ADMIN'],
+    icon: <HiOutlineUser />,
   },
-  // {
-  //   key: 'orders',
-  //   label: 'Orders',
-  //   path: '/orders',
-  //   icon: <HiOutlineShoppingCart />,
-  // },
-  // {
-  //   key: 'customers',
-  //   label: 'Customers',
-  //   path: '/customers',
-  //   icon: <HiOutlineUsers />,
-  // },
-  // {
-  //   key: 'transactions',
-  //   label: 'Transactions',
-  //   path: '/transactions',
-  //   icon: <HiOutlineDocumentText />,
-  // },
-  // {
-  //   key: 'messages',
-  //   label: 'Messages',
-  //   path: '/messages',
-  //   icon: <HiOutlineAnnotation />,
-  // },
+  {
+    key: 'admin',
+    label: 'Admin',
+    path: '/dashboard/admin',
+    roles: ['ADMIN'],
+    icon: <HiOutlineKey />,
+  },
 ];
 
 export const DASHBOARD_SIDEBAR_BOTTOM_LINKS = [
