@@ -1,15 +1,28 @@
 import { NavLink } from 'react-router-dom';
 
+const linkClass =
+  'flex items-center px-3 h-8 hover:bg-neutral-700 hover:no-underline rounded-sm text-base';
+
+const activeLink = ({ isActive }) =>
+  `${linkClass} ${isActive ? 'bg-neutral-600 text-white' : 'text-sky-400'}`;
+
 const Navbar = () => {
   return (
-    <nav id="navbar-menu">
-      <div id="nav-logo">
-        SGL<p>&nbsp;&nbsp;Sistema de Gerenciamento de Loteria</p>
+    <nav className="bg-neutral-900 text-white h-10 px-4 flex justify-between items-center mb-4">
+      <div>
+        <span className="text-sky-500 font-semibold italic">SGL</span>
+        <span className="pl-4">Sistema de Gerenciamento de Loteria</span>
       </div>
-      <div id="nav-links">
-        <NavLink to={'/'}>Home</NavLink>
-        <NavLink to={'/login'}>Entrar</NavLink>
-        <NavLink to={'/register'}>Cadastro</NavLink>
+      <div className="flex gap-1">
+        <NavLink to={'/'} className={activeLink}>
+          Home
+        </NavLink>
+        <NavLink to={'/login'} className={activeLink}>
+          Entrar
+        </NavLink>
+        <NavLink to={'/register'} className={activeLink}>
+          Cadastro
+        </NavLink>
       </div>
     </nav>
   );

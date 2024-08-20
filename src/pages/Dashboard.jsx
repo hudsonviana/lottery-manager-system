@@ -1,18 +1,16 @@
 import { Outlet } from 'react-router-dom';
-import Sidebar from '../components/Sidebar';
-import { useAuth } from '../hooks/useAuth';
+import Sidebar from '@/components/Sidebar';
+import Header from '@/components/Header';
 
 const Dashboard = () => {
-  const { auth } = useAuth();
-
   return (
-    <div id="root-dashboard">
-      <div id="sidebar">
-        <Sidebar user={auth?.user} />
-      </div>
-
-      <div className="detail">
-        <Outlet />
+    <div className="flex flex-row bg-neutral-100 h-screen w-screen overflow-hidden">
+      <Sidebar />
+      <div className="flex-1">
+        <Header />
+        <div className="p-4">
+          <Outlet />
+        </div>
       </div>
     </div>
   );
