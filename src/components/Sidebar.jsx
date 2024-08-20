@@ -10,6 +10,23 @@ import { useAuth } from '@/hooks/useAuth';
 const linkClass =
   'flex items-center gap-2 px-3 py-2 hover:bg-neutral-700 hover:no-underline rounded-sm text-base';
 
+const SidebarLink = ({ item }) => {
+  return (
+    <NavLink
+      to={item.path}
+      className={({ isActive }) =>
+        `${linkClass} ${
+          isActive ? 'bg-neutral-600 text-white' : 'text-sky-400'
+        }`
+      }
+      end
+    >
+      <span className="text-xl">{item.icon}</span>
+      {item.label}
+    </NavLink>
+  );
+};
+
 const Sidebar = () => {
   const { auth } = useAuth();
 
@@ -40,23 +57,6 @@ const Sidebar = () => {
         </div>
       </div>
     </nav>
-  );
-};
-
-const SidebarLink = ({ item }) => {
-  return (
-    <NavLink
-      to={item.path}
-      className={({ isActive }) =>
-        `${linkClass} ${
-          isActive ? 'bg-neutral-600 text-white' : 'text-sky-400'
-        }`
-      }
-      end
-    >
-      <span className="text-xl">{item.icon}</span>
-      {item.label}
-    </NavLink>
   );
 };
 
