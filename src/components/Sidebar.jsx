@@ -1,6 +1,5 @@
 import { NavLink } from 'react-router-dom';
-import { HiOutlineLogout } from 'react-icons/hi';
-import { FcApproval } from 'react-icons/fc';
+import { HiCubeTransparent, HiOutlineLogout } from 'react-icons/hi';
 import {
   DASHBOARD_SIDEBAR_LINKS,
   DASHBOARD_SIDEBAR_BOTTOM_LINKS,
@@ -33,7 +32,7 @@ const Sidebar = () => {
   return (
     <nav className="flex flex-col bg-neutral-900 w-60 p-3 text-white">
       <div className="flex items-center gap-2 px-1 py-3">
-        <FcApproval fontSize={24} />
+        <HiCubeTransparent fontSize={24} color="green" />
         <span className="text-neutral-100 text-lg">Gerenciador</span>
       </div>
 
