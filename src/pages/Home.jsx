@@ -1,3 +1,4 @@
+import Footer from '@/components/Footer';
 import Hero from '@/components/Hero';
 import HomeCard from '@/components/HomeCard';
 import { HiOutlineCog } from 'react-icons/hi';
@@ -23,12 +24,13 @@ const Home = () => {
             chances de ganhar com uma visão clara e organizada dos seus jogos.
           </div>
         </div>
-        <div className="flex flex-row mt-10 gap-4 justify-between">
+        <div className="flex flex-row mt-10 mb-10 gap-4 justify-between">
           <HomeCard text="1. Cadastre apostas realizadas no aplicativo da Caixa ou nas lotéricas" />
           <HomeCard text="2. Consulte as apostas, histórico de jogos e outras estatísticas" />
           <HomeCard text="3. Confira os resultados dos sorteios na loteria Federal" />
         </div>
       </div>
+      <Footer />
     </>
   );
 };

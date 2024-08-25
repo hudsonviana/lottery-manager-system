@@ -3,12 +3,10 @@ import Navbar from '@/components/Navbar';
 
 const MainLayout = () => {
   return (
-    <>
+    <div className="h-screen overflow-y-scroll">
       <Navbar />
-      <div className="px-0 py-0">
-        <Outlet />
-      </div>
-    </>
+      <Outlet />
+    </div>
   );
 };
 
