@@ -20,8 +20,8 @@ const Home = () => {
             O <span className="font-semibold italic">SGL</span> oferece uma
             maneira eficiente e prática para que apostadores possam registrar,
             acompanhar e gerenciar suas apostas realizadas na loteria Federal.
-            Acompanhe todas as suas apostas em um só lugar e confira suas
-            chances de ganhar com uma visão clara e organizada dos seus jogos.
+            Acompanhe todas as suas apostas em um só lugar e confira os
+            resultados com uma visão clara e organizada dos seus jogos.
           </div>
         </div>
         <div className="flex flex-row mt-10 mb-10 gap-4 justify-between">

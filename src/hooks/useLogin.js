@@ -13,13 +13,14 @@ export const useLogin = () => {
       return response.data;
     },
     onSuccess: (data) => {
-      const { accessToken, refreshToken } = data;
+      // const { accessToken, refreshToken } = data;
+      const { accessToken } = data;
       const { auth } = jwtDecode(accessToken);
       setAuth({ user: auth, accessToken });
-      localStorage.setItem('refreshToken', refreshToken);
+      // localStorage.setItem('refreshToken', refreshToken);
     },
     onError: (error) => {
-      localStorage.removeItem('refreshToken');
+      // localStorage.removeItem('refreshToken');
       const handledErrorMsg = handleError(error);
       return Promise.reject(handledErrorMsg);
     },

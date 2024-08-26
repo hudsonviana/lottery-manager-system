@@ -80,21 +80,34 @@ export const login = async (req, res) => {
     return res.status(500).json({ error: 'Erro ao gravar o refresh Token' });
   }
 
-  res.json({ accessToken, refreshToken });
+  res.cookie('refreshToken', refreshToken, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production', // true em produção
+    sameSite: 'Strict', // Evita envio do cookie em requisições cross-site
+    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 diass
+  });
+
+  res.json({ accessToken });
 };
 
 export const refreshToken = async (req, res) => {
-  const refreshTokenSchema = z.object({
-    refreshToken: z.string({ message: 'Token não detectado' }),
-  });
+  // const refreshTokenSchema = z.object({
+  //   refreshToken: z.string({ message: 'Token não detectado' }),
+  // });
 
-  const body = refreshTokenSchema.safeParse(req.body);
+  // const body = refreshTokenSchema.safeParse(req.body);
 
-  if (!body.success) {
-    return res.status(400).json({ errors: body.error.errors });
+  // if (!body.success) {
+  //   return res.status(400).json({ errors: body.error.errors });
+  // }
+
+  // const { refreshToken } = body.data;
+
+  const refreshToken = req.cookies.refreshToken; // Obter o refreshToken do cookie
+
+  if (!refreshToken) {
+    return res.status(400).json({ error: 'Token não detecado' });
   }
-
-  const { refreshToken } = body.data;
 
   try {
     const { id } = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET_KEY);
@@ -134,8 +147,17 @@ export const logout = async (req, res) => {
     const revokeRefreshToken = await userService.update({ refreshToken: null }, id);
 
     if (revokeRefreshToken.error) {
-      res.status(500).json({ error: 'Erro ao remover Refresh Token' });
+      return res.status(500).json({ error: 'Erro ao remover Refresh Token' });
     }
+
+    res.clearCookie(
+      ('refreshToken',
+      {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'Strict',
+      })
+    );
 
     res.json({ logout: true });
   } catch (error) {
