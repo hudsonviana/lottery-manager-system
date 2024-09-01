@@ -23,7 +23,7 @@ const Profile = () => {
         // console.log(response);
         isMounted && setUsers(response.data?.users);
       } catch (error) {
-        console.log('error:', error);
+        // console.log('error:', error);
         // navigate('/login', { state: { from: location }, replace: true });
       }
     };

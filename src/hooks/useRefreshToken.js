@@ -8,18 +8,10 @@ const useRefreshToken = () => {
     const response = await apiClient.get('/auth/refresh', {
       withCredentials: true,
     });
-
     const { accessToken } = response.data;
-
-    setAuth((prev) => {
-      console.log(JSON.stringify(prev));
-      console.log('NewAccessToken:', accessToken);
-      return { ...prev, accessToken };
-    });
-
+    setAuth((prev) => ({ ...prev, accessToken }));
     return accessToken;
   };
-
   return refresh;
 };
 

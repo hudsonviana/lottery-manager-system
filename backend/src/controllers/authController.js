@@ -6,11 +6,11 @@ import { z } from 'zod';
 import * as userService from '../services/user.js';
 
 const generateAccessToken = (auth) => {
-  return jwt.sign({ auth }, process.env.ACCESS_TOKEN_SECRET_KEY, { expiresIn: '30s' });
+  return jwt.sign({ auth }, process.env.ACCESS_TOKEN_SECRET_KEY, { expiresIn: '1m' });
 };
 
 const generateRefreshToken = (id) => {
-  return jwt.sign({ id }, process.env.REFRESH_TOKEN_SECRET_KEY, { expiresIn: '2m' });
+  return jwt.sign({ id }, process.env.REFRESH_TOKEN_SECRET_KEY, { expiresIn: '1h' });
 };
 
 export const register = async (req, res) => {
@@ -100,7 +100,7 @@ export const refresh = async (req, res) => {
   const { refreshToken } = req.cookies;
 
   if (!refreshToken) {
-    return res.status(204).json({ error: 'Refresh Token não detecado' });
+    return res.status(401).json({ error: 'Refresh Token não detecado' });
   }
 
   try {
@@ -145,7 +145,7 @@ export const logout = async (req, res) => {
     const revokeRefreshToken = await userService.update({ refreshToken: null }, body.data.id);
 
     if (revokeRefreshToken.error) {
-      return res.status(500).json({ error: 'Erro ao remover Refresh Token' });
+      return res.status(500).json({ error: 'Erro ao revogar o Refresh Token' });
     }
 
     res.clearCookie('refreshToken', {
