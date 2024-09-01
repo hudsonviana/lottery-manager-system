@@ -7,6 +7,17 @@ import {
 } from '@/consts/Navigation';
 import { useAuth } from '@/hooks/useAuth';
 import { useLogout } from '@/hooks/useLogout';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
 
 const linkClass =
   'flex items-center gap-2 px-3 py-2 hover:bg-neutral-700 hover:no-underline rounded-sm text-base';
@@ -36,8 +47,8 @@ const Sidebar = () => {
 
   const handleSignOutClick = async () => {
     try {
-      await signOut();
-      navigate('/login');
+      const data = await signOut();
+      navigate('/login', { state: { data } });
     } catch ({ error }) {
       setErrorAlert(error);
     }
@@ -63,17 +74,29 @@ const Sidebar = () => {
           <SidebarLink key={item.key} item={item} />
         ))}
 
-        <div className={`text-red-500 ${linkClass}`}>
-          <button
-            onClick={handleSignOutClick}
-            className="flex items-center gap-2"
-          >
+        <AlertDialog>
+          <AlertDialogTrigger className={`text-red-500 ${linkClass}`}>
             <span className="text-xl">
               <HiOutlineLogout />
             </span>
             {isPending ? 'Saindo...' : 'Sair'}
-          </button>
-        </div>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Tem certeza que deseja sair?</AlertDialogTitle>
+              <AlertDialogDescription>
+                Ao sair, será necessário fazer o login novamente para acessar o
+                sistema.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancelar</AlertDialogCancel>
+              <AlertDialogAction onClick={handleSignOutClick}>
+                Sair do sistema
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
     </nav>
   );

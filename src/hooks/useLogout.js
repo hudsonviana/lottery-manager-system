@@ -15,7 +15,6 @@ export const useLogout = () => {
     },
     onSuccess: (data) => {
       if (data.logout) {
-        console.log(data);
         setAuth({});
       }
     },

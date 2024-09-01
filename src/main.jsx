@@ -13,6 +13,8 @@ import Profile from './pages/dashboard/Profile.jsx';
 import Admin from './pages/dashboard/Admin.jsx';
 import './index.css';
 
+import { Toaster } from '@/components/ui/toaster';
+
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 const queryClient = new QueryClient();
@@ -44,6 +46,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <RouterProvider router={router} />
+        <Toaster />
       </AuthProvider>
     </QueryClientProvider>
   </React.StrictMode>
