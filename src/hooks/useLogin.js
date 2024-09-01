@@ -9,18 +9,19 @@ export const useLogin = () => {
 
   return useMutation({
     mutationFn: async ({ email, password }) => {
-      const response = await apiClient.post('/auth/login', { email, password });
+      const response = await apiClient.post(
+        '/auth/login',
+        { email, password },
+        { withCredentials: true }
+      );
       return response.data;
     },
     onSuccess: (data) => {
-      // const { accessToken, refreshToken } = data;
       const { accessToken } = data;
       const { auth } = jwtDecode(accessToken);
       setAuth({ user: auth, accessToken });
-      // localStorage.setItem('refreshToken', refreshToken);
     },
     onError: (error) => {
-      // localStorage.removeItem('refreshToken');
       const handledErrorMsg = handleError(error);
       return Promise.reject(handledErrorMsg);
     },

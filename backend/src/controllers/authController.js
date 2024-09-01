@@ -5,6 +5,14 @@ import { z } from 'zod';
 
 import * as userService from '../services/user.js';
 
+const generateAccessToken = (auth) => {
+  return jwt.sign({ auth }, process.env.ACCESS_TOKEN_SECRET_KEY, { expiresIn: '30s' });
+};
+
+const generateRefreshToken = (id) => {
+  return jwt.sign({ id }, process.env.REFRESH_TOKEN_SECRET_KEY, { expiresIn: '2m' });
+};
+
 export const register = async (req, res) => {
   const createUserSchema = z
     .object({
@@ -43,8 +51,6 @@ export const register = async (req, res) => {
   res.status(201).json({ user: newUser });
 };
 
-// Ver: https://chatgpt.com/c/b831e9da-977c-4f1f-9d64-89e83dcfb472
-
 export const login = async (req, res) => {
   const credentialsSchema = z.object({
     email: z.string().min(1, { message: 'O email é obrigatório' }),
@@ -82,31 +88,19 @@ export const login = async (req, res) => {
 
   res.cookie('refreshToken', refreshToken, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production', // true em produção
-    sameSite: 'Strict', // Evita envio do cookie em requisições cross-site
-    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 diass
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'strict',
+    maxAge: 1 * 24 * 60 * 60 * 1000, // 1 dia em milissegundos
   });
 
   res.json({ accessToken });
 };
 
-export const refreshToken = async (req, res) => {
-  // const refreshTokenSchema = z.object({
-  //   refreshToken: z.string({ message: 'Token não detectado' }),
-  // });
-
-  // const body = refreshTokenSchema.safeParse(req.body);
-
-  // if (!body.success) {
-  //   return res.status(400).json({ errors: body.error.errors });
-  // }
-
-  // const { refreshToken } = body.data;
-
-  const refreshToken = req.cookies.refreshToken; // Obter o refreshToken do cookie
+export const refresh = async (req, res) => {
+  const { refreshToken } = req.cookies;
 
   if (!refreshToken) {
-    return res.status(400).json({ error: 'Token não detecado' });
+    return res.status(204).json({ error: 'Refresh Token não detecado' });
   }
 
   try {
@@ -115,7 +109,7 @@ export const refreshToken = async (req, res) => {
     const user = await userService.findByToken({ id, refreshToken });
 
     if (!user) {
-      res.status(401).json({ error: 'Refresh Token inválido' });
+      return res.status(401).json({ error: 'Refresh Token inválido' });
     }
 
     const { refreshToken: ignore, password, createdAt, updatedAt, ...auth } = user;
@@ -129,6 +123,12 @@ export const refreshToken = async (req, res) => {
 };
 
 export const logout = async (req, res) => {
+  const { refreshToken } = req.cookies;
+
+  if (!refreshToken) {
+    return res.status(401).json({ error: 'Erro ao efeutar o Logout: refreshToken não detecado' });
+  }
+
   const logoutSchema = z.object({
     id: z
       .string({ message: 'Identificador do usuário não detectado' })
@@ -141,27 +141,22 @@ export const logout = async (req, res) => {
     return res.status(400).json({ errors: body.error.errors });
   }
 
-  const { id } = body.data;
-
   try {
-    const revokeRefreshToken = await userService.update({ refreshToken: null }, id);
+    const revokeRefreshToken = await userService.update({ refreshToken: null }, body.data.id);
 
     if (revokeRefreshToken.error) {
       return res.status(500).json({ error: 'Erro ao remover Refresh Token' });
     }
 
-    res.clearCookie(
-      ('refreshToken',
-      {
-        httpOnly: true,
-        secure: true,
-        sameSite: 'Strict',
-      })
-    );
+    res.clearCookie('refreshToken', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+    });
 
-    res.json({ logout: true });
+    res.json({ logout: true, message: 'Logout realizado com sucesso' });
   } catch (error) {
-    res.status(500).json({ error: 'Erro ao fazer o logout' });
+    res.status(500).json({ error: 'Erro ao realizar o logout' });
   }
 };
 
@@ -203,51 +198,5 @@ export const changePassword = async (req, res) => {
   res.json({ user: updatedUserPassword, auth });
 };
 
-const generateAccessToken = (auth) => {
-  return jwt.sign({ auth }, process.env.ACCESS_TOKEN_SECRET_KEY, { expiresIn: '5m' });
-};
-
-const generateRefreshToken = (id) => {
-  return jwt.sign({ id }, process.env.REFRESH_TOKEN_SECRET_KEY, { expiresIn: '1h' });
-};
-
-// esta função não é compatível com a funcionalidade de refresh Token
-// export const validateToken = async (req, res) => {
-//   const token = req.body.token;
-//   try {
-//     const decoded = jwt.verify(token, process.env.SECRET_KEY_ACCESS);
-//     return res.json({ user: decoded.auth });
-//   } catch (error) {
-//     res.status(401).json({ error: 'Token inválido' });
-//   }
-// };
-
-// // esta função não é compatível com a funcionalidade de refresh Token
-// export const logout = async (req, res) => {
-//   const auth = req.auth;
-
-//   const authHeader = req.headers['authorization'];
-//   jwt.sign(authHeader, '', { expiresIn: 1 }, (logout, err) => {
-//     if (!logout) {
-//       return res.send({ msg: err.message });
-//     }
-//     res.send({ status: 'deslogado', auth });
-//   });
-// };
-
-// export const logout = async (req, res) => {
-//   const token = req.headers['authorization'].split(' ')[1];
-
-//   try {
-//     const decoded = jwt.verify(token, process.env.SECRET_KEY);
-//     decoded.exp = Math.floor(Date.now() / 1000) - 1; // Data de expiração no passado
-//     const updatedToken = jwt.sign(decoded, process.env.SECRET_KEY);
-//     res.json({ message: 'Logout realizado com sucesso!', token: updatedToken });
-//   } catch (error) {
-//     res.status(400).json({ error: 'Invalid token' });
-//   }
-// };
-
 // export const forgotPassword = async (req, res, next) => {};
-
 // export const resetPassword = async (req, res, next) => {};

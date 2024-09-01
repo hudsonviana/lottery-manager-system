@@ -11,7 +11,8 @@ export const getAllUsers = async (req, res) => {
     return res.status(500).json({ error: users.error });
   }
 
-  res.json({ users, auth });
+  // res.json({ users, auth });
+  res.json({ users });
 };
 
 export const getUser = async (req, res) => {

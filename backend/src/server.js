@@ -4,19 +4,22 @@ import express from 'express';
 import cors from 'cors';
 import http from 'http';
 import https from 'https';
+import cookieParser from 'cookie-parser';
+
 import siteRoutes from './routes/site.js';
 import apiRoutes from './routes/api.js';
 
+const clientOrigin = 'http://localhost:3000'; //'http://localhost:5173'
+
 const corsOptions = {
-  // origin: 'http://localhost:5173', // Specify the allowed origin
-  origin: 'http://localhost:3000', // Specify the allowed origin
-  credentials: true, // Allow credentials
+  origin: clientOrigin,
+  credentials: true,
 };
 
 const app = express();
-// app.use(cors());
-app.use(cors(corsOptions));
 app.use(express.json());
+app.use(cors(corsOptions));
+app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(siteRoutes);
