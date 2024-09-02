@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { HiCubeTransparent, HiOutlineLogout } from 'react-icons/hi';
 import {
@@ -18,6 +17,8 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
+import { useToast } from '@/hooks/use-toast';
+import ToastAlert from './ToastAlert';
 
 const linkClass =
   'flex items-center gap-2 px-3 py-2 hover:bg-neutral-700 hover:no-underline rounded-sm text-base';
@@ -41,16 +42,20 @@ const SidebarLink = ({ item }) => {
 
 const Sidebar = () => {
   const navigate = useNavigate();
-  const [errorAlert, setErrorAlert] = useState('');
   const { auth } = useAuth();
   const { mutateAsync: signOut, isPending } = useLogout();
+  const { toast } = useToast();
 
   const handleSignOutClick = async () => {
     try {
       const data = await signOut();
       navigate('/login', { state: { data } });
     } catch ({ error }) {
-      setErrorAlert(error);
+      toast({
+        description: (
+          <ToastAlert title="Algo deu errado!" data={error} type="error" />
+        ),
+      });
     }
   };
 

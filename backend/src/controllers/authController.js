@@ -126,7 +126,7 @@ export const logout = async (req, res) => {
   const { refreshToken } = req.cookies;
 
   if (!refreshToken) {
-    return res.status(401).json({ error: 'Erro ao efeutar o Logout: refreshToken não detecado' });
+    return res.status(401).json({ error: 'Erro ao efeutar o Logout: refreshToken não detectado' });
   }
 
   const logoutSchema = z.object({

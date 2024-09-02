@@ -12,13 +12,11 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { AlertCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import ToastAlert from '@/components/ToastAlert';
 
 const Login = () => {
   const [formData, setFormData] = useState({ email: '', password: '' });
-  const [errorAlert, setErrorAlert] = useState('');
   const { mutateAsync: signIn, isPending } = useLogin();
 
   const navigate = useNavigate();
@@ -29,9 +27,13 @@ const Login = () => {
     const showToast = () => {
       if (location.state?.data) {
         toast({
-          variant: 'destructive',
-          title: 'Acesso finalizado',
-          description: location.state?.data.message,
+          description: (
+            <ToastAlert
+              data={location.state?.data.message}
+              type="info"
+              title="Acesso finalizado!"
+            />
+          ),
         });
       }
     };
@@ -41,7 +43,6 @@ const Login = () => {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-    setErrorAlert('');
   };
 
   const handleFormSubmit = async (e) => {
@@ -53,7 +54,11 @@ const Login = () => {
       await signIn({ email, password });
       navigate('/dashboard');
     } catch ({ error }) {
-      setErrorAlert(error);
+      toast({
+        description: (
+          <ToastAlert data={error} type="error" title="Acesso negado!" />
+        ),
+      });
     }
   };
 
@@ -103,18 +108,6 @@ const Login = () => {
           </CardFooter>
         </form>
       </Card>
-
-      {errorAlert && (
-        <Alert variant="destructive" className="my-4">
-          <AlertCircle className="h-4 w-4" />
-          <AlertTitle>Acesso negado</AlertTitle>
-          <AlertDescription>
-            {errorAlert.map((errorMsg, index) => (
-              <p key={index}>• {errorMsg}</p>
-            ))}
-          </AlertDescription>
-        </Alert>
-      )}
     </div>
   );
 };
