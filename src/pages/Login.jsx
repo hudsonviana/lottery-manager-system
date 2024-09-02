@@ -19,9 +19,9 @@ const Login = () => {
   const [formData, setFormData] = useState({ email: '', password: '' });
   const { mutateAsync: signIn, isPending } = useLogin();
 
+  const { toast } = useToast();
   const navigate = useNavigate();
   const location = useLocation();
-  const { toast } = useToast();
 
   useEffect(() => {
     const showToast = () => {
