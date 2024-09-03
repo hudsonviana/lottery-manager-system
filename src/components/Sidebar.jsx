@@ -80,7 +80,10 @@ const Sidebar = () => {
         ))}
 
         <AlertDialog>
-          <AlertDialogTrigger className={`text-red-500 ${linkClass}`}>
+          <AlertDialogTrigger
+            className={`text-red-500 ${linkClass}`}
+            disabled={isPending}
+          >
             <span className="text-xl">
               <HiOutlineLogout />
             </span>

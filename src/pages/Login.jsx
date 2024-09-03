@@ -19,7 +19,7 @@ const Login = () => {
   const [formData, setFormData] = useState({ email: '', password: '' });
   const { mutateAsync: signIn, isPending } = useLogin();
 
-  const { toast } = useToast();
+  const { toast, dismiss } = useToast();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -52,6 +52,7 @@ const Login = () => {
 
     try {
       await signIn({ email, password });
+      dismiss();
       navigate('/dashboard');
     } catch ({ error }) {
       toast({
