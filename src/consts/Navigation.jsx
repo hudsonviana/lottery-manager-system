@@ -17,14 +17,14 @@ export const DASHBOARD_SIDEBAR_LINKS = [
   {
     key: 'profile',
     label: 'Perfil',
-    path: '/dashboard/profile',
+    path: 'profile',
     roles: ['USER', 'ADMIN'],
     icon: <HiOutlineUser />,
   },
   {
     key: 'admin',
     label: 'Admin',
-    path: '/dashboard/admin',
+    path: 'admin',
     roles: ['ADMIN'],
     icon: <HiOutlineKey />,
   },
@@ -34,13 +34,13 @@ export const DASHBOARD_SIDEBAR_BOTTOM_LINKS = [
   {
     key: 'settings',
     label: 'Configurações',
-    path: '/settings',
+    path: 'settings',
     icon: <HiOutlineCog />,
   },
   {
     key: 'support',
     label: 'Ajuda',
-    path: '/support',
+    path: 'support',
     icon: <HiOutlineQuestionMarkCircle />,
   },
 ];

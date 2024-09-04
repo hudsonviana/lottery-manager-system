@@ -11,6 +11,8 @@ import Dashboard from './pages/dashboard/Dashboard.jsx';
 import Index from './pages/dashboard/Index.jsx';
 import Profile from './pages/dashboard/Profile.jsx';
 import Admin from './pages/dashboard/Admin.jsx';
+import Unauthorized from './pages/dashboard/Unauthorized.jsx';
+import RequireAuth from './components/RequireAuth.jsx';
 import './index.css';
 
 import { Toaster } from '@/components/ui/toaster';
@@ -31,12 +33,21 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path: '/dashboard',
-    element: <Dashboard />,
+    element: <RequireAuth allowedRoles={['USER', 'ADMIN']} />,
     children: [
-      { index: true, element: <Index /> },
-      { path: '/dashboard/profile', element: <Profile /> },
-      { path: '/dashboard/admin', element: <Admin /> },
+      {
+        path: '/dashboard',
+        element: <Dashboard />,
+        children: [
+          { index: true, element: <Index /> },
+          { path: 'profile', element: <Profile /> },
+          { path: 'unauthorized', element: <Unauthorized /> },
+          {
+            element: <RequireAuth allowedRoles={['ADMIN']} />,
+            children: [{ path: 'admin', element: <Admin /> }],
+          },
+        ],
+      },
     ],
   },
 ]);

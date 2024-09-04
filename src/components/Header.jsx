@@ -22,7 +22,7 @@ const Header = () => {
         />
       </div>
       <div className="flex items-center gap-2 mr-2">
-        <span className="flex items-center">Olá, {auth.user.firstName}</span>
+        <span className="flex items-center">Olá, {auth?.user?.firstName}</span>
         <HiOutlineChatAlt fontSize={24} />
         <HiOutlineBell fontSize={24} />
       </div>

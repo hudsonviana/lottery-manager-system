@@ -68,7 +68,7 @@ const Sidebar = () => {
 
       <div className="py-8 flex flex-1 flex-col gap-0.5">
         {DASHBOARD_SIDEBAR_LINKS.map((item) => {
-          if (item.roles.includes(auth.user.role)) {
+          if (item.roles.includes(auth?.user?.role)) {
             return <SidebarLink key={item.key} item={item} />;
           }
         })}
