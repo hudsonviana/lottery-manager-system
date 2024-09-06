@@ -10,8 +10,8 @@ const router = Router();
 
 router.post('/auth/register', authController.register);
 router.post('/auth/login', authController.login);
+router.put('/auth/logout', authController.logout);
 router.get('/auth/refresh', authController.refresh);
-router.put('/auth/logout', auth.authentication, authController.logout);
 router.post('/auth/:id/changepassword', auth.authentication, authController.changePassword);
 
 router.get('/users', admin.authentication, userController.getAllUsers);

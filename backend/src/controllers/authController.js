@@ -5,14 +5,6 @@ import { z } from 'zod';
 
 import * as userService from '../services/user.js';
 
-const generateAccessToken = (auth) => {
-  return jwt.sign({ auth }, process.env.ACCESS_TOKEN_SECRET_KEY, { expiresIn: '1m' });
-};
-
-const generateRefreshToken = (id) => {
-  return jwt.sign({ id }, process.env.REFRESH_TOKEN_SECRET_KEY, { expiresIn: '1h' });
-};
-
 export const register = async (req, res) => {
   const createUserSchema = z
     .object({
@@ -49,6 +41,14 @@ export const register = async (req, res) => {
   }
 
   res.status(201).json({ user: newUser });
+};
+
+const generateAccessToken = (auth) => {
+  return jwt.sign({ auth }, process.env.ACCESS_TOKEN_SECRET_KEY, { expiresIn: '10s' });
+};
+
+const generateRefreshToken = (id) => {
+  return jwt.sign({ id }, process.env.REFRESH_TOKEN_SECRET_KEY, { expiresIn: '30s' });
 };
 
 export const login = async (req, res) => {
@@ -109,7 +109,7 @@ export const refresh = async (req, res) => {
     const user = await userService.findByToken({ id, refreshToken });
 
     if (!user) {
-      return res.status(401).json({ error: 'Refresh Token inválido' });
+      return res.status(401).json({ error: 'Refresh Token: Usuário não encontrado' });
     }
 
     const { refreshToken: ignore, password, createdAt, updatedAt, ...auth } = user;
@@ -126,7 +126,7 @@ export const logout = async (req, res) => {
   const { refreshToken } = req.cookies;
 
   if (!refreshToken) {
-    return res.status(401).json({ error: 'Erro ao efeutar o Logout: refreshToken não detectado' });
+    return res.status(500).json({ error: 'Erro ao realizar o Logout: refreshToken não detectado' });
   }
 
   const logoutSchema = z.object({
@@ -156,7 +156,7 @@ export const logout = async (req, res) => {
 
     res.json({ logout: true, message: 'Logout realizado com sucesso' });
   } catch (error) {
-    res.status(500).json({ error: 'Erro ao realizar o logout' });
+    res.status(500).json({ error: 'Erro ao realizar o Logout' });
   }
 };
 

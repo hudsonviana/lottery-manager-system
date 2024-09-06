@@ -1,16 +1,19 @@
 import { useMutation } from '@tanstack/react-query';
-import useApiPrivate from './useApiPrivate';
+import { apiClient } from '@/api/apiClient';
 import { handleError } from '@/helpers/handleError';
 import { useAuth } from './useAuth';
 
 export const useLogout = () => {
   const { auth, setAuth } = useAuth();
-  const apiPrivate = useApiPrivate();
 
   return useMutation({
     mutationFn: async () => {
       const { id } = auth.user;
-      const response = await apiPrivate.put('/auth/logout', { id });
+      const response = await apiClient.put(
+        '/auth/logout',
+        { id },
+        { withCredentials: true }
+      );
       return response.data;
     },
     onSuccess: (data) => {

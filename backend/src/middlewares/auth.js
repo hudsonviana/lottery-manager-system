@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 
 export const authentication = async (req, res, next) => {
   if (!req.headers.authorization) {
-    return res.status(401).json({ error: 'Token inválido' });
+    return res.status(401).json({ error: 'Token de acesso indisponível' });
   }
 
   const accessToken = req.headers.authorization.split(' ')[1];
@@ -13,6 +13,6 @@ export const authentication = async (req, res, next) => {
     req.auth = decoded.auth;
     next();
   } catch (error) {
-    res.status(401).json({ error: 'Token inválido' });
+    res.status(401).json({ error: 'Token de acesso inválido' });
   }
 };
