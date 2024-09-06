@@ -2,7 +2,7 @@ import { Outlet } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import useRefreshToken from '@/hooks/useRefreshToken';
 import { useAuth } from '@/hooks/useAuth';
-import LoadingDashboard from './LoadingDashboard';
+import Dashboard from '@/pages/dashboard/Dashboard';
 
 const PersistLogin = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -23,13 +23,12 @@ const PersistLogin = () => {
     !auth?.accessToken ? verifyRefreshToken() : setIsLoading(false);
   }, []);
 
-  useEffect(() => {
-    console.log('isLoading:', isLoading);
-    console.log('accessToken:', JSON.stringify(auth?.accessToken));
-  }, [isLoading]);
+  // useEffect(() => {
+  //   console.log('isLoading:', isLoading);
+  //   console.log('accessToken:', JSON.stringify(auth?.accessToken));
+  // }, [isLoading]);
 
-  // return <>{isLoading ? <p>Loading...</p> : <Outlet />}</>;
-  return <>{isLoading ? <LoadingDashboard /> : <Outlet />}</>;
+  return <>{isLoading ? <Dashboard isLoading={true} /> : <Outlet />}</>;
 };
 
 export default PersistLogin;
