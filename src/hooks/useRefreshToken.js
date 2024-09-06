@@ -1,3 +1,4 @@
+import { jwtDecode } from 'jwt-decode';
 import { apiClient } from '@/api/apiClient';
 import { useAuth } from './useAuth';
 
@@ -9,7 +10,9 @@ const useRefreshToken = () => {
       withCredentials: true,
     });
     const { accessToken } = response.data;
-    setAuth((prev) => ({ ...prev, accessToken }));
+    const { auth } = jwtDecode(accessToken);
+    // setAuth((prev) => ({ ...prev, user: prev.user || auth, accessToken }));
+    setAuth({ user: auth, accessToken });
     return accessToken;
   };
   return refresh;

@@ -7,9 +7,11 @@ import ErrorPage from './pages/ErrorPage.jsx';
 import Home from './pages/Home.jsx';
 import Login from './pages/Login.jsx';
 import Register from './pages/Register.jsx';
+import PersistLogin from './components/PersistLogin.jsx';
 import Dashboard from './pages/dashboard/Dashboard.jsx';
 import Index from './pages/dashboard/Index.jsx';
 import Profile from './pages/dashboard/Profile.jsx';
+import Settings from './pages/dashboard/Settings.jsx';
 import Admin from './pages/dashboard/Admin.jsx';
 import Unauthorized from './pages/dashboard/Unauthorized.jsx';
 import RequireAuth from './components/RequireAuth.jsx';
@@ -33,18 +35,24 @@ const router = createBrowserRouter([
     ],
   },
   {
-    element: <RequireAuth allowedRoles={['USER', 'ADMIN']} />,
+    element: <PersistLogin />,
     children: [
       {
-        path: '/dashboard',
-        element: <Dashboard />,
+        element: <RequireAuth allowedRoles={['USER', 'ADMIN']} />,
         children: [
-          { index: true, element: <Index /> },
-          { path: 'profile', element: <Profile /> },
-          { path: 'unauthorized', element: <Unauthorized /> },
           {
-            element: <RequireAuth allowedRoles={['ADMIN']} />,
-            children: [{ path: 'admin', element: <Admin /> }],
+            path: '/dashboard',
+            element: <Dashboard />,
+            children: [
+              { index: true, element: <Index /> },
+              { path: 'profile', element: <Profile /> },
+              { path: 'settings', element: <Settings /> },
+              { path: 'unauthorized', element: <Unauthorized /> },
+              {
+                element: <RequireAuth allowedRoles={['ADMIN']} />,
+                children: [{ path: 'admin', element: <Admin /> }],
+              },
+            ],
           },
         ],
       },
