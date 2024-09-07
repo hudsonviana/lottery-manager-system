@@ -44,11 +44,11 @@ export const register = async (req, res) => {
 };
 
 const generateAccessToken = (auth) => {
-  return jwt.sign({ auth }, process.env.ACCESS_TOKEN_SECRET_KEY, { expiresIn: '10s' });
+  return jwt.sign({ auth }, process.env.ACCESS_TOKEN_SECRET_KEY, { expiresIn: '5m' });
 };
 
 const generateRefreshToken = (id) => {
-  return jwt.sign({ id }, process.env.REFRESH_TOKEN_SECRET_KEY, { expiresIn: '30s' });
+  return jwt.sign({ id }, process.env.REFRESH_TOKEN_SECRET_KEY, { expiresIn: '30m' });
 };
 
 export const login = async (req, res) => {
