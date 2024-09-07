@@ -25,13 +25,13 @@ const Login = () => {
 
   useEffect(() => {
     const showToast = () => {
-      if (location.state?.data) {
+      if (location.state?.data?.message) {
         toast({
           description: (
             <ToastAlert
               data={location.state?.data.message}
               type="info"
-              title="Acesso finalizado!"
+              title="Mensagem!"
             />
           ),
         });

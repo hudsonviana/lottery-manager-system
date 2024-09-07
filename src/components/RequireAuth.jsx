@@ -10,7 +10,17 @@ const RequireAuth = ({ allowedRoles }) => {
   ) : auth?.user ? (
     <Navigate to={'unauthorized'} state={{ from: location }} replace />
   ) : (
-    <Navigate to={'/login'} state={{ from: location }} replace />
+    <Navigate
+      to={'/login'}
+      state={{
+        from: location,
+        data: {
+          message:
+            'É necessário fazer o login para acessar a página solicitada.',
+        },
+      }}
+      replace
+    />
   );
 };
 
