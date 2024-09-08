@@ -18,7 +18,7 @@ const Unauthorized = () => {
         </p>
       </span>
       <Button asChild>
-        <Link to={'/dashboard'}>Dashboard</Link>
+        <Link to={'/dashboard'}>Voltar</Link>
       </Button>
     </div>
   );
