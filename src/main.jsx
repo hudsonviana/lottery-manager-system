@@ -25,12 +25,12 @@ const queryClient = new QueryClient();
 
 const router = createBrowserRouter([
   {
-    path: '/',
-    element: <MainLayout />,
-    errorElement: <ErrorPage />,
+    element: <PersistLogin />,
     children: [
       {
-        element: <PersistLogin />,
+        path: '/',
+        element: <MainLayout />,
+        errorElement: <ErrorPage />,
         children: [
           {
             element: <RequireGuest />,
@@ -42,11 +42,6 @@ const router = createBrowserRouter([
           },
         ],
       },
-    ],
-  },
-  {
-    element: <PersistLogin />,
-    children: [
       {
         element: <RequireAuth allowedRoles={['USER', 'ADMIN']} />,
         children: [
