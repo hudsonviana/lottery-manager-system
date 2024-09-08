@@ -15,6 +15,7 @@ import Support from './pages/dashboard/Support.jsx';
 import Admin from './pages/dashboard/Admin.jsx';
 import PersistLogin from './components/PersistLogin.jsx';
 import RequireAuth from './components/RequireAuth.jsx';
+import RequireGuest from './components/RequireGuest.jsx';
 import Unauthorized from './pages/dashboard/Unauthorized.jsx';
 import './index.css';
 
@@ -28,9 +29,19 @@ const router = createBrowserRouter([
     element: <MainLayout />,
     errorElement: <ErrorPage />,
     children: [
-      { index: true, element: <Home /> },
-      { path: '/login', element: <Login /> },
-      { path: '/register', element: <Register /> },
+      {
+        element: <PersistLogin />,
+        children: [
+          {
+            element: <RequireGuest />,
+            children: [
+              { index: true, element: <Home /> },
+              { path: '/login', element: <Login /> },
+              { path: '/register', element: <Register /> },
+            ],
+          },
+        ],
+      },
     ],
   },
   {
