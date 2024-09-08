@@ -2,15 +2,16 @@ import { useRouteError } from 'react-router-dom';
 
 const ErrorPage = () => {
   const error = useRouteError();
-  console.log(error)
 
   return (
-    <div>
-      <h1>Ocorreu um erro!</h1>
-      <p>Sinto muito, ocorreu um erro inesperado.</p>
-      <p>
-        <i>{error.statusText || error.message}</i>
-      </p>
+    <div className="bg-neutral-100 min-h-screen flex items-center flex-col justify-center pb-20">
+      <h1 className="text-red-600 text-2xl font-bold">
+        Erro <span>{error.status}</span>
+      </h1>
+      <h2 className="flex flex-col items-center">
+        Sinto muito, ocorreu um erro inesperado.
+      </h2>
+      <p className="italic">{error.statusText || error.message}</p>
     </div>
   );
 };

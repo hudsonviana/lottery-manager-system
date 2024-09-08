@@ -6,7 +6,7 @@ const Unauthorized = () => {
   return (
     <div className="min-h-screen flex items-center flex-col justify-center pb-20">
       <h2 className="flex flex-col items-center text-2xl font-bold">
-        <span className="text-red-600 ">
+        <span className="text-red-600">
           <HiBan fontSize={40} />
         </span>
         Não autorizado!
