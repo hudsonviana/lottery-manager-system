@@ -28,12 +28,12 @@ const router = createBrowserRouter([
     element: <PersistLogin />,
     children: [
       {
-        path: '/',
-        element: <MainLayout />,
-        errorElement: <ErrorPage />,
+        element: <RequireGuest />,
         children: [
           {
-            element: <RequireGuest />,
+            path: '/',
+            element: <MainLayout />,
+            errorElement: <ErrorPage />,
             children: [
               { index: true, element: <Home /> },
               { path: '/login', element: <Login /> },
