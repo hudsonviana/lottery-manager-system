@@ -44,11 +44,11 @@ export const register = async (req, res) => {
 };
 
 const generateAccessToken = (auth) => {
-  return jwt.sign({ auth }, process.env.ACCESS_TOKEN_SECRET_KEY, { expiresIn: '5m' });
+  return jwt.sign({ auth }, process.env.ACCESS_TOKEN_SECRET_KEY, { expiresIn: '15m' });
 };
 
 const generateRefreshToken = (id) => {
-  return jwt.sign({ id }, process.env.REFRESH_TOKEN_SECRET_KEY, { expiresIn: '30m' });
+  return jwt.sign({ id }, process.env.REFRESH_TOKEN_SECRET_KEY, { expiresIn: '1h' });
 };
 
 export const login = async (req, res) => {
@@ -116,7 +116,7 @@ export const refresh = async (req, res) => {
 
     const newAccessToken = generateAccessToken(auth);
 
-    res.json({ accessToken: newAccessToken });
+    res.json({ accessToken: newAccessToken, auth });
   } catch (error) {
     res.status(401).json({ error: 'Refresh Token inválido' });
   }
