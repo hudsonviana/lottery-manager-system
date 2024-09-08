@@ -17,9 +17,9 @@ const useRefreshToken = () => {
     } catch (error) {
       if (error?.response?.data?.error === 'Refresh Token inválido') {
         toast({
-          className: 'bg-yellow-200 text-yellow-800',
+          className: 'bg-yellow-200 text-yellow-800 border-yellow-300',
           title: 'Sessão expirada!',
-          description: 'A sessão do usuário expirou. Faça o login novamente.',
+          description: 'Faça o login novamente.',
         });
       }
     }

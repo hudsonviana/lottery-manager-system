@@ -13,7 +13,6 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import ToastAlert from '@/components/ToastAlert';
 
 const Login = () => {
   const [formData, setFormData] = useState({ email: '', password: '' });
@@ -27,13 +26,9 @@ const Login = () => {
     const showToast = () => {
       if (location.state?.data?.message) {
         toast({
-          description: (
-            <ToastAlert
-              data={location.state?.data.message}
-              type="info"
-              title="Mensagem!"
-            />
-          ),
+          className: 'bg-blue-200 text-blue-800 border-blue-300',
+          title: 'Mensagem!',
+          description: location.state?.data?.message,
         });
       }
     };
@@ -56,9 +51,9 @@ const Login = () => {
       navigate('/dashboard');
     } catch ({ error }) {
       toast({
-        description: (
-          <ToastAlert data={error} type="error" title="Acesso negado!" />
-        ),
+        className: 'bg-red-200 text-red-800 border-red-300',
+        title: 'Acesso negado!',
+        description: error.map((err, i) => <p key={i}>{err}</p>),
       });
     }
   };

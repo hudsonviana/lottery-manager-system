@@ -18,7 +18,6 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { useToast } from '@/hooks/use-toast';
-import ToastAlert from './ToastAlert';
 
 const linkClass =
   'flex items-center gap-2 px-3 py-2 hover:bg-neutral-700 hover:no-underline rounded-sm text-base';
@@ -52,9 +51,9 @@ const Sidebar = () => {
       navigate('/login', { state: { data } });
     } catch ({ error }) {
       toast({
-        description: (
-          <ToastAlert title="Algo deu errado!" data={error} type="error" />
-        ),
+        className: 'bg-red-200 text-red-800 border-red-300',
+        title: 'Algo deu errado!',
+        description: error.map((err, i) => <p key={i}>{err}</p>),
       });
     }
   };
