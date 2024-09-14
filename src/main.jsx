@@ -13,6 +13,7 @@ import Profile from './pages/dashboard/Profile.jsx';
 import Settings from './pages/dashboard/Settings.jsx';
 import Support from './pages/dashboard/Support.jsx';
 import Admin from './pages/dashboard/Admin.jsx';
+import Users from './pages/dashboard/Users.jsx';
 import PersistLogin from './components/PersistLogin.jsx';
 import RequireAuth from './components/RequireAuth.jsx';
 import RequireGuest from './components/RequireGuest.jsx';
@@ -56,7 +57,10 @@ const router = createBrowserRouter([
               { path: 'unauthorized', element: <Unauthorized /> },
               {
                 element: <RequireAuth allowedRoles={['ADMIN']} />,
-                children: [{ path: 'admin', element: <Admin /> }],
+                children: [
+                  { path: 'admin', element: <Admin /> },
+                  { path: 'users', element: <Users /> },
+                ],
               },
             ],
           },
