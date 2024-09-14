@@ -27,6 +27,7 @@ const queryClient = new QueryClient();
 const router = createBrowserRouter([
   {
     element: <PersistLogin />,
+    errorElement: <ErrorPage />,
     children: [
       {
         element: <RequireGuest />,
@@ -34,7 +35,6 @@ const router = createBrowserRouter([
           {
             path: '/',
             element: <MainLayout />,
-            errorElement: <ErrorPage />,
             children: [
               { index: true, element: <Home /> },
               { path: '/login', element: <Login /> },
