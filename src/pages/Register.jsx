@@ -1,6 +1,5 @@
 import { Button } from '@/components/ui/button';
 import {
-  Card,
   CardContent,
   CardDescription,
   CardFooter,
@@ -13,15 +12,20 @@ import { Link } from 'react-router-dom';
 
 const Register = () => {
   return (
-    <div className="grid place-content-center">
-      <Card className="w-[400px]">
-        <CardHeader>
-          <CardTitle>Criar conta</CardTitle>
-          <CardDescription>
-            Forneça os dados para criar a conta.
-          </CardDescription>
-        </CardHeader>
-        <form>
+    <div className="flex min-h-[calc(100vh-2.5rem)]">
+      <aside
+        className="grid place-content-center bg-sky-600 w-2/4 bg-cover bg-center"
+        style={{ backgroundImage: 'url(/register4.jpg)' }}
+      ></aside>
+
+      <div className="grid place-content-center w-2/4">
+        <form className="w-[400px]">
+          <CardHeader>
+            <CardTitle>Criar conta</CardTitle>
+            <CardDescription>
+              Forneça os dados para criar a conta.
+            </CardDescription>
+          </CardHeader>
           <CardContent>
             <div className="grid w-full items-center gap-4">
               <div className="grid grid-cols-2 gap-4">
@@ -87,7 +91,7 @@ const Register = () => {
             </CardDescription>
           </CardFooter>
         </form>
-      </Card>
+      </div>
     </div>
   );
 };

@@ -3,7 +3,6 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useLogin } from '@/hooks/useLogin';
 import { Button } from '@/components/ui/button';
 import {
-  Card,
   CardContent,
   CardDescription,
   CardFooter,
@@ -59,13 +58,17 @@ const Login = () => {
   };
 
   return (
-    <div className="grid place-content-center">
-      <Card className="w-[400px]">
-        <CardHeader>
-          <CardTitle>Acessar Sistema</CardTitle>
-          <CardDescription>Entre com o email e senha.</CardDescription>
-        </CardHeader>
-        <form onSubmit={handleFormSubmit}>
+    <div className="flex min-h-[calc(100vh-2.5rem)]">
+      <aside
+        className="grid place-content-center bg-sky-600 w-2/4 bg-cover bg-center"
+        style={{ backgroundImage: 'url(/login.jpg)' }}
+      ></aside>
+      <div className="grid place-content-center w-2/4">
+        <form className="w-[400px]" onSubmit={handleFormSubmit}>
+          <CardHeader>
+            <CardTitle>Acessar Sistema</CardTitle>
+            <CardDescription>Entre com o email e senha.</CardDescription>
+          </CardHeader>
           <CardContent>
             <div className="grid w-full items-center gap-4">
               <div className="flex flex-col space-y-1.5">
@@ -103,7 +106,7 @@ const Login = () => {
             </CardDescription>
           </CardFooter>
         </form>
-      </Card>
+      </div>
     </div>
   );
 };

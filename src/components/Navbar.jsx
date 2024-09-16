@@ -8,7 +8,7 @@ const activeLink = ({ isActive }) =>
 
 const Navbar = () => {
   return (
-    <nav className="bg-neutral-900 text-white h-10 px-4 flex justify-between items-center mb-4">
+    <nav className="bg-neutral-900 text-white h-10 px-4 flex justify-between items-center">
       <div>
         <span className="text-sky-500 font-semibold italic">SGL</span>
         <span className="pl-4">Sistema de Gerenciamento de Loteria</span>
