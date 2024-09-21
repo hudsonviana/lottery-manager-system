@@ -58,11 +58,17 @@ const Login = () => {
   };
 
   return (
-    <div className="flex min-h-[calc(100vh-2.5rem)]">
+    <div className="flex flex-col md:flex-row min-h-[calc(100vh-2.5rem)]">
       <aside
-        className="grid place-content-center bg-sky-600 w-2/4 bg-cover bg-center"
-        style={{ backgroundImage: 'url(/login.jpg)' }}
-      ></aside>
+        className="md:w-2/4 w-full"
+        // style={{ backgroundImage: 'url(/login.jpg)' }}
+      >
+        <img
+          src="/login.jpg"
+          alt="Minha Figura"
+          className="w-full h-full object-cover"
+        />
+      </aside>
       <div className="grid place-content-center w-2/4">
         <form className="w-[400px]" onSubmit={handleFormSubmit}>
           <CardHeader>
