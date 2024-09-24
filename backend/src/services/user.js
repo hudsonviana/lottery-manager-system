@@ -7,6 +7,7 @@ export const findAll = async () => {
     return await prisma.user.findMany({
       omit: {
         password: true,
+        refreshToken: true,
       },
     });
   } catch (error) {

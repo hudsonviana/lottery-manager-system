@@ -11,10 +11,13 @@ const ErrorPage = () => {
       <span className="text-red-600 mb-5">
         <FaRegFrown fontSize={40} />
       </span>
-      <h1 className="mb-5">
-        <span className="text-lg font-bold">{error.status}.</span> Sinto muito,
-        ocorreu um erro.
-      </h1>
+
+      <h1 className="mb-5">Sinto muito, ocorreu um erro.</h1>
+
+      {error.status && (
+        <span className="text-lg font-bold mb-5">{error.status}</span>
+      )}
+
       {error.status === 404 ? (
         <p>
           A URL <span className="font-mono">{location.pathname}</span> não foi
