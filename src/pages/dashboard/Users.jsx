@@ -3,6 +3,16 @@ import useApiPrivate from '@/hooks/useApiPrivate';
 import formatDate from '@/helpers/formatDate';
 import translateRole from '@/helpers/translateRole';
 import DataTable from '@/components/DataTable';
+import { MoreHorizontal } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
 const Users = () => {
   const apiPrivate = useApiPrivate();
@@ -44,6 +54,42 @@ const Users = () => {
       header: 'Última modificação/acesso',
       accessorKey: 'updatedAt',
       cell: (info) => formatDate(info.getValue()),
+    },
+    {
+      id: 'actions',
+      cell: ({ row }) => {
+        const user = row.original;
+
+        return (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-8 w-8 p-0">
+                <span className="sr-only">Abrir menu</span>
+                <MoreHorizontal className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Ações</DropdownMenuLabel>
+              <DropdownMenuItem
+                onClick={() => navigator.clipboard.writeText(user.id)}
+              >
+                Copia ID do usuário
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                onClick={() => navigator.clipboard.writeText(user.firstName)}
+              >
+                Copiar nome
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => navigator.clipboard.writeText(user.lastName)}
+              >
+                Copiar sobrenome
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        );
+      },
     },
   ];
 

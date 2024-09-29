@@ -20,7 +20,7 @@ const DataTable = ({ data, columns }) => {
   });
 
   return (
-    <div style={{ backgroundColor: '#fff' }}>
+    <div className="bg-white">
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
