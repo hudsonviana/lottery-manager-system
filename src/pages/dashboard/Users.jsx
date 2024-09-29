@@ -2,17 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import useApiPrivate from '@/hooks/useApiPrivate';
 import formatDate from '@/helpers/formatDate';
 import translateRole from '@/helpers/translateRole';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
-import { Button } from '@/components/ui/button';
-import { MoreHorizontal } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import DataTable from '@/components/DataTable';
 
 const Users = () => {
   const apiPrivate = useApiPrivate();
@@ -32,9 +22,55 @@ const Users = () => {
 
   // https://www.youtube.com/watch?v=NfNjj-pZV30
 
+  const columns = [
+    {
+      header: 'Nome',
+      accessorKey: 'name',
+      accessorFn: (row) => `${row.firstName} ${row.lastName}`,
+    },
+    { header: 'Email', accessorKey: 'email' },
+    {
+      header: 'Nível de Acesso',
+      accessorKey: 'role',
+      cell: (info) => translateRole(info.getValue()),
+    },
+    {
+      header: 'Cadastrado em',
+      accessorKey: 'createdAt',
+      cell: (info) => formatDate(info.getValue()),
+    },
+    {
+      header: 'Última modificação/acesso',
+      accessorKey: 'updatedAt',
+      cell: (info) => formatDate(info.getValue()),
+    },
+  ];
+
   return (
     <div>
-      <Table>
+      <DataTable data={users} columns={columns} />
+    </div>
+  );
+};
+
+export default Users;
+
+/**
+ * 
+ * 
+ * import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+import { Button } from '@/components/ui/button';
+import { MoreHorizontal } from 'lucide-react';
+import { Link } from 'react-router-dom';
+
+ *  <Table>
         <TableHeader>
           <TableRow>
             <TableHead>Nome do usuário</TableHead>
@@ -66,8 +102,4 @@ const Users = () => {
           ))}
         </TableBody>
       </Table>
-    </div>
-  );
-};
-
-export default Users;
+ */

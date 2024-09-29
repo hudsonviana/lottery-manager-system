@@ -12,7 +12,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 
-const DataTable = ({ data, columns }) => {
+const BasicTable = ({ data, columns }) => {
   const table = useReactTable({
     data,
     columns,
@@ -20,7 +20,7 @@ const DataTable = ({ data, columns }) => {
   });
 
   return (
-    <div style={{ backgroundColor: '#fff' }}>
+    <>
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
@@ -48,8 +48,8 @@ const DataTable = ({ data, columns }) => {
           ))}
         </TableBody>
       </Table>
-    </div>
+    </>
   );
 };
 
-export default DataTable;
+export default BasicTable;
