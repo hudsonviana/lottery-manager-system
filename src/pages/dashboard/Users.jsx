@@ -17,7 +17,8 @@ const Users = () => {
     queryFn: async () => (await apiPrivate.get('/users')).data?.users,
   });
 
-  if (isPending) return <div>Carregando...</div>;
+  if (isPending)
+    return <div className="container mx-auto py-10">Carregando...</div>;
   if (isError) return <div>Ocorreu um erro: {error.message}</div>;
 
   // https://www.youtube.com/watch?v=NfNjj-pZV30
@@ -47,7 +48,7 @@ const Users = () => {
   ];
 
   return (
-    <div>
+    <div className="container mx-auto py-10">
       <DataTable data={users} columns={columns} />
     </div>
   );
