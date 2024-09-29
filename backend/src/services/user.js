@@ -19,6 +19,7 @@ export const findOne = async ({ id, email }) => {
   try {
     return await prisma.user.findUnique({
       where: { id, email },
+      omit: { refreshToken: true },
     });
   } catch (error) {
     return { error: 'Ocorreu um erro ao consultar o usuário' };

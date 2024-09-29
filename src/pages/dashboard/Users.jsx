@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import useApiPrivate from '@/hooks/useApiPrivate';
-
+import formatDate from '@/helpers/formatDate';
+import translateRole from '@/helpers/translateRole';
 import {
   Table,
   TableBody,
@@ -11,6 +12,7 @@ import {
 } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
 import { MoreHorizontal } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const Users = () => {
   const apiPrivate = useApiPrivate();
@@ -30,26 +32,6 @@ const Users = () => {
 
   // https://www.youtube.com/watch?v=NfNjj-pZV30
 
-  // Função para formatar a data
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleString('pt-BR', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    });
-  };
-
-  const translateRole = (role) => {
-    const roles = {
-      ADMIN: 'Administrador',
-      USER: 'Usuário',
-    };
-    return roles[role] || 'indefinido';
-  };
-
   return (
     <div>
       <Table>
@@ -67,7 +49,9 @@ const Users = () => {
           {users?.map((user) => (
             <TableRow key={user.id}>
               <TableCell>
-                {user.firstName} {user.lastName}
+                <Link to={user.id}>
+                  {user.firstName} {user.lastName}
+                </Link>
               </TableCell>
               <TableCell>{user.email}</TableCell>
               <TableCell>{translateRole(user.role)}</TableCell>

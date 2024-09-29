@@ -14,6 +14,7 @@ import Settings from './pages/dashboard/Settings.jsx';
 import Support from './pages/dashboard/Support.jsx';
 import Admin from './pages/dashboard/Admin.jsx';
 import Users from './pages/dashboard/Users.jsx';
+import User from './pages/dashboard/User.jsx';
 import PersistLogin from './components/PersistLogin.jsx';
 import RequireAuth from './components/RequireAuth.jsx';
 import RequireGuest from './components/RequireGuest.jsx';
@@ -22,6 +23,7 @@ import './index.css';
 
 import { Toaster } from '@/components/ui/toaster';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
 const queryClient = new QueryClient();
 
 const router = createBrowserRouter([
@@ -60,6 +62,7 @@ const router = createBrowserRouter([
                 children: [
                   { path: 'admin', element: <Admin /> },
                   { path: 'users', element: <Users /> },
+                  { path: 'users/:id', element: <User /> },
                 ],
               },
             ],
