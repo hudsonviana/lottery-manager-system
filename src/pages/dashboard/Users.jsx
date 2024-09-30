@@ -3,7 +3,7 @@ import useApiPrivate from '@/hooks/useApiPrivate';
 import formatDate from '@/helpers/formatDate';
 import translateRole from '@/helpers/translateRole';
 import DataTable from '@/components/DataTable';
-import { MoreHorizontal } from 'lucide-react';
+import { MoreHorizontal, ArrowUpDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -14,9 +14,21 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
+const sortingHeader = ({ label, column }) => {
+  return (
+    <Button
+      className="ms-0 px-0"
+      variant="ghost"
+      onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+    >
+      {label}
+      <ArrowUpDown className="ml-2 h-4 w-4" />
+    </Button>
+  );
+};
+
 const Users = () => {
   const apiPrivate = useApiPrivate();
-
   const {
     isPending,
     isError,
@@ -28,30 +40,37 @@ const Users = () => {
   });
 
   if (isPending)
-    return <div className="container mx-auto py-10">Carregando...</div>;
+    return <div className="container mx-auto py-0">Carregando...</div>;
   if (isError) return <div>Ocorreu um erro: {error.message}</div>;
-
-  // https://www.youtube.com/watch?v=NfNjj-pZV30
 
   const columns = [
     {
-      header: 'Nome',
+      header: (info) => sortingHeader({ label: 'Nome', column: info.column }),
       accessorKey: 'name',
       accessorFn: (row) => `${row.firstName} ${row.lastName}`,
     },
-    { header: 'Email', accessorKey: 'email' },
     {
-      header: 'Nível de Acesso',
+      header: (info) => sortingHeader({ label: 'Email', column: info.column }),
+      accessorKey: 'email',
+    },
+    {
+      header: (info) =>
+        sortingHeader({ label: 'Nível de acesso', column: info.column }),
       accessorKey: 'role',
       cell: (info) => translateRole(info.getValue()),
     },
     {
-      header: 'Cadastrado em',
+      header: (info) =>
+        sortingHeader({ label: 'Cadastrado em', column: info.column }),
       accessorKey: 'createdAt',
       cell: (info) => formatDate(info.getValue()),
     },
     {
-      header: 'Última modificação/acesso',
+      header: (info) =>
+        sortingHeader({
+          label: 'Última autlização',
+          column: info.column,
+        }),
       accessorKey: 'updatedAt',
       cell: (info) => formatDate(info.getValue()),
     },
@@ -94,59 +113,10 @@ const Users = () => {
   ];
 
   return (
-    <div className="container mx-auto py-10">
+    <div className="container mx-auto py-0">
       <DataTable data={users} columns={columns} />
     </div>
   );
 };
 
 export default Users;
-
-/**
- * 
- * 
- * import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
-import { Button } from '@/components/ui/button';
-import { MoreHorizontal } from 'lucide-react';
-import { Link } from 'react-router-dom';
-
- *  <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Nome do usuário</TableHead>
-            <TableHead>Email</TableHead>
-            <TableHead>Perfil</TableHead>
-            <TableHead>Criado em</TableHead>
-            <TableHead>Atualizado em</TableHead>
-            <TableHead></TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {users?.map((user) => (
-            <TableRow key={user.id}>
-              <TableCell>
-                <Link to={user.id}>
-                  {user.firstName} {user.lastName}
-                </Link>
-              </TableCell>
-              <TableCell>{user.email}</TableCell>
-              <TableCell>{translateRole(user.role)}</TableCell>
-              <TableCell>{formatDate(user.createdAt)}</TableCell>
-              <TableCell>{formatDate(user.updatedAt)}</TableCell>
-              <TableCell>
-                <Button variant="ghost" className="ml-auto flex h-8 p-0">
-                  <MoreHorizontal className="h-4 w-4" />
-                </Button>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
- */

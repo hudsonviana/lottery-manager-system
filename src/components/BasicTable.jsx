@@ -20,7 +20,7 @@ const BasicTable = ({ data, columns }) => {
   });
 
   return (
-    <div className="bg-white">
+    <div className="bg-white rounded-md border">
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
