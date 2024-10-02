@@ -1,13 +1,14 @@
-import useApiPrivate from '@/hooks/useApiPrivate';
+import useAuthApiClient from '@/hooks/useAuthApiClient';
 import { useQuery } from '@tanstack/react-query';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import translateRole from '@/helpers/translateRole';
+import { Button } from '@/components/ui/button';
 
 const User = () => {
+  const navigate = useNavigate();
   const { id } = useParams();
 
-  const apiPrivate = useApiPrivate();
-
+  const authApiClient = useAuthApiClient();
   const {
     isPending,
     isError,
@@ -15,7 +16,7 @@ const User = () => {
     error,
   } = useQuery({
     queryKey: ['users', id],
-    queryFn: async () => (await apiPrivate.get(`/users/${id}`)).data?.user,
+    queryFn: async () => (await authApiClient.get(`/users/${id}`)).data?.user,
   });
 
   if (isPending) return <div>Carregando...</div>;
@@ -26,7 +27,7 @@ const User = () => {
       <div className="flex flex-row">
         <h4 className="mr-1">Nome completo:</h4>{' '}
         <span>
-          {user.firstName} {user.firstName}
+          {user.firstName} {user.lastName}
         </span>
       </div>
       <div className="flex flex-row">
@@ -36,6 +37,8 @@ const User = () => {
         <h4 className="mr-1">Perfil:</h4>{' '}
         <span>{translateRole(user.role)}</span>
       </div>
+
+      <Button onClick={() => navigate(-1)}>Voltar</Button>
     </div>
   );
 };

@@ -3,7 +3,7 @@ import { apiClientPrivate } from '@/api/apiClient';
 import useRefreshToken from './useRefreshToken';
 import { useAuth } from './useAuth';
 
-const useApiPrivate = () => {
+const useAuthApiClient = () => {
   const refresh = useRefreshToken();
   const { auth } = useAuth();
 
@@ -41,4 +41,4 @@ const useApiPrivate = () => {
   return apiClientPrivate;
 };
 
-export default useApiPrivate;
+export default useAuthApiClient;

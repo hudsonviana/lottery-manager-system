@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
-import useApiPrivate from '@/hooks/useApiPrivate';
+import { useNavigate } from 'react-router-dom';
+import useAuthApiClient from '@/hooks/useAuthApiClient';
 import formatDate from '@/helpers/formatDate';
 import translateRole from '@/helpers/translateRole';
 import DataTable from '@/components/DataTable';
@@ -13,6 +14,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+
+// import generateRandomUsers from '@/mock/generateRandomUsers';
+// const users = generateRandomUsers(89);
 
 const sortingHeader = ({ label, column }) => {
   return (
@@ -28,15 +32,11 @@ const sortingHeader = ({ label, column }) => {
 };
 
 const Users = () => {
-  const apiPrivate = useApiPrivate();
-  const {
-    isPending,
-    isError,
-    data: users,
-    error,
-  } = useQuery({
+  const navigate = useNavigate();
+  const authApiClient = useAuthApiClient();
+  const { isPending, isError, data, error } = useQuery({
     queryKey: ['users'],
-    queryFn: async () => (await apiPrivate.get('/users')).data?.users,
+    queryFn: async () => (await authApiClient.get('/users')).data?.users,
   });
 
   if (isPending)
@@ -83,16 +83,14 @@ const Users = () => {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="h-8 w-8 p-0">
-                <span className="sr-only">Abrir menu</span>
+                <span className="sr-only">Menu</span>
                 <MoreHorizontal className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Ações</DropdownMenuLabel>
-              <DropdownMenuItem
-                onClick={() => navigator.clipboard.writeText(user.id)}
-              >
-                Copia ID do usuário
+              <DropdownMenuItem onClick={() => navigate(user.id)}>
+                Visualizar usuário
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem
@@ -114,7 +112,7 @@ const Users = () => {
 
   return (
     <div className="container mx-auto py-0">
-      <DataTable data={users} columns={columns} />
+      <DataTable data={data} columns={columns} />
     </div>
   );
 };

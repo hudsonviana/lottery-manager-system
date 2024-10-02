@@ -76,7 +76,7 @@ const DataTable = ({ data, columns }) => {
                   data-state={row.getIsSelected() && 'selected'}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id} className="py-2">
+                    <TableCell key={cell.id} className="py-0.5">
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext()
@@ -91,7 +91,7 @@ const DataTable = ({ data, columns }) => {
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  Sem resultados.
+                  Sem resultados
                 </TableCell>
               </TableRow>
             )}
@@ -99,39 +99,52 @@ const DataTable = ({ data, columns }) => {
         </Table>
       </div>
 
-      <div className="flex items-center justify-end space-x-2 pt-2">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => table.setPageIndex(0)}
-          disabled={!table.getCanPreviousPage()}
-        >
-          <HiChevronDoubleLeft />
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
-        >
-          <HiChevronLeft />
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
-        >
-          <HiChevronRight />
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-          disabled={!table.getCanNextPage()}
-        >
-          <HiChevronDoubleRight />
-        </Button>
+      <div className="flex justify-between pt-2">
+        <div className="flex items-center text-neutral-500">
+          Mostrando {table.getRowModel().rows?.length} de{' '}
+          {table.getState().globalFilter
+            ? table.getFilteredRowModel().rows?.length
+            : data.length}{' '}
+          resultados
+        </div>
+        <div className="flex items-center space-x-2">
+          <div className="mx-5 text-neutral-500">
+            Pág {table.getState().pagination.pageIndex + 1} de{' '}
+            {table.getPageCount() || 1}
+          </div>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => table.setPageIndex(0)}
+            disabled={!table.getCanPreviousPage()}
+          >
+            <HiChevronDoubleLeft />
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => table.previousPage()}
+            disabled={!table.getCanPreviousPage()}
+          >
+            <HiChevronLeft />
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => table.nextPage()}
+            disabled={!table.getCanNextPage()}
+          >
+            <HiChevronRight />
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => table.setPageIndex(table.getPageCount() - 1)}
+            disabled={!table.getCanNextPage()}
+          >
+            <HiChevronDoubleRight />
+          </Button>
+        </div>
       </div>
     </div>
   );
