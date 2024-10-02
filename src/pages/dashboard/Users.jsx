@@ -14,6 +14,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import CreateUserModal from '@/components/CreateUserModal';
 
 // import generateRandomUsers from '@/mock/generateRandomUsers';
 // const users = generateRandomUsers(89);
@@ -113,7 +114,11 @@ const Users = () => {
 
   return (
     <div className="container mx-auto py-0">
-      <DataTable data={data} columns={columns} />
+      <DataTable
+        data={data}
+        columns={columns}
+        createModal={<CreateUserModal />}
+      />
     </div>
   );
 };

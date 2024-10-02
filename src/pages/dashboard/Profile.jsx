@@ -1,7 +1,12 @@
+import CreateUserModal from '@/components/CreateUserModal';
+
 const Profile = () => {
   return (
-    <div>Profile</div>
-  )
-}
+    <div>
+      Profile
+      <CreateUserModal />
+    </div>
+  );
+};
 
-export default Profile
+export default Profile;

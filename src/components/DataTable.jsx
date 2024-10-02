@@ -24,7 +24,7 @@ import {
   HiOutlineChevronRight,
 } from 'react-icons/hi';
 
-const DataTable = ({ data, columns }) => {
+const DataTable = ({ data, columns, createModal }) => {
   const [sorting, setSorting] = useState([]);
   const [filtering, setFiltering] = useState(
     localStorage.getItem('filtering') || ''
@@ -56,6 +56,7 @@ const DataTable = ({ data, columns }) => {
           onChange={handleInputChange}
           className="max-w-sm"
         />
+        {createModal}
       </div>
       <div className="bg-white rounded-md border">
         <Table>
@@ -108,16 +109,17 @@ const DataTable = ({ data, columns }) => {
 
       <div className="flex justify-between pt-2">
         <div className="flex items-center text-neutral-500">
-          {table.getRowModel().rows?.length ? (
+          {table.getRowModel().rows.length > 0 && (
             <span>
               Mostrando {table.getRowModel().rows?.length} de{' '}
               {table.getState().globalFilter
                 ? table.getFilteredRowModel().rows?.length
                 : data.length}{' '}
-              resultados
+              {table.getFilteredRowModel().rows?.length === 1 ||
+              (!table.getState().globalFilter && data.length === 1)
+                ? 'resultado'
+                : 'resultados'}
             </span>
-          ) : (
-            ''
           )}
         </div>
         <div className="flex items-center space-x-2">
