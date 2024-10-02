@@ -37,6 +37,7 @@ const Users = () => {
   const { isPending, isError, data, error } = useQuery({
     queryKey: ['users'],
     queryFn: async () => (await authApiClient.get('/users')).data?.users,
+    staleTime: 1000 * 60 * 2,
   });
 
   if (isPending)

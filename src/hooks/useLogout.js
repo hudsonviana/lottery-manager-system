@@ -19,6 +19,7 @@ export const useLogout = () => {
     onSuccess: (data) => {
       if (data?.logout) {
         setAuth({});
+        localStorage.clear();
       }
     },
     onError: (error) => {

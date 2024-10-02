@@ -15,18 +15,20 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { Button } from './ui/button';
-import { Input } from './ui/input';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import {
-  HiChevronDoubleLeft,
-  HiChevronDoubleRight,
-  HiChevronLeft,
-  HiChevronRight,
+  HiOutlineChevronDoubleLeft,
+  HiOutlineChevronDoubleRight,
+  HiOutlineChevronLeft,
+  HiOutlineChevronRight,
 } from 'react-icons/hi';
 
 const DataTable = ({ data, columns }) => {
   const [sorting, setSorting] = useState([]);
-  const [filtering, setFiltering] = useState('');
+  const [filtering, setFiltering] = useState(
+    localStorage.getItem('filtering') || ''
+  );
 
   const table = useReactTable({
     data,
@@ -40,13 +42,18 @@ const DataTable = ({ data, columns }) => {
     state: { sorting, globalFilter: filtering },
   });
 
+  const handleInputChange = (e) => {
+    setFiltering(e.target.value);
+    localStorage.setItem('filtering', e.target.value);
+  };
+
   return (
     <div>
-      <div className="flex items-center pb-2">
+      <div className="flex items-center justify-between pb-2">
         <Input
           placeholder="Pesquisar"
           value={filtering}
-          onChange={(e) => setFiltering(e.target.value)}
+          onChange={handleInputChange}
           className="max-w-sm"
         />
       </div>
@@ -101,11 +108,17 @@ const DataTable = ({ data, columns }) => {
 
       <div className="flex justify-between pt-2">
         <div className="flex items-center text-neutral-500">
-          Mostrando {table.getRowModel().rows?.length} de{' '}
-          {table.getState().globalFilter
-            ? table.getFilteredRowModel().rows?.length
-            : data.length}{' '}
-          resultados
+          {table.getRowModel().rows?.length ? (
+            <span>
+              Mostrando {table.getRowModel().rows?.length} de{' '}
+              {table.getState().globalFilter
+                ? table.getFilteredRowModel().rows?.length
+                : data.length}{' '}
+              resultados
+            </span>
+          ) : (
+            ''
+          )}
         </div>
         <div className="flex items-center space-x-2">
           <div className="mx-5 text-neutral-500">
@@ -118,7 +131,7 @@ const DataTable = ({ data, columns }) => {
             onClick={() => table.setPageIndex(0)}
             disabled={!table.getCanPreviousPage()}
           >
-            <HiChevronDoubleLeft />
+            <HiOutlineChevronDoubleLeft />
           </Button>
           <Button
             variant="outline"
@@ -126,7 +139,7 @@ const DataTable = ({ data, columns }) => {
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
           >
-            <HiChevronLeft />
+            <HiOutlineChevronLeft />
           </Button>
           <Button
             variant="outline"
@@ -134,7 +147,7 @@ const DataTable = ({ data, columns }) => {
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
           >
-            <HiChevronRight />
+            <HiOutlineChevronRight />
           </Button>
           <Button
             variant="outline"
@@ -142,7 +155,7 @@ const DataTable = ({ data, columns }) => {
             onClick={() => table.setPageIndex(table.getPageCount() - 1)}
             disabled={!table.getCanNextPage()}
           >
-            <HiChevronDoubleRight />
+            <HiOutlineChevronDoubleRight />
           </Button>
         </div>
       </div>
