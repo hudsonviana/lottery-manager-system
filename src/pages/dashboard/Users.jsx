@@ -35,7 +35,7 @@ const sortingHeader = ({ label, column }) => {
 };
 
 const Users = () => {
-  const [open, setOpen] = useState(false);
+  const [updateModalOpen, setUpdateModalOpen] = useState(false);
   const [userUpdate, setUserUpdate] = useState({});
 
   const navigate = useNavigate();
@@ -53,7 +53,7 @@ const Users = () => {
 
   const handleUpdateUserMenuClick = (user) => {
     setUserUpdate(user);
-    setOpen(true);
+    setUpdateModalOpen(true);
   };
 
   const columns = [
@@ -124,9 +124,9 @@ const Users = () => {
   return (
     <div className="container mx-auto py-0">
       <UpdateUserModal
-        updateModalOpen={open}
-        setUpdateModalOpen={setOpen}
-        userUpdate={userUpdate}
+        updateModalOpen={updateModalOpen}
+        setUpdateModalOpen={setUpdateModalOpen}
+        user={userUpdate}
       />
       <DataTable
         data={data}

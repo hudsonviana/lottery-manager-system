@@ -10,9 +10,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  // DialogTrigger,
 } from '@/components/ui/dialog';
-// import { HiOutlinePlusCircle } from 'react-icons/hi';
 import { Check, ChevronsUpDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
@@ -44,28 +42,18 @@ const roles = [
   },
 ];
 
-const UpdateUserModal = ({
-  userUpdate,
-  updateModalOpen,
-  setUpdateModalOpen,
-}) => {
+const UpdateUserModal = ({ user, updateModalOpen, setUpdateModalOpen }) => {
   const [open, setOpen] = useState(false);
-  const [modalOpen, setModalOpen] = useState(false);
-  const [userData, setUserData] = useState({});
+  const [userUpdateData, setUserUpdateData] = useState({});
 
   useEffect(() => {
-    setUserData(userUpdate);
-    setModalOpen(updateModalOpen);
+    setUserUpdateData(user);
   }, [updateModalOpen]);
-
-  useEffect(() => {
-    if (!modalOpen) setUpdateModalOpen(false);
-  }, [modalOpen]);
 
   const handleInputChange = (e) => {
     const { type, name } = e.target;
     const value = e.target[type === 'checkbox' ? 'checked' : 'value'];
-    setUserData((prevData) => ({ ...prevData, [name]: value }));
+    setUserUpdateData((prevData) => ({ ...prevData, [name]: value }));
   };
 
   const handleCancelButtonClick = () => {
@@ -76,15 +64,15 @@ const UpdateUserModal = ({
   const queryClient = useQueryClient();
 
   const updateUserMutation = useMutation({
-    mutationFn: () => updateUser(userUpdate.id, userData),
-    onSuccess: ({ user }) => {
+    mutationFn: () => updateUser(user.id, userUpdateData),
+    onSuccess: ({ updatedUser }) => {
       queryClient.invalidateQueries({ queryKey: ['users'] });
-      setModalOpen(false);
+      setUpdateModalOpen(false);
       handleCancelButtonClick();
       toast({
         className: 'bg-green-200 text-green-800 border-green-300',
         title: 'Atualização concluída com sucesso!',
-        description: `O usuário: ${user.firstName} ${user.lastName} (Email: ${user.email}) foi atualizado no banco de dados.`,
+        description: `O usuário: ${updatedUser.firstName} ${updatedUser.lastName} (Email: ${updatedUser.email}) foi atualizado no banco de dados.`,
       });
     },
     onError: (err) => {
@@ -101,16 +89,10 @@ const UpdateUserModal = ({
     updateUserMutation.mutate();
   };
 
-  const canSave = [...Object.values(userData)].every(Boolean);
+  const canSave = [...Object.values(userUpdateData)].every(Boolean);
 
   return (
-    <Dialog open={modalOpen} onOpenChange={setModalOpen}>
-      {/* <DialogTrigger asChild>
-        <Button onClick={handleCancelButtonClick}>
-          <HiOutlinePlusCircle size={20} className="me-1" />
-          Novo usuário
-        </Button>
-      </DialogTrigger> */}
+    <Dialog open={updateModalOpen} onOpenChange={setUpdateModalOpen}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Atualizar usuário</DialogTitle>
@@ -127,7 +109,7 @@ const UpdateUserModal = ({
               id="firstName"
               name="firstName"
               className="col-span-3"
-              value={userData.firstName}
+              value={userUpdateData.firstName}
               onChange={handleInputChange}
             />
           </div>
@@ -139,7 +121,7 @@ const UpdateUserModal = ({
               id="lastName"
               name="lastName"
               className="col-span-3"
-              value={userData.lastName}
+              value={userUpdateData.lastName}
               onChange={handleInputChange}
             />
           </div>
@@ -151,7 +133,7 @@ const UpdateUserModal = ({
               id="email"
               name="email"
               className="col-span-3"
-              value={userData.email}
+              value={userUpdateData.email}
               onChange={handleInputChange}
             />
           </div>
@@ -168,8 +150,9 @@ const UpdateUserModal = ({
                   aria-expanded={open}
                   className="w-[200px] justify-between"
                 >
-                  {userData.role
-                    ? roles.find((role) => role.value === userData.role)?.label
+                  {userUpdateData.role
+                    ? roles.find((role) => role.value === userUpdateData.role)
+                        ?.label
                     : 'Selecione o perfil...'}
                   <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                 </Button>
@@ -186,10 +169,10 @@ const UpdateUserModal = ({
                           value={role.value}
                           onSelect={(currentValue) => {
                             const selectedRole =
-                              currentValue === userData.role
+                              currentValue === userUpdateData.role
                                 ? ''
                                 : currentValue;
-                            setUserData((prevData) => ({
+                            setUserUpdateData((prevData) => ({
                               ...prevData,
                               role: selectedRole,
                             }));
@@ -199,7 +182,7 @@ const UpdateUserModal = ({
                           <Check
                             className={cn(
                               'mr-2 h-4 w-4',
-                              userData.role === role.value
+                              userUpdateData.role === role.value
                                 ? 'opacity-100'
                                 : 'opacity-0'
                             )}
