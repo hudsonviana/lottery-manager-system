@@ -14,7 +14,9 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import CreateUserModal from '@/components/CreateUserModal';
+import UpdateUserModal from '@/components/UpdateUserModal';
 import useUserApi from '@/hooks/useUserApi';
+import { useState } from 'react';
 
 // import generateRandomUsers from '@/mock/generateRandomUsers';
 // const users = generateRandomUsers(89);
@@ -33,18 +35,26 @@ const sortingHeader = ({ label, column }) => {
 };
 
 const Users = () => {
+  const [open, setOpen] = useState(false);
+  const [userUpdate, setUserUpdate] = useState({});
+
   const navigate = useNavigate();
   const { fetchUsers } = useUserApi();
 
   const { isPending, isError, data, error } = useQuery({
     queryKey: ['users'],
     queryFn: fetchUsers,
-    staleTime: 1000 * 60 * 2,
+    staleTime: 1000 * 60 * 5,
   });
 
   if (isPending)
     return <div className="container mx-auto py-0">Carregando...</div>;
   if (isError) return <div>Ocorreu um erro: {error.message}</div>;
+
+  const handleUpdateUserMenuClick = (user) => {
+    setUserUpdate(user);
+    setOpen(true);
+  };
 
   const columns = [
     {
@@ -96,10 +106,8 @@ const Users = () => {
                 Visualizar usuário
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem
-                onClick={() => navigator.clipboard.writeText(user.firstName)}
-              >
-                Copiar nome
+              <DropdownMenuItem onClick={() => handleUpdateUserMenuClick(user)}>
+                Atualizar usuário
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => navigator.clipboard.writeText(user.lastName)}
@@ -115,6 +123,11 @@ const Users = () => {
 
   return (
     <div className="container mx-auto py-0">
+      <UpdateUserModal
+        updateModalOpen={open}
+        setUpdateModalOpen={setOpen}
+        userUpdate={userUpdate}
+      />
       <DataTable
         data={data}
         columns={columns}

@@ -18,7 +18,10 @@ const useUserApi = () => {
     return response.data;
   };
 
-  const updateUser = async (id) => {};
+  const updateUser = async (id, userData) => {
+    const response = await authApiClient.put(`/users/${id}`, userData);
+    return response.data;
+  };
 
   const deleteUser = async (id) => {};
 

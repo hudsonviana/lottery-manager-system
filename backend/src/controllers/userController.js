@@ -122,7 +122,7 @@ export const updateUser = async (req, res) => {
     return res.status(500).json({ error: updatedUser.error });
   }
 
-  res.json({ user: updatedUser, auth });
+  res.json({ user: updatedUser });
 };
 
 export const deleteUser = async (req, res) => {
