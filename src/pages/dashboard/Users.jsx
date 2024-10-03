@@ -3,20 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import formatDate from '@/helpers/formatDate';
 import translateRole from '@/helpers/translateRole';
 import DataTable from '@/components/DataTable';
-import { MoreHorizontal, ArrowUpDown } from 'lucide-react';
+import { ArrowUpDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 import CreateUserModal from '@/components/CreateUserModal';
 import UpdateUserModal from '@/components/UpdateUserModal';
 import useUserApi from '@/hooks/useUserApi';
 import { useState } from 'react';
+import UserActions from '@/components/UserActions';
 
 // import generateRandomUsers from '@/mock/generateRandomUsers';
 // const users = generateRandomUsers(89);
@@ -35,7 +28,7 @@ const sortingHeader = ({ label, column }) => {
 };
 
 const Users = () => {
-  const [updateModalOpen, setUpdateModalOpen] = useState(false);
+  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [userUpdate, setUserUpdate] = useState({});
 
   const navigate = useNavigate();
@@ -51,9 +44,9 @@ const Users = () => {
     return <div className="container mx-auto py-0">Carregando...</div>;
   if (isError) return <div>Ocorreu um erro: {error.message}</div>;
 
-  const handleUpdateUserMenuClick = (user) => {
+  const handleUpdateUserAction = (user) => {
     setUserUpdate(user);
-    setUpdateModalOpen(true);
+    setIsUpdateModalOpen(true);
   };
 
   const columns = [
@@ -93,29 +86,12 @@ const Users = () => {
         const user = row.original;
 
         return (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-8 w-8 p-0">
-                <span className="sr-only">Menu</span>
-                <MoreHorizontal className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Ações</DropdownMenuLabel>
-              <DropdownMenuItem onClick={() => navigate(user.id)}>
-                Visualizar usuário
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => handleUpdateUserMenuClick(user)}>
-                Atualizar usuário
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() => navigator.clipboard.writeText(user.lastName)}
-              >
-                Copiar sobrenome
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <UserActions
+            user={user}
+            onView={() => navigate(user.id)}
+            onUpdate={() => handleUpdateUserAction(user)}
+            onDelete={() => console.log(`Deletar usuário:`, user)}
+          />
         );
       },
     },
@@ -124,8 +100,8 @@ const Users = () => {
   return (
     <div className="container mx-auto py-0">
       <UpdateUserModal
-        updateModalOpen={updateModalOpen}
-        setUpdateModalOpen={setUpdateModalOpen}
+        isUpdateModalOpen={isUpdateModalOpen}
+        setIsUpdateModalOpen={setIsUpdateModalOpen}
         user={userUpdate}
       />
       <DataTable

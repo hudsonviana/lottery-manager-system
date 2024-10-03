@@ -42,13 +42,13 @@ const roles = [
   },
 ];
 
-const UpdateUserModal = ({ user, updateModalOpen, setUpdateModalOpen }) => {
+const UpdateUserModal = ({ user, isUpdateModalOpen, setIsUpdateModalOpen }) => {
   const [open, setOpen] = useState(false);
   const [userUpdateData, setUserUpdateData] = useState({});
 
   useEffect(() => {
     setUserUpdateData(user);
-  }, [updateModalOpen]);
+  }, [user]);
 
   const handleInputChange = (e) => {
     const { type, name } = e.target;
@@ -57,17 +57,17 @@ const UpdateUserModal = ({ user, updateModalOpen, setUpdateModalOpen }) => {
   };
 
   const handleCancelButtonClick = () => {
-    setUpdateModalOpen(false);
+    setIsUpdateModalOpen(false);
   };
 
   const { updateUser } = useUserApi();
   const queryClient = useQueryClient();
 
   const updateUserMutation = useMutation({
-    mutationFn: () => updateUser(user.id, userUpdateData),
+    mutationFn: (userData) => updateUser(user.id, userData),
     onSuccess: ({ updatedUser }) => {
       queryClient.invalidateQueries({ queryKey: ['users'] });
-      setUpdateModalOpen(false);
+      setIsUpdateModalOpen(false);
       handleCancelButtonClick();
       toast({
         className: 'bg-green-200 text-green-800 border-green-300',
@@ -86,13 +86,13 @@ const UpdateUserModal = ({ user, updateModalOpen, setUpdateModalOpen }) => {
   });
 
   const handleUpdateButtonClick = () => {
-    updateUserMutation.mutate();
+    updateUserMutation.mutate(userUpdateData);
   };
 
   const canSave = [...Object.values(userUpdateData)].every(Boolean);
 
   return (
-    <Dialog open={updateModalOpen} onOpenChange={setUpdateModalOpen}>
+    <Dialog open={isUpdateModalOpen} onOpenChange={setIsUpdateModalOpen}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Atualizar usuário</DialogTitle>
