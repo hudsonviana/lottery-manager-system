@@ -60,7 +60,7 @@ export const getUserGames = async (req, res) => {
 };
 
 export const addUser = async (req, res) => {
-  const auth = req.auth;
+  // const auth = req.auth;
 
   const addUserSchema = z.object({
     firstName: z
@@ -77,7 +77,8 @@ export const addUser = async (req, res) => {
     return res.status(400).json({ errors: body.error.errors });
   }
 
-  const tempPassword = crypto.randomBytes(3).toString('hex');
+  // const tempPassword = crypto.randomBytes(3).toString('hex');
+  const tempPassword = 'aabbcc';
 
   const salt = await bcrypt.genSalt();
   const hashedPassword = await bcrypt.hash(tempPassword, salt);
@@ -88,7 +89,7 @@ export const addUser = async (req, res) => {
     return res.status(500).json({ error: newUser.error });
   }
 
-  res.status(201).json({ user: newUser, tempPassword, auth });
+  res.status(201).json({ user: newUser, tempPassword });
 };
 
 export const updateUser = async (req, res) => {

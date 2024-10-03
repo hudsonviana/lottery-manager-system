@@ -1,6 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
-import useAuthApiClient from '@/hooks/useAuthApiClient';
 import formatDate from '@/helpers/formatDate';
 import translateRole from '@/helpers/translateRole';
 import DataTable from '@/components/DataTable';
@@ -15,6 +14,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import CreateUserModal from '@/components/CreateUserModal';
+import useUserApi from '@/hooks/useUserApi';
 
 // import generateRandomUsers from '@/mock/generateRandomUsers';
 // const users = generateRandomUsers(89);
@@ -34,10 +34,11 @@ const sortingHeader = ({ label, column }) => {
 
 const Users = () => {
   const navigate = useNavigate();
-  const authApiClient = useAuthApiClient();
+  const { fetchUsers } = useUserApi();
+
   const { isPending, isError, data, error } = useQuery({
     queryKey: ['users'],
-    queryFn: async () => (await authApiClient.get('/users')).data?.users,
+    queryFn: fetchUsers,
     staleTime: 1000 * 60 * 2,
   });
 

@@ -1,14 +1,15 @@
-import useAuthApiClient from '@/hooks/useAuthApiClient';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate, useParams } from 'react-router-dom';
 import translateRole from '@/helpers/translateRole';
 import { Button } from '@/components/ui/button';
+import useUserApi from '@/hooks/useUserApi';
 
 const User = () => {
   const navigate = useNavigate();
   const { id } = useParams();
 
-  const authApiClient = useAuthApiClient();
+  const { fetchUser } = useUserApi();
+
   const {
     isPending,
     isError,
@@ -16,7 +17,7 @@ const User = () => {
     error,
   } = useQuery({
     queryKey: ['users', id],
-    queryFn: async () => (await authApiClient.get(`/users/${id}`)).data?.user,
+    queryFn: () => fetchUser(id),
   });
 
   if (isPending) return <div>Carregando...</div>;

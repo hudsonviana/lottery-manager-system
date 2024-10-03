@@ -28,6 +28,8 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import useUserApi from '@/hooks/useUserApi';
 
 const roles = [
   {
@@ -64,8 +66,17 @@ const CreateUserModal = () => {
     });
   };
 
+  const { addUser } = useUserApi();
+  const queryClient = useQueryClient();
+
+  const createUserMutation = useMutation({
+    mutationFn: addUser,
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['users'] }),
+    onError: (err) => console.log(err),
+  });
+
   const handleSaveButtonClick = () => {
-    console.log(formData);
+    createUserMutation.mutate(formData);
   };
 
   const canSave = [...Object.values(formData)].every(Boolean);
@@ -188,13 +199,15 @@ const CreateUserModal = () => {
               Cancelar
             </Button>
           </DialogClose>
-          <Button
-            type="submit"
-            disabled={!canSave}
-            onClick={handleSaveButtonClick}
-          >
-            Salvar
-          </Button>
+          <DialogTrigger asChild>
+            <Button
+              type="submit"
+              disabled={!canSave}
+              onClick={handleSaveButtonClick}
+            >
+              Salvar
+            </Button>
+          </DialogTrigger>
         </DialogFooter>
       </DialogContent>
     </Dialog>
