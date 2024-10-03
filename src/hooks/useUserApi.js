@@ -15,11 +15,14 @@ const useUserApi = () => {
 
   const addUser = async (userData) => {
     const response = await authApiClient.post('/users', userData);
-    console.log('Usuário criado:', response.data);
     return response.data;
   };
 
-  return { fetchUsers, fetchUser, addUser };
+  const updateUser = async (id) => {};
+
+  const deleteUser = async (id) => {};
+
+  return { fetchUsers, fetchUser, addUser, updateUser, deleteUser };
 };
 
 export default useUserApi;

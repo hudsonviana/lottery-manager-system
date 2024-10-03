@@ -30,6 +30,8 @@ import {
 } from '@/components/ui/popover';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import useUserApi from '@/hooks/useUserApi';
+import { handleError } from '@/helpers/handleError';
+import { toast } from '@/hooks/use-toast';
 
 const roles = [
   {
@@ -44,7 +46,8 @@ const roles = [
 
 const CreateUserModal = () => {
   const [open, setOpen] = useState(false);
-  const [formData, setFormData] = useState({
+  const [modalOpen, setModalOpen] = useState(false);
+  const [userData, setUserData] = useState({
     firstName: '',
     lastName: '',
     email: '',
@@ -54,11 +57,11 @@ const CreateUserModal = () => {
   const handleInputChange = (e) => {
     const { type, name } = e.target;
     const value = e.target[type === 'checkbox' ? 'checked' : 'value'];
-    setFormData((prevData) => ({ ...prevData, [name]: value }));
+    setUserData((prevData) => ({ ...prevData, [name]: value }));
   };
 
   const handleCancelButtonClick = () => {
-    setFormData({
+    setUserData({
       firstName: '',
       lastName: '',
       email: '',
@@ -71,20 +74,36 @@ const CreateUserModal = () => {
 
   const createUserMutation = useMutation({
     mutationFn: addUser,
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['users'] }),
-    onError: (err) => console.log(err),
+    onSuccess: ({ user }) => {
+      queryClient.invalidateQueries({ queryKey: ['users'] });
+      setModalOpen(false);
+      handleCancelButtonClick();
+      toast({
+        className: 'bg-green-200 text-green-800 border-green-300',
+        title: 'Usuário cadastrado!',
+        description: `O usuário: ${user.firstName} ${user.lastName} (Email: ${user.email}) foi criado no banco de dados.`,
+      });
+    },
+    onError: (err) => {
+      const { error } = handleError(err);
+      toast({
+        className: 'bg-red-200 text-red-800 border-red-300',
+        title: 'Erro ao criar usuário!',
+        description: error.map((err, i) => <p key={i}>{err}</p>),
+      });
+    },
   });
 
   const handleSaveButtonClick = () => {
-    createUserMutation.mutate(formData);
+    createUserMutation.mutate(userData);
   };
 
-  const canSave = [...Object.values(formData)].every(Boolean);
+  const canSave = [...Object.values(userData)].every(Boolean);
 
   return (
-    <Dialog>
+    <Dialog open={modalOpen} onOpenChange={setModalOpen}>
       <DialogTrigger asChild>
-        <Button>
+        <Button onClick={handleCancelButtonClick}>
           <HiOutlinePlusCircle size={20} className="me-1" />
           Novo usuário
         </Button>
@@ -143,8 +162,8 @@ const CreateUserModal = () => {
                   aria-expanded={open}
                   className="w-[200px] justify-between"
                 >
-                  {formData.role
-                    ? roles.find((role) => role.value === formData.role)?.label
+                  {userData.role
+                    ? roles.find((role) => role.value === userData.role)?.label
                     : 'Selecione o perfil...'}
                   <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                 </Button>
@@ -161,10 +180,10 @@ const CreateUserModal = () => {
                           value={role.value}
                           onSelect={(currentValue) => {
                             const selectedRole =
-                              currentValue === formData.role
+                              currentValue === userData.role
                                 ? ''
                                 : currentValue;
-                            setFormData((prevData) => ({
+                            setUserData((prevData) => ({
                               ...prevData,
                               role: selectedRole,
                             }));
@@ -174,7 +193,7 @@ const CreateUserModal = () => {
                           <Check
                             className={cn(
                               'mr-2 h-4 w-4',
-                              formData.role === role.value
+                              userData.role === role.value
                                 ? 'opacity-100'
                                 : 'opacity-0'
                             )}
@@ -199,15 +218,13 @@ const CreateUserModal = () => {
               Cancelar
             </Button>
           </DialogClose>
-          <DialogTrigger asChild>
-            <Button
-              type="submit"
-              disabled={!canSave}
-              onClick={handleSaveButtonClick}
-            >
-              Salvar
-            </Button>
-          </DialogTrigger>
+          <Button
+            type="submit"
+            disabled={!canSave}
+            onClick={handleSaveButtonClick}
+          >
+            Salvar
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
