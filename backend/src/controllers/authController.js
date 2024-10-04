@@ -6,7 +6,7 @@ import { z } from 'zod';
 import * as userService from '../services/user.js';
 
 export const register = async (req, res) => {
-  const createUserSchema = z
+  const registerUserSchema = z
     .object({
       firstName: z
         .string({ message: 'O nome é obrigatório' })
@@ -15,15 +15,15 @@ export const register = async (req, res) => {
       email: z.string({ message: 'O email é obrigatório' }).email({ message: 'Email inválido' }),
       password: z
         .string({ message: 'A senha é obrigatória' })
-        .min(6, { message: 'A senha precisa conter pelo menos 6 caracteres' }),
+        .min(6, { message: 'A senha precisa ter pelo menos 6 caracteres' }),
       confirmPassword: z.string({ message: 'A confirmação de senha é obrigatória' }),
     })
     .refine((data) => data.password === data.confirmPassword, {
-      message: 'Senhas não conferem',
+      message: 'As senhas não coincidem',
       path: ['confirmPassword'],
     });
 
-  const body = createUserSchema.safeParse(req.body);
+  const body = registerUserSchema.safeParse(req.body);
 
   if (!body.success) {
     return res.status(400).json({ errors: body.error.errors });
@@ -40,7 +40,9 @@ export const register = async (req, res) => {
     return res.status(500).json({ error: newUser.error });
   }
 
-  res.status(201).json({ user: newUser });
+  const { password, refreshToken, ...userRegisted } = newUser;
+
+  res.status(201).json({ userRegisted });
 };
 
 const generateAccessToken = (auth) => {
@@ -177,7 +179,7 @@ export const changePassword = async (req, res) => {
       confirmNewPassword: z.string({ message: 'A confirmação de senha é obrigatória' }),
     })
     .refine((data) => data.newPassword === data.confirmNewPassword, {
-      message: 'As senhas fornecidas não conferem',
+      message: 'As senhas não coincidem',
       path: ['confirmNewPassword'],
     });
 
