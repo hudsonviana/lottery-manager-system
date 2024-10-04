@@ -28,7 +28,26 @@ const useUserApi = () => {
     return response.data;
   };
 
-  return { fetchUsers, fetchUser, addUser, updateUser, deleteUser };
+  // AuthController
+  const changePassword = async (id, passData) => {
+    const response = await authApiClient.post(
+      `/auth/${id}/changepassword`,
+      passData
+    );
+    return response.data;
+  };
+
+  const registerUser = async (userData) => {};
+
+  return {
+    fetchUsers,
+    fetchUser,
+    addUser,
+    updateUser,
+    deleteUser,
+    changePassword,
+    registerUser,
+  };
 };
 
 export default useUserApi;

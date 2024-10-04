@@ -89,7 +89,9 @@ export const addUser = async (req, res) => {
     return res.status(500).json({ error: newUser.error });
   }
 
-  res.status(201).json({ user: newUser, tempPassword });
+  const { password, refreshToken, ...userCreated } = newUser;
+
+  res.status(201).json({ user: userCreated, tempPassword });
 };
 
 export const updateUser = async (req, res) => {

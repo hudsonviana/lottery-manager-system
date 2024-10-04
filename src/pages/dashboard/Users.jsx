@@ -48,9 +48,9 @@ const Users = () => {
   const [userUpdate, setUserUpdate] = useState({});
   const [userDelete, setUserDelete] = useState({});
 
-  const queryClient = useQueryClient();
-
   const navigate = useNavigate();
+
+  const queryClient = useQueryClient();
   const { fetchUsers, deleteUser } = useUserApi();
 
   const { isPending, isError, data, error } = useQuery({
@@ -148,6 +148,7 @@ const Users = () => {
       <UpdateUserModal
         isUpdateModalOpen={isUpdateModalOpen}
         setIsUpdateModalOpen={setIsUpdateModalOpen}
+        isOwnUser={false}
         user={userUpdate}
       />
       <DataTable

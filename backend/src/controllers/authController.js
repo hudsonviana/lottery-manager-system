@@ -165,19 +165,20 @@ export const changePassword = async (req, res) => {
   const { id } = req.params;
 
   if (auth.id !== id) {
-    return res.status(403).json({ error: 'Acesso negado' });
+    return res.status(403).json({ error: 'Não é permitido mudar a senha de outro usuário' });
   }
 
   const changePasswordSchema = z
     .object({
-      password: z
-        .string({ message: 'A senha é obrigatória' })
-        .min(6, { message: 'A senha precisa conter pelo menos 6 caracteres' }),
-      confirmPassword: z.string({ message: 'A confirmação de senha é obrigatória' }),
+      currentPassword: z.string({ message: 'A senha atual é obrigatória' }),
+      newPassword: z
+        .string({ message: 'A nova senha é obrigatória' })
+        .min(6, { message: 'A nova senha precisa ter pelo menos 6 caracteres' }),
+      confirmNewPassword: z.string({ message: 'A confirmação de senha é obrigatória' }),
     })
-    .refine((data) => data.password === data.confirmPassword, {
-      message: 'Senhas não conferem',
-      path: ['confirmPassword'],
+    .refine((data) => data.newPassword === data.confirmNewPassword, {
+      message: 'As senhas fornecidas não conferem',
+      path: ['confirmNewPassword'],
     });
 
   const body = changePasswordSchema.safeParse(req.body);
@@ -186,16 +187,28 @@ export const changePassword = async (req, res) => {
     return res.status(400).json({ errors: body.error.errors });
   }
 
+  const user = await userService.findOne({ id });
+
+  if (!user) {
+    return res.status(404).json({ error: 'Usuário não encontrado' });
+  }
+
+  const currentPasswordMatch = await bcrypt.compare(body.data.currentPassword, user.password);
+
+  if (!currentPasswordMatch) {
+    return res.status(401).json({ error: 'Senha atual incorreta' });
+  }
+
   const salt = await bcrypt.genSalt();
-  const hashedPassword = await bcrypt.hash(body.data.password, salt);
+  const hashedPassword = await bcrypt.hash(body.data.newPassword, salt);
 
   const updatedUserPassword = await userService.update({ password: hashedPassword }, id);
 
   if (updatedUserPassword.error) {
-    return res.status(500).json({ error: updatedUserPassword.error });
+    return res.status(500).json({ error: 'Erro ao atualizar a senha' });
   }
 
-  res.json({ user: updatedUserPassword, auth });
+  res.json({ updatedUserPassword });
 };
 
 // export const forgotPassword = async (req, res, next) => {};

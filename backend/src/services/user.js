@@ -76,7 +76,11 @@ export const store = async (data) => {
 
 export const update = async (data, id) => {
   try {
-    return await prisma.user.update({ data: data, where: { id: id } });
+    return await prisma.user.update({
+      data: data,
+      where: { id: id },
+      omit: { password: true, refreshToken: true },
+    });
   } catch (error) {
     return { error: 'Ocorreu um erro ao atualizar o usuário' };
   }
@@ -84,7 +88,10 @@ export const update = async (data, id) => {
 
 export const destroy = async (id) => {
   try {
-    return await prisma.user.delete({ where: { id: id } });
+    return await prisma.user.delete({
+      where: { id: id },
+      omit: { password: true, refreshToken: true },
+    });
   } catch (error) {
     return { error: 'Ocorreu um erro ao deletar o usuário' };
   }

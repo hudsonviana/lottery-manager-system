@@ -32,7 +32,12 @@ import { handleError } from '@/helpers/handleError';
 import { toast } from '@/hooks/use-toast';
 import { USER_ROLES } from '@/consts/Roles';
 
-const UpdateUserModal = ({ user, isUpdateModalOpen, setIsUpdateModalOpen }) => {
+const UpdateUserModal = ({
+  user,
+  isUpdateModalOpen,
+  setIsUpdateModalOpen,
+  isOwnUser = false,
+}) => {
   const [open, setOpen] = useState(false);
   const [userUpdateData, setUserUpdateData] = useState({});
 
@@ -127,66 +132,69 @@ const UpdateUserModal = ({ user, isUpdateModalOpen, setIsUpdateModalOpen }) => {
               onChange={handleInputChange}
             />
           </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="role" className="text-right">
-              Perfil
-            </Label>
 
-            <Popover open={open} onOpenChange={setOpen}>
-              <PopoverTrigger asChild>
-                <Button
-                  variant="outline"
-                  role="combobox"
-                  aria-expanded={open}
-                  className="w-[200px] justify-between"
-                >
-                  {userUpdateData.role
-                    ? USER_ROLES.find(
-                        (role) => role.value === userUpdateData.role
-                      )?.label
-                    : 'Selecione o perfil...'}
-                  <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-[200px] p-0">
-                <Command>
-                  <CommandInput placeholder="Pesquisar perfil..." />
-                  <CommandList>
-                    <CommandEmpty>Perfil não encontrado.</CommandEmpty>
-                    <CommandGroup>
-                      {USER_ROLES.map((role) => (
-                        <CommandItem
-                          key={role.value}
-                          value={role.value}
-                          onSelect={(currentValue) => {
-                            const selectedRole =
-                              currentValue === userUpdateData.role
-                                ? ''
-                                : currentValue;
-                            setUserUpdateData((prevData) => ({
-                              ...prevData,
-                              role: selectedRole,
-                            }));
-                            setOpen(false);
-                          }}
-                        >
-                          <Check
-                            className={cn(
-                              'mr-2 h-4 w-4',
-                              userUpdateData.role === role.value
-                                ? 'opacity-100'
-                                : 'opacity-0'
-                            )}
-                          />
-                          {role.label}
-                        </CommandItem>
-                      ))}
-                    </CommandGroup>
-                  </CommandList>
-                </Command>
-              </PopoverContent>
-            </Popover>
-          </div>
+          {!isOwnUser && (
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="role" className="text-right">
+                Perfil
+              </Label>
+
+              <Popover open={open} onOpenChange={setOpen}>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    role="combobox"
+                    aria-expanded={open}
+                    className="w-[200px] justify-between"
+                  >
+                    {userUpdateData.role
+                      ? USER_ROLES.find(
+                          (role) => role.value === userUpdateData.role
+                        )?.label
+                      : 'Selecione o perfil...'}
+                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-[200px] p-0">
+                  <Command>
+                    <CommandInput placeholder="Pesquisar perfil..." />
+                    <CommandList>
+                      <CommandEmpty>Perfil não encontrado.</CommandEmpty>
+                      <CommandGroup>
+                        {USER_ROLES.map((role) => (
+                          <CommandItem
+                            key={role.value}
+                            value={role.value}
+                            onSelect={(currentValue) => {
+                              const selectedRole =
+                                currentValue === userUpdateData.role
+                                  ? ''
+                                  : currentValue;
+                              setUserUpdateData((prevData) => ({
+                                ...prevData,
+                                role: selectedRole,
+                              }));
+                              setOpen(false);
+                            }}
+                          >
+                            <Check
+                              className={cn(
+                                'mr-2 h-4 w-4',
+                                userUpdateData.role === role.value
+                                  ? 'opacity-100'
+                                  : 'opacity-0'
+                              )}
+                            />
+                            {role.label}
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
+            </div>
+          )}
         </div>
         <DialogFooter>
           <DialogClose asChild>
