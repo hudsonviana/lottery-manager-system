@@ -129,11 +129,15 @@ export const deleteUser = async (req, res) => {
   const auth = req.auth;
   const { id } = req.params;
 
+  if (auth.id === id) {
+    return res.status(403).json({ error: 'O usuário não pode deletar a própria conta' });
+  }
+
   const deletedUser = await userService.destroy(id);
 
   if (deletedUser.error) {
     return res.status(500).json({ error: deletedUser.error });
   }
 
-  res.json({ user: deletedUser, auth });
+  res.json({ deletedUser });
 };

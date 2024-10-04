@@ -23,7 +23,10 @@ const useUserApi = () => {
     return response.data;
   };
 
-  const deleteUser = async (id) => {};
+  const deleteUser = async (id) => {
+    const response = await authApiClient.delete(`/users/${id}`);
+    return response.data;
+  };
 
   return { fetchUsers, fetchUser, addUser, updateUser, deleteUser };
 };

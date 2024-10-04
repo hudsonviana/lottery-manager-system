@@ -30,17 +30,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import useUserApi from '@/hooks/useUserApi';
 import { handleError } from '@/helpers/handleError';
 import { toast } from '@/hooks/use-toast';
-
-const roles = [
-  {
-    value: 'USER',
-    label: 'Usuário',
-  },
-  {
-    value: 'ADMIN',
-    label: 'Administrador',
-  },
-];
+import { USER_ROLES } from '@/consts/Roles';
 
 const UpdateUserModal = ({ user, isUpdateModalOpen, setIsUpdateModalOpen }) => {
   const [open, setOpen] = useState(false);
@@ -48,7 +38,7 @@ const UpdateUserModal = ({ user, isUpdateModalOpen, setIsUpdateModalOpen }) => {
 
   useEffect(() => {
     setUserUpdateData(user);
-  }, [user]);
+  }, [isUpdateModalOpen]);
 
   const handleInputChange = (e) => {
     const { type, name } = e.target;
@@ -151,8 +141,9 @@ const UpdateUserModal = ({ user, isUpdateModalOpen, setIsUpdateModalOpen }) => {
                   className="w-[200px] justify-between"
                 >
                   {userUpdateData.role
-                    ? roles.find((role) => role.value === userUpdateData.role)
-                        ?.label
+                    ? USER_ROLES.find(
+                        (role) => role.value === userUpdateData.role
+                      )?.label
                     : 'Selecione o perfil...'}
                   <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                 </Button>
@@ -163,7 +154,7 @@ const UpdateUserModal = ({ user, isUpdateModalOpen, setIsUpdateModalOpen }) => {
                   <CommandList>
                     <CommandEmpty>Perfil não encontrado.</CommandEmpty>
                     <CommandGroup>
-                      {roles.map((role) => (
+                      {USER_ROLES.map((role) => (
                         <CommandItem
                           key={role.value}
                           value={role.value}

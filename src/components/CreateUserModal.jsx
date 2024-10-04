@@ -32,17 +32,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import useUserApi from '@/hooks/useUserApi';
 import { handleError } from '@/helpers/handleError';
 import { toast } from '@/hooks/use-toast';
-
-const roles = [
-  {
-    value: 'USER',
-    label: 'Usuário',
-  },
-  {
-    value: 'ADMIN',
-    label: 'Administrador',
-  },
-];
+import { USER_ROLES } from '@/consts/Roles';
 
 const CreateUserModal = () => {
   const [open, setOpen] = useState(false);
@@ -163,7 +153,8 @@ const CreateUserModal = () => {
                   className="w-[200px] justify-between"
                 >
                   {userData.role
-                    ? roles.find((role) => role.value === userData.role)?.label
+                    ? USER_ROLES.find((role) => role.value === userData.role)
+                        ?.label
                     : 'Selecione o perfil...'}
                   <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                 </Button>
@@ -174,7 +165,7 @@ const CreateUserModal = () => {
                   <CommandList>
                     <CommandEmpty>Perfil não encontrado.</CommandEmpty>
                     <CommandGroup>
-                      {roles.map((role) => (
+                      {USER_ROLES.map((role) => (
                         <CommandItem
                           key={role.value}
                           value={role.value}
