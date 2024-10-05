@@ -42,6 +42,12 @@ export const sortingHeader = ({ label, column }) => {
   );
 };
 
+export const createColumn = (label, accessorKey, cellFn) => ({
+  header: (info) => sortingHeader({ label, column: info.column }),
+  accessorKey,
+  ...(cellFn && { cell: cellFn }),
+});
+
 const DataTable = ({ data, columns, createModal, defaultSorting }) => {
   const [sorting, setSorting] = useState(defaultSorting || []);
   const [filtering, setFiltering] = useState(
