@@ -23,6 +23,24 @@ import {
   HiOutlineChevronLeft,
   HiOutlineChevronRight,
 } from 'react-icons/hi';
+import { ArrowDown, ArrowUp } from 'lucide-react';
+
+export const sortingHeader = ({ label, column }) => {
+  return (
+    <Button
+      className="ms-0 px-0"
+      variant="ghost"
+      onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+    >
+      {label}
+      {column.getIsSorted() === 'asc' ? (
+        <ArrowUp className="ml-2 h-4 w-4" />
+      ) : column.getIsSorted() === 'desc' ? (
+        <ArrowDown className="ml-2 h-4 w-4" />
+      ) : null}
+    </Button>
+  );
+};
 
 const DataTable = ({ data, columns, createModal, defaultSorting }) => {
   const [sorting, setSorting] = useState(defaultSorting || []);

@@ -2,9 +2,8 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import formatDate from '@/helpers/formatDate';
 import translateRole from '@/helpers/translateRole';
-import DataTable from '@/components/DataTable';
-import { ArrowUp, ArrowDown, Loader2 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import DataTable, { sortingHeader } from '@/components/DataTable';
+import { Loader2 } from 'lucide-react';
 import CreateUserModal from '@/components/CreateUserModal';
 import UpdateUserModal from '@/components/UpdateUserModal';
 import useUserApi from '@/hooks/useUserApi';
@@ -27,23 +26,6 @@ import { handleError } from '@/helpers/handleError';
 
 // import generateRandomUsers from '@/mock/generateRandomUsers';
 // const users = generateRandomUsers(89);
-
-const sortingHeader = ({ label, column }) => {
-  return (
-    <Button
-      className="ms-0 px-0"
-      variant="ghost"
-      onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-    >
-      {label}
-      {column.getIsSorted() === 'asc' ? (
-        <ArrowUp className="ml-2 h-4 w-4" />
-      ) : column.getIsSorted() === 'desc' ? (
-        <ArrowDown className="ml-2 h-4 w-4" />
-      ) : null}
-    </Button>
-  );
-};
 
 const Users = () => {
   const { toast, dismiss } = useToast();
