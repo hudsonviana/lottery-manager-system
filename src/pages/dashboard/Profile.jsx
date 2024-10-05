@@ -6,6 +6,7 @@ import UpdateUserModal from '@/components/UpdateUserModal';
 import ChangePasswordModal from '@/components/ChangePasswordModal';
 import { useQuery } from '@tanstack/react-query';
 import useUserApi from '@/hooks/useUserApi';
+import { Loader2 } from 'lucide-react';
 
 const Profile = () => {
   const { auth } = useAuth();
@@ -24,8 +25,15 @@ const Profile = () => {
     staleTime: 1000 * 60 * 15,
   });
 
-  if (isPending)
-    return <div className="container mx-auto py-0">Carregando...</div>;
+  if (isPending) {
+    return (
+      <div className="flex items-center container mx-auto py-0">
+        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+        Carregando...
+      </div>
+    );
+  }
+
   if (isError) return <div>Ocorreu um erro: {error.message}</div>;
 
   return (

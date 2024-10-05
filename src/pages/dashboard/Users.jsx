@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import formatDate from '@/helpers/formatDate';
 import translateRole from '@/helpers/translateRole';
 import DataTable from '@/components/DataTable';
-import { ArrowUpDown } from 'lucide-react';
+import { ArrowUp, ArrowDown, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import CreateUserModal from '@/components/CreateUserModal';
 import UpdateUserModal from '@/components/UpdateUserModal';
@@ -36,7 +36,11 @@ const sortingHeader = ({ label, column }) => {
       onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
     >
       {label}
-      <ArrowUpDown className="ml-2 h-4 w-4" />
+      {column.getIsSorted() === 'asc' ? (
+        <ArrowUp className="ml-2 h-4 w-4" />
+      ) : column.getIsSorted() === 'desc' ? (
+        <ArrowDown className="ml-2 h-4 w-4" />
+      ) : null}
     </Button>
   );
 };
@@ -79,8 +83,15 @@ const Users = () => {
     },
   });
 
-  if (isPending)
-    return <div className="container mx-auto py-0">Carregando...</div>;
+  if (isPending) {
+    return (
+      <div className="flex items-center container mx-auto py-0">
+        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+        Carregando...
+      </div>
+    );
+  }
+
   if (isError) return <div>Ocorreu um erro: {error.message}</div>;
 
   const handleUpdateUserAction = (user) => {
@@ -155,6 +166,7 @@ const Users = () => {
         data={data}
         columns={columns}
         createModal={<CreateUserModal />}
+        defaultSorting={[{ id: 'createdAt', desc: true }]} // Add this line for default sorting
       />
 
       <AlertDialog open={isDeleteAlertOpen} onOpenChange={setIsDeleteAlertOpen}>

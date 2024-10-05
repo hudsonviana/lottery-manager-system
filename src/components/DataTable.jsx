@@ -24,8 +24,8 @@ import {
   HiOutlineChevronRight,
 } from 'react-icons/hi';
 
-const DataTable = ({ data, columns, createModal }) => {
-  const [sorting, setSorting] = useState([]);
+const DataTable = ({ data, columns, createModal, defaultSorting }) => {
+  const [sorting, setSorting] = useState(defaultSorting || []);
   const [filtering, setFiltering] = useState(
     localStorage.getItem('filtering') || ''
   );

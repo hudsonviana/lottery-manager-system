@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import translateRole from '@/helpers/translateRole';
 import { Button } from '@/components/ui/button';
 import useUserApi from '@/hooks/useUserApi';
+import { Loader2 } from 'lucide-react';
 
 const User = () => {
   const navigate = useNavigate();
@@ -20,7 +21,15 @@ const User = () => {
     queryFn: () => fetchUser(id),
   });
 
-  if (isPending) return <div>Carregando...</div>;
+  if (isPending) {
+    return (
+      <div className="flex items-center container mx-auto py-0">
+        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+        Carregando...
+      </div>
+    );
+  }
+
   if (isError) return <div>Ocorreu um erro: {error.message}</div>;
 
   return (
