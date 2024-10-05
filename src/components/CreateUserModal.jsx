@@ -13,7 +13,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { HiOutlinePlusCircle } from 'react-icons/hi';
-import { Check, ChevronsUpDown } from 'lucide-react';
+import { Check, ChevronsUpDown, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
   Command,
@@ -37,7 +37,7 @@ import { USER_ROLES } from '@/consts/Roles';
 const CreateUserModal = () => {
   const [open, setOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
-  const [userData, setUserData] = useState({
+  const [newUserData, setNewUserData] = useState({
     firstName: '',
     lastName: '',
     email: '',
@@ -47,16 +47,7 @@ const CreateUserModal = () => {
   const handleInputChange = (e) => {
     const { type, name } = e.target;
     const value = e.target[type === 'checkbox' ? 'checked' : 'value'];
-    setUserData((prevData) => ({ ...prevData, [name]: value }));
-  };
-
-  const handleCancelButtonClick = () => {
-    setUserData({
-      firstName: '',
-      lastName: '',
-      email: '',
-      role: '',
-    });
+    setNewUserData((prevData) => ({ ...prevData, [name]: value }));
   };
 
   const { addUser } = useUserApi();
@@ -66,7 +57,6 @@ const CreateUserModal = () => {
     mutationFn: addUser,
     onSuccess: ({ user }) => {
       queryClient.invalidateQueries({ queryKey: ['users'] });
-      setModalOpen(false);
       handleCancelButtonClick();
       toast({
         className: 'bg-green-200 text-green-800 border-green-300',
@@ -85,10 +75,20 @@ const CreateUserModal = () => {
   });
 
   const handleSaveButtonClick = () => {
-    createUserMutation.mutate(userData);
+    createUserMutation.mutate(newUserData);
   };
 
-  const canSave = [...Object.values(userData)].every(Boolean);
+  const handleCancelButtonClick = () => {
+    setModalOpen(false);
+    setNewUserData({
+      firstName: '',
+      lastName: '',
+      email: '',
+      role: '',
+    });
+  };
+
+  const canSave = [...Object.values(newUserData)].every(Boolean);
 
   return (
     <Dialog open={modalOpen} onOpenChange={setModalOpen}>
@@ -115,6 +115,7 @@ const CreateUserModal = () => {
               name="firstName"
               className="col-span-3"
               onChange={handleInputChange}
+              value={newUserData.firstName}
             />
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
@@ -126,6 +127,7 @@ const CreateUserModal = () => {
               name="lastName"
               className="col-span-3"
               onChange={handleInputChange}
+              value={newUserData.lastName}
             />
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
@@ -137,6 +139,7 @@ const CreateUserModal = () => {
               name="email"
               className="col-span-3"
               onChange={handleInputChange}
+              value={newUserData.email}
             />
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
@@ -152,8 +155,8 @@ const CreateUserModal = () => {
                   aria-expanded={open}
                   className="w-[200px] justify-between"
                 >
-                  {userData.role
-                    ? USER_ROLES.find((role) => role.value === userData.role)
+                  {newUserData.role
+                    ? USER_ROLES.find((role) => role.value === newUserData.role)
                         ?.label
                     : 'Selecione o perfil...'}
                   <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
@@ -171,10 +174,10 @@ const CreateUserModal = () => {
                           value={role.value}
                           onSelect={(currentValue) => {
                             const selectedRole =
-                              currentValue === userData.role
+                              currentValue === newUserData.role
                                 ? ''
                                 : currentValue;
-                            setUserData((prevData) => ({
+                            setNewUserData((prevData) => ({
                               ...prevData,
                               role: selectedRole,
                             }));
@@ -184,7 +187,7 @@ const CreateUserModal = () => {
                           <Check
                             className={cn(
                               'mr-2 h-4 w-4',
-                              userData.role === role.value
+                              newUserData.role === role.value
                                 ? 'opacity-100'
                                 : 'opacity-0'
                             )}
@@ -205,16 +208,24 @@ const CreateUserModal = () => {
               type="button"
               variant="outline"
               onClick={handleCancelButtonClick}
+              tabIndex={-1}
             >
               Cancelar
             </Button>
           </DialogClose>
           <Button
             type="submit"
-            disabled={!canSave}
+            disabled={!canSave || createUserMutation.isPending}
             onClick={handleSaveButtonClick}
           >
-            Salvar
+            {createUserMutation.isPending ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Aguarde
+              </>
+            ) : (
+              'Salvar'
+            )}
           </Button>
         </DialogFooter>
       </DialogContent>

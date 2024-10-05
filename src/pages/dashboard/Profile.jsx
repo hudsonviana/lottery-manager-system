@@ -21,7 +21,7 @@ const Profile = () => {
   } = useQuery({
     queryKey: ['users', auth?.user?.id],
     queryFn: () => fetchUser(auth?.user?.id),
-    staleTime: 1000 * 60,
+    staleTime: 1000 * 60 * 15,
   });
 
   if (isPending)
@@ -42,9 +42,9 @@ const Profile = () => {
         id={auth?.user?.id}
       />
       <div className="container mx-auto">
-        <div className="grid grid-cols-4 sm:grid-cols-12 gap-6 px-4">
+        <div className="grid grid-cols-4 sm:grid-cols-12 gap-6">
           <div className="col-span-4 sm:col-span-3">
-            <div className="bg-white shadow rounded-lg p-6">
+            <div className="bg-white shadow rounded-lg p-6 min-h-[calc(100vh-6rem)]">
               <div className="flex flex-col items-center">
                 <img
                   src="/default.png"
@@ -56,18 +56,19 @@ const Profile = () => {
                 <p className="text-gray-700">{translateRole(user?.role)}</p>
                 <div className="mt-6 flex flex-wrap gap-4 justify-center">
                   <Button
+                    className="w-full"
                     onClick={() => setIsUpdateModalOpen(true)}
                     disabled={isPending}
                   >
                     Atualizar dados
                   </Button>
-
                   <Button
-                    className="bg-gray-300 hover:bg-gray-400 text-gray-700"
+                    variant="secondary"
+                    className="w-full"
                     onClick={() => setIsChangePassModalOpen(true)}
                     disabled={isPending}
                   >
-                    Alterar senha
+                    Mudar senha
                   </Button>
                 </div>
               </div>
@@ -84,8 +85,7 @@ const Profile = () => {
             </div>
           </div>
           <div className="col-span-4 sm:col-span-9">
-            <div className="bg-white shadow rounded-lg p-6 min-h-screen">
-              
+            <div className="bg-white shadow rounded-lg p-6 min-h-[calc(100vh-6rem)]">
               {/* <h2 className="text-xl font-bold mb-4">About Me</h2>
               <p className="text-gray-700">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed

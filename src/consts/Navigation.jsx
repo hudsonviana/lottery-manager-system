@@ -1,10 +1,11 @@
 import {
   HiOutlineViewGrid,
   HiOutlineKey,
-  HiOutlineUser,
   HiOutlineUsers,
   HiOutlineQuestionMarkCircle,
   HiOutlineCog,
+  HiOutlineBookmark,
+  HiOutlineIdentification,
 } from 'react-icons/hi';
 
 export const DASHBOARD_SIDEBAR_LINKS = [
@@ -20,7 +21,14 @@ export const DASHBOARD_SIDEBAR_LINKS = [
     label: 'Perfil',
     path: 'profile',
     roles: ['USER', 'ADMIN'],
-    icon: <HiOutlineUser />,
+    icon: <HiOutlineIdentification />,
+  },
+  {
+    key: 'games',
+    label: 'Jogos',
+    path: 'games',
+    roles: ['USER', 'ADMIN'],
+    icon: <HiOutlineBookmark />,
   },
   {
     key: 'users',

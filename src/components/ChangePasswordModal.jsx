@@ -15,6 +15,7 @@ import { useMutation } from '@tanstack/react-query';
 import useUserApi from '@/hooks/useUserApi';
 import { handleError } from '@/helpers/handleError';
 import { toast } from '@/hooks/use-toast';
+import { Loader2 } from 'lucide-react';
 
 const ChangePasswordModal = ({
   id,
@@ -38,7 +39,6 @@ const ChangePasswordModal = ({
   const changePasswordMutation = useMutation({
     mutationFn: (passData) => changePassword(id, passData),
     onSuccess: ({ updatedUserPassword }) => {
-      setIsChangePassModalOpen(false);
       handleCancelButtonClick();
       toast({
         className: 'bg-green-200 text-green-800 border-green-300',
@@ -129,16 +129,24 @@ const ChangePasswordModal = ({
               type="button"
               variant="outline"
               onClick={handleCancelButtonClick}
+              tabIndex={-1}
             >
               Cancelar
             </Button>
           </DialogClose>
           <Button
             type="submit"
-            disabled={!canSave}
+            disabled={!canSave || changePasswordMutation.isPending}
             onClick={handleChangePassButtonClick}
           >
-            Confirmar
+            {changePasswordMutation.isPending ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Aguarde
+              </>
+            ) : (
+              'Confirmar'
+            )}
           </Button>
         </DialogFooter>
       </DialogContent>

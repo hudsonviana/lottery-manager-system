@@ -5,12 +5,12 @@ const useUserApi = () => {
 
   const fetchUsers = async () => {
     const response = await authApiClient.get('/users');
-    return response.data?.users;
+    return response.data.users;
   };
 
   const fetchUser = async (id) => {
     const response = await authApiClient.get(`/users/${id}`);
-    return response.data?.user;
+    return response.data.user;
   };
 
   const addUser = async (userData) => {
@@ -28,7 +28,6 @@ const useUserApi = () => {
     return response.data;
   };
 
-  // AuthController
   const changePassword = async (id, passData) => {
     const response = await authApiClient.post(
       `/auth/${id}/changepassword`,
@@ -37,7 +36,7 @@ const useUserApi = () => {
     return response.data;
   };
 
-  const registerUser = async (userData) => {};
+  // const registerUser = async (userData) => {};
 
   return {
     fetchUsers,
@@ -46,7 +45,6 @@ const useUserApi = () => {
     updateUser,
     deleteUser,
     changePassword,
-    registerUser,
   };
 };
 

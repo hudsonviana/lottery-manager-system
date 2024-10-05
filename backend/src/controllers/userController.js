@@ -1,10 +1,10 @@
 import * as userService from '../services/user.js';
 import bcrypt from 'bcrypt';
-import crypto from 'crypto';
+// import crypto from 'crypto';
 import { z } from 'zod';
 
 export const getAllUsers = async (req, res) => {
-  const auth = req.auth;
+  // const auth = req.auth;
   const users = await userService.findAll();
 
   if (users.error) {
@@ -35,7 +35,7 @@ export const getUser = async (req, res) => {
 
   const { password, ...userData } = user;
 
-  res.json({ user: userData, auth });
+  res.json({ user: userData });
 };
 
 export const getUserGames = async (req, res) => {

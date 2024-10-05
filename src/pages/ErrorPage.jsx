@@ -1,9 +1,10 @@
-import { useRouteError, useLocation, Link } from 'react-router-dom';
+import { useRouteError, useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { FaRegFrown } from 'react-icons/fa';
 
 const ErrorPage = () => {
   const error = useRouteError();
+  const navigate = useNavigate();
   const location = useLocation();
 
   return (
@@ -27,9 +28,12 @@ const ErrorPage = () => {
         <p className="italic">{error.statusText || error.message}</p>
       )}
 
-      <Button asChild className="mt-5">
-        <Link to={'/'}>Página inicial</Link>
-      </Button>
+      <div className="flex flex-row mt-5 gap-4">
+        <Button onClick={() => navigate('/')}>Página inicial</Button>
+        <Button onClick={() => navigate(-1)} variant="outline">
+          Voltar
+        </Button>
+      </div>
     </div>
   );
 };

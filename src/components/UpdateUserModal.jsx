@@ -11,7 +11,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { Check, ChevronsUpDown } from 'lucide-react';
+import { Check, ChevronsUpDown, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
   Command,
@@ -51,10 +51,6 @@ const UpdateUserModal = ({
     setUserUpdateData((prevData) => ({ ...prevData, [name]: value }));
   };
 
-  const handleCancelButtonClick = () => {
-    setIsUpdateModalOpen(false);
-  };
-
   const { updateUser } = useUserApi();
   const queryClient = useQueryClient();
 
@@ -62,7 +58,6 @@ const UpdateUserModal = ({
     mutationFn: (userData) => updateUser(user.id, userData),
     onSuccess: ({ updatedUser }) => {
       queryClient.invalidateQueries({ queryKey: ['users'] });
-      setIsUpdateModalOpen(false);
       handleCancelButtonClick();
       toast({
         className: 'bg-green-200 text-green-800 border-green-300',
@@ -82,6 +77,11 @@ const UpdateUserModal = ({
 
   const handleUpdateButtonClick = () => {
     updateUserMutation.mutate(userUpdateData);
+  };
+
+  const handleCancelButtonClick = () => {
+    setIsUpdateModalOpen(false);
+    setUserUpdateData({});
   };
 
   const canSave = [...Object.values(userUpdateData)].every(Boolean);
@@ -202,16 +202,24 @@ const UpdateUserModal = ({
               type="button"
               variant="outline"
               onClick={handleCancelButtonClick}
+              tabIndex={-1}
             >
               Cancelar
             </Button>
           </DialogClose>
           <Button
             type="submit"
-            disabled={!canSave}
+            disabled={!canSave || updateUserMutation.isPending}
             onClick={handleUpdateButtonClick}
           >
-            Salvar modificações
+            {updateUserMutation.isPending ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Aguarde
+              </>
+            ) : (
+              'Salvar modificações'
+            )}
           </Button>
         </DialogFooter>
       </DialogContent>
