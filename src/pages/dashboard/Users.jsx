@@ -94,20 +94,36 @@ const Users = () => {
       accessorKey: 'name',
       accessorFn: (row) => `${row.firstName} ${row.lastName}`,
     },
-    createColumn('Email', 'email'),
-    createColumn('Nível de acesso', 'role', (info) =>
-      translateRole(info.getValue())
-    ),
-    createColumn('Cadastrado em', 'createdAt', (info) =>
-      formatDate(info.getValue())
-    ),
-    createColumn('Última autlização', 'updatedAt', (info) =>
-      formatDate(info.getValue())
-    ),
+    {
+      header: (info) => sortingHeader({ label: 'Email', column: info.column }),
+      accessorKey: 'email',
+    },
+    {
+      header: (info) =>
+        sortingHeader({ label: 'Nível de acesso', column: info.column }),
+      accessorKey: 'role',
+      cell: (info) => translateRole(info.getValue()),
+    },
+    {
+      header: (info) =>
+        sortingHeader({ label: 'Cadastrado em', column: info.column }),
+      accessorKey: 'createdAt',
+      cell: (info) => formatDate(info.getValue()),
+    },
+    {
+      header: (info) =>
+        sortingHeader({
+          label: 'Última autlização',
+          column: info.column,
+        }),
+      accessorKey: 'updatedAt',
+      cell: (info) => formatDate(info.getValue()),
+    },
     {
       id: 'actions',
       cell: ({ row }) => {
         const user = row.original;
+
         return (
           <UserActions
             user={user}

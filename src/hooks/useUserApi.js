@@ -28,6 +28,11 @@ const useUserApi = () => {
     return response.data;
   };
 
+  const fetchUserGames = async (id) => {
+    const response = await authApiClient.get(`/users/${id}/games`);
+    return response.data;
+  };
+
   const changePassword = async (id, passData) => {
     const response = await authApiClient.post(
       `/auth/${id}/changepassword`,
@@ -44,6 +49,7 @@ const useUserApi = () => {
     addUser,
     updateUser,
     deleteUser,
+    fetchUserGames,
     changePassword,
   };
 };

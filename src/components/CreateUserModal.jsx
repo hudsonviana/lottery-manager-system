@@ -32,7 +32,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import useUserApi from '@/hooks/useUserApi';
 import { handleError } from '@/helpers/handleError';
 import { toast } from '@/hooks/use-toast';
-import { USER_ROLES } from '@/consts/Roles';
+import { USER_ROLES } from '@/consts/Enums';
 
 const CreateUserModal = () => {
   const [open, setOpen] = useState(false);

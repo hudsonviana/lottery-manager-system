@@ -56,7 +56,7 @@ export const getUserGames = async (req, res) => {
     return res.status(500).json({ error: userGames.error });
   }
 
-  res.json({ userGames, auth });
+  res.json({ userGames });
 };
 
 export const addUser = async (req, res) => {

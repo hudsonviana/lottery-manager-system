@@ -42,6 +42,7 @@ export const findGamesByUser = async ({ id, email }) => {
       where: { id, email },
       omit: {
         password: true,
+        refreshToken: true,
       },
       include: {
         games: {
