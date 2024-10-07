@@ -1,13 +1,19 @@
-import axios from 'axios';
+import lotteryApiClient from '@/api/lotteryApiClient';
 // import useAuthApiClient from './useAuthApiClient';
 
 const useDrawApi = () => {
   // const authApiClient = useAuthApiClient();
 
-  const fetchDrawResult = async (lotteryType = 'megasena', contestNumber) => {
+  const fetchDrawResult = async (
+    lotteryType = 'megasena',
+    contestNumber,
+    { prevContest = false } = {}
+  ) => {
+    if (prevContest === true) contestNumber = Number(contestNumber) - 1;
+
     try {
-      const response = await axios.get(
-        `https://servicebus2.caixa.gov.br/portaldeloterias/api/${lotteryType}/${contestNumber}`
+      const response = await lotteryApiClient.get(
+        `/${lotteryType}/${contestNumber}`
       );
       return response.data;
     } catch (error) {

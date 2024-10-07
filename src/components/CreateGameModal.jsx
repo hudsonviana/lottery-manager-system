@@ -35,6 +35,7 @@ import { handleError } from '@/helpers/handleError';
 import { toast } from '@/hooks/use-toast';
 import { LOTTERY_TYPE } from '@/consts/Enums';
 import { useAuth } from '@/hooks/useAuth';
+import BettingSlip from './BettingSlip';
 
 const CreateGameModal = () => {
   const { auth } = useAuth();
@@ -43,7 +44,7 @@ const CreateGameModal = () => {
   const [newGameData, setNewGameData] = useState({
     gameNumbers: '',
     ticketPrice: '',
-    contestNumber: '',
+    contestNumber: 0,
     drawDate: '',
     lotteryType: '',
   });
@@ -59,8 +60,6 @@ const CreateGameModal = () => {
   */
 
   const { addGame } = useGameApi();
-  const { fetchDrawResult } = useDrawApi();
-
   const queryClient = useQueryClient();
 
   const createGameMutation = useMutation({
@@ -84,6 +83,7 @@ const CreateGameModal = () => {
     },
   });
 
+  const { fetchDrawResult } = useDrawApi();
   const contestData = useQuery({
     queryKey: [
       'contestData',
@@ -93,43 +93,47 @@ const CreateGameModal = () => {
     queryFn: () =>
       fetchDrawResult(
         newGameData.lotteryType.replace('_', '').toLowerCase(),
-        newGameData.contestNumber
+        newGameData.contestNumber,
+        { prevContest: true }
       ),
     enabled: Boolean(
-      newGameData.lotteryType && newGameData.contestNumber.length === 4
+      newGameData.lotteryType && String(newGameData.contestNumber).length === 4
     ),
   });
 
   useEffect(() => {
-    if (contestData?.isFetching) {
-      setNewGameData((prevData) => ({
-        ...prevData,
-        drawDate: 'Buscando...',
+    if (contestData.isFetching) {
+      setNewGameData((prev) => ({ ...prev, drawDate: 'Buscando...' }));
+    }
+
+    if (contestData.isSuccess) {
+      setNewGameData((prev) => ({
+        ...prev,
+        drawDate:
+          contestData.data?.status === 500
+            ? 'Data indefinida'
+            : contestData.data?.dataProximoConcurso,
       }));
     }
 
-    if (contestData?.isSuccess) {
-      if (contestData?.data?.status === 500) {
-        setNewGameData((prevData) => ({
-          ...prevData,
-          drawDate: 'Data indefinida',
-        }));
-      } else {
-        setNewGameData((prevData) => ({
-          ...prevData,
-          drawDate: contestData?.data?.dataApuracao,
-        }));
-      }
+    if (contestData.isError) {
+      setNewGameData((prev) => ({
+        ...prev,
+        drawDate: 'Erro: Tente novamente',
+      }));
     }
-  }, [contestData?.isSuccess, contestData?.data?.dataApuracao]); //
+  }, [contestData.isFetching]);
 
   const handleInputChange = (e) => {
     const { type, name } = e.target;
     const value = e.target[type === 'checkbox' ? 'checked' : 'value'];
+
+    const newValue = name === 'contestNumber' ? Number(value) : value;
+
     setNewGameData((prevData) => ({
       ...prevData,
       drawDate: '',
-      [name]: value,
+      [name]: newValue,
     }));
   };
 
@@ -142,7 +146,7 @@ const CreateGameModal = () => {
     setNewGameData({
       gameNumbers: '',
       ticketPrice: '',
-      contestNumber: '',
+      contestNumber: 0,
       drawDate: '',
       lotteryType: '',
     });
@@ -249,36 +253,15 @@ const CreateGameModal = () => {
               <Input
                 id="drawDate"
                 name="drawDate"
-                className=""
-                disabled={true}
+                className="cursor-not-allowed"
                 value={newGameData.drawDate}
+                readOnly
               />
             </div>
           </div>
 
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="lastName" className="text-right">
-              Sobrenome
-            </Label>
-            <Input
-              id="lastName"
-              name="lastName"
-              className="col-span-3"
-              onChange={handleInputChange}
-              // value={newGameData.lastName}
-            />
-          </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="email" className="text-right">
-              Email
-            </Label>
-            <Input
-              id="email"
-              name="email"
-              className="col-span-3"
-              onChange={handleInputChange}
-              // value={newGameData.email}
-            />
+          <div className="gap-1">
+            <BettingSlip setNewGameData={setNewGameData} />
           </div>
         </div>
 
