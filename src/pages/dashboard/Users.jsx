@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import formatDate from '@/helpers/formatDate';
 import translateRole from '@/helpers/translateRole';
-import DataTable, { sortingHeader, createColumn } from '@/components/DataTable';
+import DataTable, { sortingHeader } from '@/components/DataTable';
 import { Loader2 } from 'lucide-react';
 import CreateUserModal from '@/components/CreateUserModal';
 import UpdateUserModal from '@/components/UpdateUserModal';

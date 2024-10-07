@@ -6,6 +6,7 @@ import DataTable, { sortingHeader } from '@/components/DataTable';
 import formatDate from '@/helpers/formatDate';
 import translateGameResult from '@/helpers/translateGameResult';
 import GameDisplay from '@/components/GameDisplay';
+import CreateGameModal from '@/components/CreateGameModal';
 
 const Games = () => {
   const { auth } = useAuth();
@@ -84,6 +85,15 @@ const Games = () => {
     },
     {
       header: (info) =>
+        sortingHeader({
+          label: 'Data do sorteio',
+          column: info.column,
+        }),
+      accessorKey: 'draw.drawDate',
+      cell: (info) => formatDate(info.getValue(), { withTime: false }),
+    },
+    {
+      header: (info) =>
         sortingHeader({ label: 'Apostas', column: info.column }),
       accessorKey: 'gameNumbers',
       cell: (info) => <GameDisplay gameNumbers={info.getValue()} />,
@@ -100,24 +110,15 @@ const Games = () => {
     },
     {
       header: (info) =>
-        sortingHeader({ label: 'Resultado', column: info.column }),
-      accessorKey: 'result',
-      cell: (info) => translateGameResult(info.getValue()),
-    },
-    {
-      header: (info) =>
         sortingHeader({ label: 'Cadastrado em', column: info.column }),
       accessorKey: 'createdAt',
       cell: (info) => formatDate(info.getValue()),
     },
     {
       header: (info) =>
-        sortingHeader({
-          label: 'Última autlização',
-          column: info.column,
-        }),
-      accessorKey: 'updatedAt',
-      cell: (info) => formatDate(info.getValue()),
+        sortingHeader({ label: 'Resultado', column: info.column }),
+      accessorKey: 'result',
+      cell: (info) => translateGameResult(info.getValue()),
     },
   ];
 
@@ -127,6 +128,7 @@ const Games = () => {
         data={data?.userGames?.games}
         columns={columns}
         defaultSorting={[{ id: 'contestNumber', desc: true }]}
+        createModal={<CreateGameModal />}
       />
     </div>
   );

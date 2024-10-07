@@ -1,12 +1,6 @@
 export const USER_ROLES = [
-  {
-    value: 'USER',
-    label: 'Usuário',
-  },
-  {
-    value: 'ADMIN',
-    label: 'Administrador',
-  },
+  { value: 'USER', label: 'Usuário' },
+  { value: 'ADMIN', label: 'Administrador' },
 ];
 
 export const GAME_RESULT = [
@@ -22,37 +16,10 @@ export const DRAW_STATUS = [
   { value: 'DRAWN', label: 'Sorteio realizado' },
 ];
 
-/**
- * 
- * enum DrawStatus {
-  DRAWN
-  PENDING
-}
- * 
- * enum GameResult {
-  WON_SIX_NUM
-  WON_FIVE_NUM
-  WON_FOUR_NUM
-  LOST
-  PENDING
-}
-
-enum Role {
-  USER
-  ADMIN
-}
-
-enum Lottery {
-  MEGA_SENA
-  QUINA
-  LOTOFACIL
-  TIMEMANIA
-  LOTOMANIA
-}
-
-
-
-
-
-
- */
+export const LOTTERY_TYPE = [
+  { value: 'MEGA_SENA', label: 'Mega Sena' },
+  { value: 'QUINA', label: 'Quina' },
+  { value: 'LOTOFACIL', label: 'Lotofácil' },
+  { value: 'TIMEMANIA', label: 'Timemania' },
+  { value: 'LOTOMANIA', label: 'Lotomania' },
+];

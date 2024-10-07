@@ -107,7 +107,7 @@ export const addGame = async (req, res) => {
     return res.status(500).json({ error: newGame.error });
   }
 
-  res.status(201).json({ game: newGame, auth });
+  res.status(201).json({ newGame });
 };
 
 export const updateGame = async (req, res) => {
