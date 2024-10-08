@@ -37,27 +37,20 @@ import { LOTTERY_TYPE } from '@/consts/Enums';
 import { useAuth } from '@/hooks/useAuth';
 import BettingSlip from './BettingSlip';
 
+const newGameDataInitialState = {
+  gameNumbers: '',
+  ticketPrice: 0,
+  contestNumber: 0,
+  drawDate: '',
+  lotteryType: '',
+};
+
 const CreateGameModal = () => {
   const { auth } = useAuth();
   const [open, setOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
-  const [newGameData, setNewGameData] = useState({
-    gameNumbers: '',
-    ticketPrice: '',
-    contestNumber: 0,
-    drawDate: '',
-    lotteryType: '',
-  });
-
-  /**
-   * const addGameSchema = z.object({
-    gameNumbers: gameNumbersSchema,
-    ticketPrice: z.number().nonnegative().optional(),
-    contestNumber: z.number().positive(),
-    drawDate: z.string().refine(validateDateFormat, { message: 'Formato de data inválido' }),
-    lotteryType: z.enum(['MEGA_SENA', 'QUINA', 'LOTOFACIL', 'TIMEMANIA', 'LOTOMANIA']),
-  });
-  */
+  const [newGameData, setNewGameData] = useState(newGameDataInitialState);
+  const [action, setAction] = useState(null);
 
   const { addGame } = useGameApi();
   const queryClient = useQueryClient();
@@ -66,11 +59,12 @@ const CreateGameModal = () => {
     mutationFn: (gameData) => addGame(auth.user.id, gameData),
     onSuccess: ({ newGame }) => {
       queryClient.invalidateQueries({ queryKey: ['games', auth.user.id] });
+      console.log('newGame:', newGame);
       handleCancelButtonClick();
       toast({
         className: 'bg-green-200 text-green-800 border-green-300',
         title: 'Jogo cadastrado!',
-        description: `O jogo referente ao Concurso: ${newGame.draw.contestNumber}) foi criado no banco de dados.`,
+        description: `Jogo criado no banco de dados com sucesso!.`,
       });
     },
     onError: (err) => {
@@ -143,13 +137,16 @@ const CreateGameModal = () => {
 
   const handleCancelButtonClick = () => {
     setModalOpen(false);
-    setNewGameData({
-      gameNumbers: '',
-      ticketPrice: '',
-      contestNumber: 0,
-      drawDate: '',
-      lotteryType: '',
-    });
+    setAction(null);
+    setNewGameData(newGameDataInitialState);
+  };
+
+  const handleActions = (actionType) => {
+    setAction(actionType);
+  };
+
+  const resetAction = () => {
+    setAction(null);
   };
 
   const canSave = [...Object.values(newGameData)].every(Boolean);
@@ -162,7 +159,7 @@ const CreateGameModal = () => {
           Novo jogo
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[600px]">
+      <DialogContent className="sm:max-w-[700px]">
         <DialogHeader>
           <DialogTitle>Cadastrar novo jogo</DialogTitle>
           <DialogDescription>Insira os dados do novo jogo.</DialogDescription>
@@ -261,35 +258,64 @@ const CreateGameModal = () => {
           </div>
 
           <div className="gap-1">
-            <BettingSlip setNewGameData={setNewGameData} />
+            <BettingSlip
+              setNewGameData={setNewGameData}
+              action={action}
+              resetAction={resetAction}
+            />
           </div>
         </div>
 
-        <DialogFooter>
-          <DialogClose asChild>
+        <DialogFooter className="!justify-between">
+          <div className="flex gap-3">
             <Button
-              type="button"
-              variant="outline"
-              onClick={handleCancelButtonClick}
-              tabIndex={-1}
+              onClick={() => handleActions('onConfirm')}
+              className="bg-green-500 hover:bg-green-400 text-black"
             >
-              Cancelar
+              Confirmar
             </Button>
-          </DialogClose>
-          <Button
-            type="submit"
-            disabled={!canSave || createGameMutation.isPending}
-            onClick={handleSaveButtonClick}
-          >
-            {createGameMutation.isPending ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Aguarde
-              </>
-            ) : (
-              'Salvar'
-            )}
-          </Button>
+            <Button
+              onClick={() => handleActions('onClear')}
+              className="bg-yellow-500 hover:bg-yellow-400 text-black"
+            >
+              Limpar
+            </Button>
+          </div>
+
+          <div className="flex gap-3">
+            <Button
+              onClick={() => handleActions('onRemove')}
+              variant="destructive"
+            >
+              Excluir
+            </Button>
+
+            <DialogClose asChild>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={handleCancelButtonClick}
+                tabIndex={-1}
+              >
+                Cancelar
+              </Button>
+            </DialogClose>
+
+            <Button
+              type="submit"
+              disabled={!canSave || createGameMutation.isPending}
+              onClick={handleSaveButtonClick}
+            >
+              {createGameMutation.isPending ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Aguarde
+                </>
+              ) : (
+                'Salvar'
+              )}
+            </Button>
+          </div>
         </DialogFooter>
       </DialogContent>
     </Dialog>

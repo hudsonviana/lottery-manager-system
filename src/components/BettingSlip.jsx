@@ -43,9 +43,24 @@ const BetNumber = ({ num, isSelected, onClick }) => {
   );
 };
 
-const BettingSlip = ({ setNewGameData }) => {
+const getBetPryce = (betNumber) => {
+  const betValue = [
+    { betNum: 6, value: 5 },
+    { betNum: 7, value: 35 },
+    { betNum: 8, value: 140 },
+    { betNum: 9, value: 420 },
+  ];
+  return betValue.find(({ betNum }) => betNum === betNumber)?.value || '';
+};
+
+const BettingSlip = ({ setNewGameData, action, resetAction }) => {
   const [betNumber, setBetNumber] = useState(0);
   const [selectedDozens, setSelectedDozens] = useState([]);
+  const [gamesConfirmed, setGamesConfirmed] = useState({
+    gameA: [],
+    gameB: [],
+    gameC: [],
+  });
 
   const isEnabled = selectedDozens.length < betNumber;
 
@@ -55,13 +70,6 @@ const BettingSlip = ({ setNewGameData }) => {
     (i + 1).toString().padStart(2, '0')
   );
 
-  const betValue = [
-    { num: 6, value: 5 },
-    { num: 7, value: 35 },
-    { num: 8, value: 140 },
-    { num: 9, value: 420 },
-  ];
-
   const handleBetNumberClick = (num) => {
     setBetNumber(num);
   };
@@ -69,6 +77,51 @@ const BettingSlip = ({ setNewGameData }) => {
   useEffect(() => {
     setSelectedDozens([]);
   }, [betNumber]);
+
+  useEffect(() => {
+    if (!action) return;
+
+    if (action === 'onConfirm') {
+      const gameEntry = Object.entries(gamesConfirmed).find(
+        ([_, game]) => game.length === 0
+      );
+
+      if (gameEntry) {
+        const [gameKey] = gameEntry;
+        const updatedGames = { ...gamesConfirmed, [gameKey]: selectedDozens };
+
+        setGamesConfirmed(updatedGames);
+
+        setNewGameData((prev) => ({
+          ...prev,
+          gameNumbers: updatedGames,
+          ticketPrice: prev.ticketPrice + getBetPryce(betNumber),
+        }));
+
+        setBetNumber(0);
+      }
+    }
+
+    if (action === 'onClear') {
+      setBetNumber(0);
+    }
+
+    if (action === 'onRemove') {
+      console.log('Removendo apostas...');
+    }
+
+    if (action) {
+      resetAction();
+    }
+  }, [action, resetAction, gamesConfirmed, selectedDozens, setNewGameData]);
+
+  const totalPryce = Number(
+    getBetPryce(gamesConfirmed.gameA.length) +
+      getBetPryce(gamesConfirmed.gameB.length) +
+      getBetPryce(gamesConfirmed.gameC.length)
+  );
+
+  console.log(totalPryce);
 
   return (
     <div className="flex gap-3">
@@ -122,9 +175,14 @@ const BettingSlip = ({ setNewGameData }) => {
               ))}
             </ul>
           </div>
-          <div>
+          <div className="font-medium">
             Valor da aposta:
-            <span className="ms-2">R$ 5.00</span>
+            <span className="ms-2">
+              {getBetPryce(betNumber).toLocaleString('pt-BR', {
+                style: 'currency',
+                currency: 'BRL',
+              })}
+            </span>
           </div>
         </div>
       </div>
@@ -133,14 +191,17 @@ const BettingSlip = ({ setNewGameData }) => {
         <Label htmlFor="betts" className="text-left">
           Confira suas apostas
         </Label>
-        <div className="gap-1 bg-green-100 pt-5 ps-2 h-full">
+        <div className="gap-1 bg-green-100 pt-5 ps-2 h-full relative">
           <div className="flex items-center space-x-2 mb-5">
             <Checkbox id="gameA" className="bg-white" />
             <label
               htmlFor="gameA"
               className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
             >
-              A:
+              A:{' '}
+              <span className="font-normal">
+                {gamesConfirmed.gameA.join(' - ')}
+              </span>
             </label>
           </div>
 
@@ -150,7 +211,10 @@ const BettingSlip = ({ setNewGameData }) => {
               htmlFor="gameB"
               className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
             >
-              B:
+              B:{' '}
+              <span className="font-normal">
+                {gamesConfirmed.gameB.join(' - ')}
+              </span>
             </label>
           </div>
 
@@ -160,8 +224,21 @@ const BettingSlip = ({ setNewGameData }) => {
               htmlFor="gameC"
               className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
             >
-              C:
+              C:{' '}
+              <span className="font-normal">
+                {gamesConfirmed.gameC.join(' - ')}
+              </span>
             </label>
+          </div>
+
+          <div className="font-medium absolute inset-x-0 bottom-0 mb-2.5">
+            Valor total da aposta:
+            <span className="ms-2">
+              {totalPryce.toLocaleString('pt-BR', {
+                style: 'currency',
+                currency: 'BRL',
+              })}
+            </span>
           </div>
         </div>
       </div>
