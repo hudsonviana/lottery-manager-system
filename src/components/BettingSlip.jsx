@@ -1,6 +1,7 @@
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useEffect, useState } from 'react';
+import { toast } from '@/hooks/use-toast';
 
 const betValue = [
   { betNum: 6, value: 5 },
@@ -8,6 +9,14 @@ const betValue = [
   { betNum: 8, value: 140 },
   { betNum: 9, value: 420 },
 ];
+
+const showAlert = (message) => {
+  return toast({
+    className: 'bg-yellow-200 text-yellow-800 border-yellow-300',
+    title: 'Alerta!',
+    description: message,
+  });
+};
 
 const getBetPryce = (betNumber) => {
   return betValue.find(({ betNum }) => betNum === betNumber)?.value || 0;
@@ -43,7 +52,9 @@ const Dozen = ({ num, isEnabled, setSelectedDozens, betNumber }) => {
   return (
     <button
       onClick={handleDozenClick}
-      className={`size-7 ${isSelected ? 'bg-blue-950 text-white' : 'bg-white'}`}
+      className={`size-7 font-medium text-sm ${
+        isSelected ? 'bg-blue-950 text-white' : 'bg-white'
+      }`}
     >
       {num}
     </button>
@@ -55,7 +66,9 @@ const BetNumber = ({ num, isSelected, onClick }) => {
   return (
     <button
       onClick={onClick}
-      className={`size-7 ${isSelected ? 'bg-blue-950 text-white' : 'bg-white'}`}
+      className={`size-7 font-medium text-sm ${
+        isSelected ? 'bg-blue-950 text-white' : 'bg-white'
+      }`}
     >
       {num}
     </button>
@@ -77,6 +90,19 @@ const BettingSlip = ({ setNewGameData, action, resetAction }) => {
     setBetNumber(num);
   };
 
+  const handleInputCheck = (e) => {
+    const { id, dataset } = e.target;
+    console.log({ [id]: dataset.state === 'unchecked' });
+    // setNewUserData((prevData) => ({ ...prevData, [name]: value }));
+  };
+
+  const calculateTotalPryce = () => {
+    return Object.values(gamesConfirmed).reduce(
+      (total, game) => total + getBetPryce(game.length),
+      0
+    );
+  };
+
   useEffect(() => {
     setSelectedDozens([]);
   }, [betNumber]);
@@ -89,20 +115,28 @@ const BettingSlip = ({ setNewGameData, action, resetAction }) => {
         ([_, game]) => game.length === 0
       );
 
-      if (gameEntry) {
-        const [gameKey] = gameEntry;
-        const updatedGames = { ...gamesConfirmed, [gameKey]: selectedDozens };
-
-        setGamesConfirmed(updatedGames);
-
-        setNewGameData((prev) => ({
-          ...prev,
-          gameNumbers: updatedGames,
-          ticketPrice: prev.ticketPrice + getBetPryce(betNumber),
-        }));
-
-        setBetNumber(0);
+      if (!gameEntry) {
+        return showAlert(
+          'Número máximo de apostas atingido. Não é possível cadastrar mais apostas nesse jogo.'
+        );
       }
+
+      if (selectedDozens.length !== betNumber) {
+        return showAlert('Conclua sua aposta.');
+      }
+
+      const [gameKey] = gameEntry;
+      const updatedGames = { ...gamesConfirmed, [gameKey]: selectedDozens };
+
+      setGamesConfirmed(updatedGames);
+
+      setNewGameData((prev) => ({
+        ...prev,
+        gameNumbers: updatedGames,
+        ticketPrice: calculateTotalPryce(),
+      }));
+
+      setBetNumber(0);
     };
 
     const handleRemove = () => {
@@ -119,20 +153,10 @@ const BettingSlip = ({ setNewGameData, action, resetAction }) => {
       case 'onRemove':
         handleRemove();
         break;
-
-      default:
-        break;
     }
 
     resetAction();
   }, [action, resetAction, gamesConfirmed, selectedDozens, setNewGameData]);
-
-  const calculateTotalPryce = () => {
-    return Object.values(gamesConfirmed).reduce(
-      (total, game) => total + getBetPryce(game.length),
-      0
-    );
-  };
 
   const totalPryce = calculateTotalPryce();
 
@@ -142,9 +166,9 @@ const BettingSlip = ({ setNewGameData, action, resetAction }) => {
         <Label htmlFor="bettingSlip" className="text-left">
           Volante
         </Label>
-        <div className="grid bg-[#fffacf] h-full p-0.5 select-none">
+        <div className="grid bg-yellow-100 h-full p-0.5 select-none">
           <div className="mb-2">
-            <h1 className="text-neutral-700 text-sm mb-1">
+            <h1 className="text-neutral-700 text-sm mb-1 ms-0.5">
               Selecione quantos números deseja para esta aposta.
             </h1>
             <ul>
@@ -165,7 +189,7 @@ const BettingSlip = ({ setNewGameData, action, resetAction }) => {
           </div>
 
           <div>
-            <h1 className="text-neutral-700 text-sm mb-1">
+            <h1 className="text-neutral-700 text-sm mb-1 ms-0.5">
               Escolha os números para sua aposta:
             </h1>
             <ul>
@@ -188,7 +212,7 @@ const BettingSlip = ({ setNewGameData, action, resetAction }) => {
               ))}
             </ul>
           </div>
-          <div className="font-medium">
+          <div className="font-medium ms-1">
             Valor da aposta:
             <span className="ms-2">
               {getBetPryce(betNumber).toLocaleString('pt-BR', {
@@ -206,7 +230,12 @@ const BettingSlip = ({ setNewGameData, action, resetAction }) => {
         </Label>
         <div className="gap-1 bg-green-100 pt-5 ps-2 h-full relative">
           <div className="flex items-center space-x-2 mb-5">
-            <Checkbox id="gameA" className="bg-white" />
+            <Checkbox
+              id="gameA"
+              name="gameA"
+              className="bg-white"
+              onClick={handleInputCheck}
+            />
             <label
               htmlFor="gameA"
               className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
@@ -219,7 +248,12 @@ const BettingSlip = ({ setNewGameData, action, resetAction }) => {
           </div>
 
           <div className="flex items-center space-x-2 mb-5">
-            <Checkbox id="gameB" className="bg-white" />
+            <Checkbox
+              id="gameB"
+              name="gameB"
+              className="bg-white"
+              onClick={handleInputCheck}
+            />
             <label
               htmlFor="gameB"
               className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
@@ -232,7 +266,12 @@ const BettingSlip = ({ setNewGameData, action, resetAction }) => {
           </div>
 
           <div className="flex items-center space-x-2 mb-5">
-            <Checkbox id="gameC" className="bg-white" />
+            <Checkbox
+              id="gameC"
+              name="gameC"
+              className="bg-white"
+              onClick={handleInputCheck}
+            />
             <label
               htmlFor="gameC"
               className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
@@ -244,7 +283,7 @@ const BettingSlip = ({ setNewGameData, action, resetAction }) => {
             </label>
           </div>
 
-          <div className="font-medium absolute inset-x-0 bottom-0 mb-2.5">
+          <div className="ms-1.5 font-medium absolute inset-x-0 bottom-0 mb-2.5">
             Valor total da aposta:
             <span className="ms-2">
               {totalPryce.toLocaleString('pt-BR', {
