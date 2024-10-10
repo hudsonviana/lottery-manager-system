@@ -2,6 +2,23 @@ import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useEffect, useState } from 'react';
 
+const betValue = [
+  { betNum: 6, value: 5 },
+  { betNum: 7, value: 35 },
+  { betNum: 8, value: 140 },
+  { betNum: 9, value: 420 },
+];
+
+const getBetPryce = (betNumber) => {
+  return betValue.find(({ betNum }) => betNum === betNumber)?.value || 0;
+};
+
+const betNumbers = Array.from({ length: 4 }, (_, i) => i + 6);
+
+const dozens = Array.from({ length: 60 }, (_, i) =>
+  (i + 1).toString().padStart(2, '0')
+);
+
 const selectDozen = (dozen) => (prevList) => [...prevList, dozen];
 const removeDozen = (dozen) => (prevList) =>
   prevList.filter((value) => value !== dozen);
@@ -43,16 +60,6 @@ const BetNumber = ({ num, isSelected, onClick }) => {
   );
 };
 
-const getBetPryce = (betNumber) => {
-  const betValue = [
-    { betNum: 6, value: 5 },
-    { betNum: 7, value: 35 },
-    { betNum: 8, value: 140 },
-    { betNum: 9, value: 420 },
-  ];
-  return betValue.find(({ betNum }) => betNum === betNumber)?.value || '';
-};
-
 const BettingSlip = ({ setNewGameData, action, resetAction }) => {
   const [betNumber, setBetNumber] = useState(0);
   const [selectedDozens, setSelectedDozens] = useState([]);
@@ -63,12 +70,6 @@ const BettingSlip = ({ setNewGameData, action, resetAction }) => {
   });
 
   const isEnabled = selectedDozens.length < betNumber;
-
-  const betNumbers = Array.from({ length: 4 }, (_, i) => i + 6);
-
-  const dozens = Array.from({ length: 60 }, (_, i) =>
-    (i + 1).toString().padStart(2, '0')
-  );
 
   const handleBetNumberClick = (num) => {
     setBetNumber(num);
@@ -115,13 +116,14 @@ const BettingSlip = ({ setNewGameData, action, resetAction }) => {
     }
   }, [action, resetAction, gamesConfirmed, selectedDozens, setNewGameData]);
 
-  const totalPryce = Number(
-    getBetPryce(gamesConfirmed.gameA.length) +
-      getBetPryce(gamesConfirmed.gameB.length) +
-      getBetPryce(gamesConfirmed.gameC.length)
-  );
+  const calculateTotalPryce = () => {
+    return Object.values(gamesConfirmed).reduce(
+      (total, game) => total + getBetPryce(game.length),
+      0
+    );
+  };
 
-  console.log(totalPryce);
+  const totalPryce = calculateTotalPryce();
 
   return (
     <div className="flex gap-3">
