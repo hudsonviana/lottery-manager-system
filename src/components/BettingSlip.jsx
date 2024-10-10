@@ -19,7 +19,9 @@ const dozens = Array.from({ length: 60 }, (_, i) =>
   (i + 1).toString().padStart(2, '0')
 );
 
-const selectDozen = (dozen) => (prevList) => [...prevList, dozen];
+const selectDozen = (dozen) => (prevList) =>
+  [...prevList, dozen].sort((a, b) => a - b);
+
 const removeDozen = (dozen) => (prevList) =>
   prevList.filter((value) => value !== dozen);
 
@@ -82,7 +84,7 @@ const BettingSlip = ({ setNewGameData, action, resetAction }) => {
   useEffect(() => {
     if (!action) return;
 
-    if (action === 'onConfirm') {
+    const handleConfirm = () => {
       const gameEntry = Object.entries(gamesConfirmed).find(
         ([_, game]) => game.length === 0
       );
@@ -101,19 +103,28 @@ const BettingSlip = ({ setNewGameData, action, resetAction }) => {
 
         setBetNumber(0);
       }
-    }
+    };
 
-    if (action === 'onClear') {
-      setBetNumber(0);
-    }
-
-    if (action === 'onRemove') {
+    const handleRemove = () => {
       console.log('Removendo apostas...');
+    };
+
+    switch (action) {
+      case 'onConfirm':
+        handleConfirm();
+        break;
+      case 'onClear':
+        setBetNumber(0);
+        break;
+      case 'onRemove':
+        handleRemove();
+        break;
+
+      default:
+        break;
     }
 
-    if (action) {
-      resetAction();
-    }
+    resetAction();
   }, [action, resetAction, gamesConfirmed, selectedDozens, setNewGameData]);
 
   const calculateTotalPryce = () => {
@@ -131,7 +142,7 @@ const BettingSlip = ({ setNewGameData, action, resetAction }) => {
         <Label htmlFor="bettingSlip" className="text-left">
           Volante
         </Label>
-        <div className="grid bg-[#fffacf] h-full p-0.5">
+        <div className="grid bg-[#fffacf] h-full p-0.5 select-none">
           <div className="mb-2">
             <h1 className="text-neutral-700 text-sm mb-1">
               Selecione quantos números deseja para esta aposta.
