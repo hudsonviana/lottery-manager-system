@@ -1,7 +1,13 @@
 import { Label } from '@/components/ui/label';
-import { Checkbox } from '@/components/ui/checkbox';
 import { useEffect, useState } from 'react';
-import { toast } from '@/hooks/use-toast';
+import { toast, useToast } from '@/hooks/use-toast';
+import { HiXCircle } from 'react-icons/hi';
+
+const gamesConfirmedInitialState = {
+  gameA: [],
+  gameB: [],
+  gameC: [],
+};
 
 const betValue = [
   { betNum: 6, value: 5 },
@@ -20,6 +26,13 @@ const showAlert = (message) => {
 
 const getBetPryce = (betNumber) => {
   return betValue.find(({ betNum }) => betNum === betNumber)?.value || 0;
+};
+
+const calculateTotalPryce = (gamesConfirmed) => {
+  return Object.values(gamesConfirmed).reduce(
+    (total, game) => total + getBetPryce(game.length),
+    0
+  );
 };
 
 const betNumbers = Array.from({ length: 4 }, (_, i) => i + 6);
@@ -76,13 +89,12 @@ const BetNumber = ({ num, isSelected, onClick }) => {
 };
 
 const BettingSlip = ({ setNewGameData, action, resetAction }) => {
+  const { dismiss } = useToast();
   const [betNumber, setBetNumber] = useState(0);
   const [selectedDozens, setSelectedDozens] = useState([]);
-  const [gamesConfirmed, setGamesConfirmed] = useState({
-    gameA: [],
-    gameB: [],
-    gameC: [],
-  });
+  const [gamesConfirmed, setGamesConfirmed] = useState(
+    gamesConfirmedInitialState
+  );
 
   const isEnabled = selectedDozens.length < betNumber;
 
@@ -90,17 +102,38 @@ const BettingSlip = ({ setNewGameData, action, resetAction }) => {
     setBetNumber(num);
   };
 
-  const handleInputCheck = (e) => {
-    const { id, dataset } = e.target;
-    console.log({ [id]: dataset.state === 'unchecked' });
-    // setNewUserData((prevData) => ({ ...prevData, [name]: value }));
-  };
+  const handleRemoveBet = (e) => {
+    const { id } = e.target.closest('button');
 
-  const calculateTotalPryce = () => {
-    return Object.values(gamesConfirmed).reduce(
-      (total, game) => total + getBetPryce(game.length),
-      0
-    );
+    const updatedGames = { ...gamesConfirmed };
+
+    const gameKeys = Object.keys(updatedGames);
+    const targetIndex = gameKeys.indexOf(id);
+
+    if (targetIndex !== -1) {
+      updatedGames[id] = [];
+
+      for (let i = targetIndex + 1; i < gameKeys.length; i++) {
+        const currentGame = gameKeys[i];
+        const previousGame = gameKeys[i - 1];
+        updatedGames[previousGame] = [...updatedGames[currentGame]];
+        updatedGames[currentGame] = [];
+      }
+
+      setGamesConfirmed(updatedGames);
+
+      const gameNumbersUpdated = Object.values(updatedGames).every(
+        (arr) => arr.length === 0
+      )
+        ? ''
+        : updatedGames;
+
+      setNewGameData((prev) => ({
+        ...prev,
+        gameNumbers: gameNumbersUpdated,
+        ticketPrice: calculateTotalPryce(updatedGames),
+      }));
+    }
   };
 
   useEffect(() => {
@@ -116,15 +149,14 @@ const BettingSlip = ({ setNewGameData, action, resetAction }) => {
       );
 
       if (!gameEntry) {
-        return showAlert(
-          'Número máximo de apostas atingido. Não é possível cadastrar mais apostas nesse jogo.'
-        );
+        return showAlert('São permitidas no máximo 3 apostas por jogo.');
       }
 
       if (selectedDozens.length !== betNumber) {
         return showAlert('Conclua sua aposta.');
       }
 
+      dismiss();
       const [gameKey] = gameEntry;
       const updatedGames = { ...gamesConfirmed, [gameKey]: selectedDozens };
 
@@ -133,14 +165,19 @@ const BettingSlip = ({ setNewGameData, action, resetAction }) => {
       setNewGameData((prev) => ({
         ...prev,
         gameNumbers: updatedGames,
-        ticketPrice: calculateTotalPryce(),
+        ticketPrice: prev.ticketPrice + getBetPryce(betNumber),
       }));
 
       setBetNumber(0);
     };
 
-    const handleRemove = () => {
-      console.log('Removendo apostas...');
+    const handleExclude = () => {
+      setGamesConfirmed(gamesConfirmedInitialState);
+      setNewGameData((prev) => ({
+        ...prev,
+        gameNumbers: '',
+        ticketPrice: 0,
+      }));
     };
 
     switch (action) {
@@ -150,15 +187,15 @@ const BettingSlip = ({ setNewGameData, action, resetAction }) => {
       case 'onClear':
         setBetNumber(0);
         break;
-      case 'onRemove':
-        handleRemove();
+      case 'onExclude':
+        handleExclude();
         break;
     }
 
     resetAction();
   }, [action, resetAction, gamesConfirmed, selectedDozens, setNewGameData]);
 
-  const totalPryce = calculateTotalPryce();
+  const totalPryce = calculateTotalPryce(gamesConfirmed);
 
   return (
     <div className="flex gap-3">
@@ -229,59 +266,47 @@ const BettingSlip = ({ setNewGameData, action, resetAction }) => {
           Confira suas apostas
         </Label>
         <div className="gap-1 bg-green-100 pt-5 ps-2 h-full relative">
-          <div className="flex items-center space-x-2 mb-5">
-            <Checkbox
-              id="gameA"
-              name="gameA"
-              className="bg-white"
-              onClick={handleInputCheck}
-            />
-            <label
-              htmlFor="gameA"
-              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-            >
-              A:{' '}
-              <span className="font-normal">
-                {gamesConfirmed.gameA.join(' - ')}
+          {gamesConfirmed.gameA.length !== 0 && (
+            <div className="flex items-center space-x-1 mb-5">
+              <button id="gameA" onClick={handleRemoveBet}>
+                <HiXCircle size={20} color="red" />
+              </button>
+              <span className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                A:{' '}
+                <span className="font-normal">
+                  {gamesConfirmed.gameA.join(' - ')}
+                </span>
               </span>
-            </label>
-          </div>
+            </div>
+          )}
 
-          <div className="flex items-center space-x-2 mb-5">
-            <Checkbox
-              id="gameB"
-              name="gameB"
-              className="bg-white"
-              onClick={handleInputCheck}
-            />
-            <label
-              htmlFor="gameB"
-              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-            >
-              B:{' '}
-              <span className="font-normal">
-                {gamesConfirmed.gameB.join(' - ')}
+          {gamesConfirmed.gameB.length !== 0 && (
+            <div className="flex items-center space-x-1 mb-5">
+              <button id="gameB" onClick={handleRemoveBet}>
+                <HiXCircle size={20} color="red" />
+              </button>
+              <span className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                B:{' '}
+                <span className="font-normal">
+                  {gamesConfirmed.gameB.join(' - ')}
+                </span>
               </span>
-            </label>
-          </div>
+            </div>
+          )}
 
-          <div className="flex items-center space-x-2 mb-5">
-            <Checkbox
-              id="gameC"
-              name="gameC"
-              className="bg-white"
-              onClick={handleInputCheck}
-            />
-            <label
-              htmlFor="gameC"
-              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-            >
-              C:{' '}
-              <span className="font-normal">
-                {gamesConfirmed.gameC.join(' - ')}
+          {gamesConfirmed.gameC.length !== 0 && (
+            <div className="flex items-center space-x-1 mb-5">
+              <button id="gameC" onClick={handleRemoveBet}>
+                <HiXCircle size={20} color="red" />
+              </button>
+              <span className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                C:{' '}
+                <span className="font-normal">
+                  {gamesConfirmed.gameC.join(' - ')}
+                </span>
               </span>
-            </label>
-          </div>
+            </div>
+          )}
 
           <div className="ms-1.5 font-medium absolute inset-x-0 bottom-0 mb-2.5">
             Valor total da aposta:

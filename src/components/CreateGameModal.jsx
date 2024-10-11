@@ -284,7 +284,7 @@ const CreateGameModal = () => {
 
           <div className="flex gap-3">
             <Button
-              onClick={() => handleActions('onRemove')}
+              onClick={() => handleActions('onExclude')}
               variant="destructive"
             >
               Excluir
