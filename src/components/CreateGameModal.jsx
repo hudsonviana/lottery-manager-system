@@ -41,6 +41,56 @@ const newGameDataInitialState = {
   lotteryType: '',
 };
 
+const parseHTML = (htmlString) => {
+  // Create a new DOM parser
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(htmlString, 'text/html');
+
+  // Extract game numbers
+  const gameA = Array.from(doc.querySelectorAll('h2'))
+    .find((h) => h.textContent?.includes('Aposta A'))
+    ?.textContent?.match(/\d+/g);
+  const gameB =
+    Array.from(doc.querySelectorAll('h2'))
+      .find((h) => h.textContent?.includes('Aposta B'))
+      ?.textContent?.match(/\d+/g) || [];
+  const gameC =
+    Array.from(doc.querySelectorAll('h2'))
+      .find((h) => h.textContent?.includes('Aposta C'))
+      ?.textContent?.match(/\d+/g) || [];
+
+  // Extract ticket price
+  const totalCell = Array.from(doc.querySelectorAll('td')).find((td) =>
+    td.textContent.includes('TOTAL:')
+  );
+  const ticketPriceText = totalCell ? totalCell.textContent : '0';
+  const ticketPrice = parseFloat(
+    ticketPriceText.replace(/[^0-9,.]/g, '').replace(',', '.')
+  );
+
+  // Extract contest number and draw date
+  let contestNumber = null;
+  const h2Elements = doc.querySelectorAll('h2');
+  h2Elements.forEach((h) => {
+    const match = h.textContent.match(/CONCURSO (\d+)/);
+    if (match) {
+      contestNumber = parseInt(match[1], 10);
+    }
+  });
+
+  // Create the final object
+  return {
+    gameNumbers: {
+      gameA,
+      gameB,
+      gameC,
+    },
+    ticketPrice,
+    contestNumber,
+    lotteryType: 'MEGA_SENA',
+  };
+};
+
 const CreateGameModal = () => {
   const { auth } = useAuth();
   const [open, setOpen] = useState(false);
@@ -133,6 +183,26 @@ const CreateGameModal = () => {
     setNewGameData(newGameDataInitialState);
   };
 
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const htmlString = e.target.result;
+        const { contestNumber, gameNumbers, lotteryType, ticketPrice } =
+          parseHTML(htmlString);
+        setNewGameData((prev) => ({
+          ...prev,
+          contestNumber,
+          gameNumbers,
+          lotteryType,
+          ticketPrice,
+        }));
+      };
+      reader.readAsText(file);
+    }
+  };
+
   const handleActions = (actionType) => {
     setAction(actionType);
   };
@@ -159,98 +229,110 @@ const CreateGameModal = () => {
 
         <div className="grid gap-4 py-4">
           <div className="flex justify-between">
-            <div className="grid items-center gap-1">
-              <Label htmlFor="lotteryType" className="text-left">
-                Loteria
-              </Label>
-              <Popover open={open} onOpenChange={setOpen}>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant="outline"
-                    role="combobox"
-                    aria-expanded={open}
-                    className="w-[200px] justify-between"
-                  >
-                    {newGameData.lotteryType
-                      ? LOTTERY_TYPE.find(
-                          (lotteryType) => lotteryType.value === newGameData.lotteryType
-                        )?.label
-                      : 'Selecione a loteria...'}
-                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-[200px] p-0">
-                  <Command>
-                    <CommandInput placeholder="Pesquisar loteria..." />
-                    <CommandList>
-                      <CommandEmpty>Loteria não encontrada.</CommandEmpty>
-                      <CommandGroup>
-                        {LOTTERY_TYPE.map((lotteryType) => (
-                          <CommandItem
-                            key={lotteryType.value}
-                            value={lotteryType.value}
-                            onSelect={(currentValue) => {
-                              const selectedLotteryType =
-                                currentValue === newGameData.lotteryType
-                                  ? ''
-                                  : currentValue;
-                              setNewGameData((prevData) => ({
-                                ...prevData,
-                                drawDate: '',
-                                lotteryType: selectedLotteryType,
-                              }));
-                              setOpen(false);
-                            }}
-                          >
-                            <Check
-                              className={cn(
-                                'mr-2 h-4 w-4',
-                                newGameData.lotteryType === lotteryType.value
-                                  ? 'opacity-100'
-                                  : 'opacity-0'
-                              )}
-                            />
-                            {lotteryType.label}
-                          </CommandItem>
-                        ))}
-                      </CommandGroup>
-                    </CommandList>
-                  </Command>
-                </PopoverContent>
-              </Popover>
+            <div className="flex justify-between gap-2">
+              <div className="grid items-center gap-1">
+                <Label htmlFor="lotteryType" className="text-left">
+                  Loteria
+                </Label>
+                <Popover open={open} onOpenChange={setOpen}>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      role="combobox"
+                      aria-expanded={open}
+                      className="w-[200px] justify-between"
+                    >
+                      {newGameData.lotteryType
+                        ? LOTTERY_TYPE.find(
+                            (lotteryType) => lotteryType.value === newGameData.lotteryType
+                          )?.label
+                        : 'Selecione a loteria...'}
+                      <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-[200px] p-0">
+                    <Command>
+                      <CommandInput placeholder="Pesquisar loteria..." />
+                      <CommandList>
+                        <CommandEmpty>Loteria não encontrada.</CommandEmpty>
+                        <CommandGroup>
+                          {LOTTERY_TYPE.map((lotteryType) => (
+                            <CommandItem
+                              key={lotteryType.value}
+                              value={lotteryType.value}
+                              onSelect={(currentValue) => {
+                                const selectedLotteryType =
+                                  currentValue === newGameData.lotteryType
+                                    ? ''
+                                    : currentValue;
+                                setNewGameData((prevData) => ({
+                                  ...prevData,
+                                  drawDate: '',
+                                  lotteryType: selectedLotteryType,
+                                }));
+                                setOpen(false);
+                              }}
+                            >
+                              <Check
+                                className={cn(
+                                  'mr-2 h-4 w-4',
+                                  newGameData.lotteryType === lotteryType.value
+                                    ? 'opacity-100'
+                                    : 'opacity-0'
+                                )}
+                              />
+                              {lotteryType.label}
+                            </CommandItem>
+                          ))}
+                        </CommandGroup>
+                      </CommandList>
+                    </Command>
+                  </PopoverContent>
+                </Popover>
+              </div>
+
+              <div className="grid items-center gap-1">
+                <Label htmlFor="contestNumber" className="text-left">
+                  Concurso
+                </Label>
+                <Input
+                  id="contestNumber"
+                  name="contestNumber"
+                  className="w-20"
+                  maxLength={4}
+                  size={4}
+                  onChange={handleInputChange}
+                  value={newGameData.contestNumber || ''}
+                />
+              </div>
+
+              <div className="grid items-center gap-1">
+                <Label htmlFor="drawDate" className="text-left">
+                  Data do sorteio
+                </Label>
+                <Input
+                  id="drawDate"
+                  name="drawDate"
+                  className="cursor-not-allowed"
+                  value={newGameData.drawDate}
+                  size={4}
+                  readOnly
+                />
+              </div>
             </div>
 
-            <div className="grid items-center gap-1">
-              <Label htmlFor="contestNumber" className="text-left">
-                Concurso
+            <div className="grid w-60 items-center gap-1">
+              <Label htmlFor="file" className="text-left">
+                Importar
               </Label>
-              <Input
-                id="contestNumber"
-                name="contestNumber"
-                className="w-20"
-                maxLength={4}
-                onChange={handleInputChange}
-                // value={newGameData.contestNumber}
-              />
-            </div>
-
-            <div className="grid items-center gap-1">
-              <Label htmlFor="drawDate" className="text-left">
-                Data do sorteio
-              </Label>
-              <Input
-                id="drawDate"
-                name="drawDate"
-                className="cursor-not-allowed"
-                value={newGameData.drawDate}
-                readOnly
-              />
+              <Input id="file" type="file" name="file" onChange={handleFileChange} />
             </div>
           </div>
 
           <div className="gap-1">
             <BettingSlip
               setNewGameData={setNewGameData}
+              importedGameNumbers={newGameData?.gameNumbers}
               action={action}
               resetAction={resetAction}
             />

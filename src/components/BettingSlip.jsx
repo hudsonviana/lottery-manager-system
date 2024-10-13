@@ -37,15 +37,11 @@ const calculateTotalPryce = (gamesConfirmed) => {
 
 const betNumbers = Array.from({ length: 4 }, (_, i) => i + 6);
 
-const dozens = Array.from({ length: 60 }, (_, i) =>
-  (i + 1).toString().padStart(2, '0')
-);
+const dozens = Array.from({ length: 60 }, (_, i) => (i + 1).toString().padStart(2, '0'));
 
-const selectDozen = (dozen) => (prevList) =>
-  [...prevList, dozen].sort((a, b) => a - b);
+const selectDozen = (dozen) => (prevList) => [...prevList, dozen].sort((a, b) => a - b);
 
-const removeDozen = (dozen) => (prevList) =>
-  prevList.filter((value) => value !== dozen);
+const removeDozen = (dozen) => (prevList) => prevList.filter((value) => value !== dozen);
 
 // Dozen Button
 const Dozen = ({ num, isEnabled, setSelectedDozens, betNumber }) => {
@@ -88,13 +84,11 @@ const BetNumber = ({ num, isSelected, onClick }) => {
   );
 };
 
-const BettingSlip = ({ setNewGameData, action, resetAction }) => {
+const BettingSlip = ({ setNewGameData, importedGameNumbers, action, resetAction }) => {
   const { dismiss } = useToast();
   const [betNumber, setBetNumber] = useState(0);
   const [selectedDozens, setSelectedDozens] = useState([]);
-  const [gamesConfirmed, setGamesConfirmed] = useState(
-    gamesConfirmedInitialState
-  );
+  const [gamesConfirmed, setGamesConfirmed] = useState(gamesConfirmedInitialState);
 
   const isEnabled = selectedDozens.length < betNumber;
 
@@ -195,6 +189,10 @@ const BettingSlip = ({ setNewGameData, action, resetAction }) => {
     resetAction();
   }, [action, resetAction, gamesConfirmed, selectedDozens, setNewGameData]);
 
+  useEffect(() => {
+    if (importedGameNumbers) setGamesConfirmed(importedGameNumbers);
+  }, [importedGameNumbers]);
+
   const totalPryce = calculateTotalPryce(gamesConfirmed);
 
   return (
@@ -210,11 +208,7 @@ const BettingSlip = ({ setNewGameData, action, resetAction }) => {
             </h1>
             <ul>
               {betNumbers.map((num) => (
-                <li
-                  key={num}
-                  className="float-left"
-                  style={{ margin: '2.5px' }}
-                >
+                <li key={num} className="float-left" style={{ margin: '2.5px' }}>
                   <BetNumber
                     num={num}
                     isSelected={betNumber === num}
@@ -272,10 +266,7 @@ const BettingSlip = ({ setNewGameData, action, resetAction }) => {
                 <HiXCircle size={20} color="red" />
               </button>
               <span className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                A:{' '}
-                <span className="font-normal">
-                  {gamesConfirmed.gameA.join(' - ')}
-                </span>
+                A: <span className="font-normal">{gamesConfirmed.gameA.join(' - ')}</span>
               </span>
             </div>
           )}
@@ -286,10 +277,7 @@ const BettingSlip = ({ setNewGameData, action, resetAction }) => {
                 <HiXCircle size={20} color="red" />
               </button>
               <span className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                B:{' '}
-                <span className="font-normal">
-                  {gamesConfirmed.gameB.join(' - ')}
-                </span>
+                B: <span className="font-normal">{gamesConfirmed.gameB.join(' - ')}</span>
               </span>
             </div>
           )}
@@ -300,10 +288,7 @@ const BettingSlip = ({ setNewGameData, action, resetAction }) => {
                 <HiXCircle size={20} color="red" />
               </button>
               <span className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                C:{' '}
-                <span className="font-normal">
-                  {gamesConfirmed.gameC.join(' - ')}
-                </span>
+                C: <span className="font-normal">{gamesConfirmed.gameC.join(' - ')}</span>
               </span>
             </div>
           )}
