@@ -16,6 +16,7 @@ import Admin from './pages/dashboard/Admin.jsx';
 import Users from './pages/dashboard/Users.jsx';
 import User from './pages/dashboard/User.jsx';
 import Games from './pages/dashboard/Games.jsx';
+import Game from './pages/dashboard/Game.jsx';
 import PersistLogin from './components/PersistLogin.jsx';
 import RequireAuth from './components/RequireAuth.jsx';
 import RequireGuest from './components/RequireGuest.jsx';
@@ -56,6 +57,7 @@ const router = createBrowserRouter([
               { index: true, element: <Index /> },
               { path: 'profile', element: <Profile /> },
               { path: 'games', element: <Games /> },
+              { path: 'games/:id', element: <Game /> },
               { path: 'settings', element: <Settings /> },
               { path: 'support', element: <Support /> },
               { path: 'unauthorized', element: <Unauthorized /> },

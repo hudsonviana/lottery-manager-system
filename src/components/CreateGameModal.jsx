@@ -23,11 +23,7 @@ import {
   CommandItem,
   CommandList,
 } from '@/components/ui/command';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import useGameApi from '@/hooks/useGameApi';
 import useDrawApi from '@/hooks/useDrawApi';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -58,7 +54,7 @@ const CreateGameModal = () => {
   const createGameMutation = useMutation({
     mutationFn: (gameData) => addGame(auth.user.id, gameData),
     onSuccess: ({ newGame }) => {
-      queryClient.invalidateQueries({ queryKey: ['games', auth.user.id] });
+      queryClient.invalidateQueries({ queryKey: ['games'] });
       console.log('newGame:', newGame);
       handleCancelButtonClick();
       toast({
@@ -79,11 +75,7 @@ const CreateGameModal = () => {
 
   const { fetchDrawResult } = useDrawApi();
   const contestData = useQuery({
-    queryKey: [
-      'contestData',
-      newGameData.lotteryType,
-      newGameData.contestNumber,
-    ],
+    queryKey: ['contestData', newGameData.lotteryType, newGameData.contestNumber],
     queryFn: () =>
       fetchDrawResult(
         newGameData.lotteryType.replace('_', '').toLowerCase(),
@@ -181,8 +173,7 @@ const CreateGameModal = () => {
                   >
                     {newGameData.lotteryType
                       ? LOTTERY_TYPE.find(
-                          (lotteryType) =>
-                            lotteryType.value === newGameData.lotteryType
+                          (lotteryType) => lotteryType.value === newGameData.lotteryType
                         )?.label
                       : 'Selecione a loteria...'}
                     <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
@@ -283,10 +274,7 @@ const CreateGameModal = () => {
           </div>
 
           <div className="flex gap-3">
-            <Button
-              onClick={() => handleActions('onExclude')}
-              variant="destructive"
-            >
+            <Button onClick={() => handleActions('onExclude')} variant="destructive">
               Excluir
             </Button>
 

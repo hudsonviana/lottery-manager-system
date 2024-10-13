@@ -1,22 +1,73 @@
-import { useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import useUserApi from '@/hooks/useUserApi';
+import useGameApi from '@/hooks/useGameApi';
 import { useAuth } from '@/hooks/useAuth';
 import { Loader2 } from 'lucide-react';
 import DataTable, { sortingHeader } from '@/components/DataTable';
 import formatDate from '@/helpers/formatDate';
 import translateGameResult from '@/helpers/translateGameResult';
+import translateLotteryType from '@/helpers/translateLotteryType';
 import GameDisplay from '@/components/GameDisplay';
 import CreateGameModal from '@/components/CreateGameModal';
+import GameActions from '@/components/GameActions';
+
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
+import { AlertDescription } from '@/components/ui/alert';
+import { handleError } from '@/helpers/handleError';
+import { useToast } from '@/hooks/use-toast';
 
 const Games = () => {
+  const { toast, dismiss } = useToast();
+  const navigate = useNavigate();
   const { auth } = useAuth();
+  const [isDeleteAlertOpen, setIsDeleteAlertOpen] = useState(false);
+  const [gameDelete, setGameDelete] = useState({});
 
   const { fetchUserGames } = useUserApi();
+  const { deleteGame } = useGameApi();
+
+  const queryClient = useQueryClient();
 
   const { isPending, isError, data, error } = useQuery({
-    queryKey: ['games', auth.user.id],
+    queryKey: ['games'],
     queryFn: () => fetchUserGames(auth.user.id),
     staleTime: 1000 * 60,
+  });
+
+  const deleteGameMutation = useMutation({
+    mutationFn: ({ playerId, id }) => deleteGame(playerId, id),
+    onSuccess: () => {
+      console.log(gameDelete);
+      queryClient.invalidateQueries(['games']);
+      toast({
+        className: 'bg-green-200 text-green-800 border-green-300',
+        title: 'Jogo deletado com sucesso!',
+        description: `Jogo da loteria ${translateLotteryType(
+          gameDelete?.draw?.lotteryType
+        )} (Concurso: ${
+          gameDelete?.draw?.contestNumber
+        }) foi deletado do banco de dados.`,
+      });
+    },
+    onError: (err) => {
+      const { error } = handleError(err);
+      toast({
+        className: 'bg-red-200 text-red-800 border-red-300',
+        title: 'Erro ao deletar jogo!',
+        description: error.map((err, i) => <p key={i}>{err}</p>),
+      });
+    },
   });
 
   if (isPending) {
@@ -30,56 +81,15 @@ const Games = () => {
 
   if (isError) return <div>Ocorreu um erro: {error.message}</div>;
 
-  // const games = [
-  //   {
-  //     id: '8732ea7d-cbf4-4648-81f1-39fc8cfb93e5',
-  //     gameNumbers: {
-  //       gameA: ['01', '02', '03', '04', '05', '06'],
-  //       gameB: ['11', '12', '13', '14', '15', '16'],
-  //       gameC: [],
-  //     },
-  //     ticketPrice: 15,
-  //     result: 'PENDING',
-  //     createdAt: '2024-07-21T18:49:35.289Z',
-  //     updatedAt: '2024-07-21T18:49:35.289Z',
-  //     draw: {
-  //       id: '3757d0e3-900c-43dc-8b72-10a0393610e3',
-  //       lotteryType: 'MEGA_SENA',
-  //       contestNumber: 2751,
-  //       drawDate: '2024-07-20T03:00:00.000Z',
-  //       status: 'DRAWN',
-  //       drawnNumbers: ['04', '13', '18', '42', '52', '53'],
-  //       prize: [
-  //         {
-  //           faixa: 1,
-  //           valorPremio: 0,
-  //           descricaoFaixa: '6 acertos',
-  //           numeroDeGanhadores: 0,
-  //         },
-  //         {
-  //           faixa: 2,
-  //           valorPremio: 60964.39,
-  //           descricaoFaixa: '5 acertos',
-  //           numeroDeGanhadores: 60,
-  //         },
-  //         {
-  //           faixa: 3,
-  //           valorPremio: 1049.72,
-  //           descricaoFaixa: '4 acertos',
-  //           numeroDeGanhadores: 4978,
-  //         },
-  //       ],
-  //       accumulated: true,
-  //       createdAt: '2024-07-20T21:03:40.605Z',
-  //       updatedAt: '2024-07-21T03:19:48.280Z',
-  //     },
-  //   },
-  // ];
+  const handleDeleteGameAction = (game) => {
+    dismiss();
+    setGameDelete(game);
+    setIsDeleteAlertOpen(true);
+  };
 
   const columns = [
     {
-      header: (info) =>
-        sortingHeader({ label: 'Concurso', column: info.column }),
+      header: (info) => sortingHeader({ label: 'Concurso', column: info.column }),
       accessorKey: 'draw.contestNumber',
       id: 'contestNumber',
     },
@@ -93,14 +103,12 @@ const Games = () => {
       cell: (info) => formatDate(info.getValue(), { withTime: false }),
     },
     {
-      header: (info) =>
-        sortingHeader({ label: 'Apostas', column: info.column }),
+      header: (info) => sortingHeader({ label: 'Apostas', column: info.column }),
       accessorKey: 'gameNumbers',
       cell: (info) => <GameDisplay gameNumbers={info.getValue()} />,
     },
     {
-      header: (info) =>
-        sortingHeader({ label: 'Custo do jogo', column: info.column }),
+      header: (info) => sortingHeader({ label: 'Custo do jogo', column: info.column }),
       accessorKey: 'ticketPrice',
       cell: (info) =>
         info.getValue().toLocaleString('pt-BR', {
@@ -109,16 +117,29 @@ const Games = () => {
         }),
     },
     {
-      header: (info) =>
-        sortingHeader({ label: 'Cadastrado em', column: info.column }),
+      header: (info) => sortingHeader({ label: 'Cadastrado em', column: info.column }),
       accessorKey: 'createdAt',
       cell: (info) => formatDate(info.getValue()),
     },
     {
-      header: (info) =>
-        sortingHeader({ label: 'Resultado', column: info.column }),
+      header: (info) => sortingHeader({ label: 'Resultado', column: info.column }),
       accessorKey: 'result',
       cell: (info) => translateGameResult(info.getValue()),
+    },
+    {
+      id: 'actions',
+      cell: ({ row }) => {
+        const game = row.original;
+
+        return (
+          <GameActions
+            game={game}
+            onView={() => navigate(game.id)}
+            onUpdate={() => console.log(game.id)}
+            onDelete={() => handleDeleteGameAction(game)}
+          />
+        );
+      },
     },
   ];
 
@@ -130,6 +151,47 @@ const Games = () => {
         defaultSorting={[{ id: 'contestNumber', desc: true }]}
         createModal={<CreateGameModal />}
       />
+
+      <AlertDialog open={isDeleteAlertOpen} onOpenChange={setIsDeleteAlertOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Tem certeza que deseja deletar o jogo?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Esta ação não pode ser desfeita.
+            </AlertDialogDescription>
+            <AlertDescription>
+              <ul className="border border-neutral-300 rounded-md p-2">
+                <li className="flex gap-1">
+                  <div className="font-medium min-w-12">Jogo cadastrado em:</div>
+                  <span>{formatDate(gameDelete?.createdAt)}</span>
+                </li>
+                <li className="flex gap-1">
+                  <div className="font-medium min-w-12">Loteria:</div>
+                  <span>{translateLotteryType(gameDelete?.draw?.lotteryType)}</span>
+                </li>
+                <li className="flex gap-1">
+                  <div className="font-medium min-w-12">Concurso:</div>
+                  <span>{gameDelete?.draw?.contestNumber}</span>
+                </li>
+                <li className="flex gap-1">
+                  <div className="font-medium min-w-12">Apostas:</div>
+                  <span>{<GameDisplay gameNumbers={gameDelete?.gameNumbers} />}</span>
+                </li>
+              </ul>
+            </AlertDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() =>
+                deleteGameMutation.mutate({ playerId: auth.user.id, id: gameDelete.id })
+              }
+            >
+              Confirmar
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

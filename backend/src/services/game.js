@@ -61,17 +61,17 @@ export const store = async ({ gameData, drawData }) => {
   }
 };
 
-export const update = async (data, { playerId, id }) => {
+export const update = async (data, id) => {
   try {
-    return await prisma.game.update({ data, where: { playerId, id } });
+    return await prisma.game.update({ data, where: { id } });
   } catch (error) {
     return { error: 'Ocorreu um erro ao atualizar o jogo' };
   }
 };
 
-export const destroy = async ({ playerId, id }) => {
+export const destroy = async (id) => {
   try {
-    return await prisma.game.delete({ where: { playerId, id } });
+    return await prisma.game.delete({ where: { id } });
   } catch (error) {
     return { error: 'Ocorreu um erro ao deletar o jogo' };
   }

@@ -99,14 +99,12 @@ const Users = () => {
       accessorKey: 'email',
     },
     {
-      header: (info) =>
-        sortingHeader({ label: 'Nível de acesso', column: info.column }),
+      header: (info) => sortingHeader({ label: 'Nível de acesso', column: info.column }),
       accessorKey: 'role',
       cell: (info) => translateRole(info.getValue()),
     },
     {
-      header: (info) =>
-        sortingHeader({ label: 'Cadastrado em', column: info.column }),
+      header: (info) => sortingHeader({ label: 'Cadastrado em', column: info.column }),
       accessorKey: 'createdAt',
       cell: (info) => formatDate(info.getValue()),
     },
@@ -154,12 +152,10 @@ const Users = () => {
       <AlertDialog open={isDeleteAlertOpen} onOpenChange={setIsDeleteAlertOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>
-              Tem certeza que deseja deletar o usuário?
-            </AlertDialogTitle>
+            <AlertDialogTitle>Tem certeza que deseja deletar o usuário?</AlertDialogTitle>
             <AlertDialogDescription>
-              Esta ação não pode ser desfeita. Isto vai deletar permanentemente
-              o usuário e remover seus dados.
+              Esta ação não pode ser desfeita. Isto vai deletar permanentemente o usuário
+              e remover seus dados.
             </AlertDialogDescription>
             <AlertDescription>
               <ul className="border border-neutral-300 rounded-md p-2">
@@ -182,9 +178,7 @@ const Users = () => {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancelar</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={() => deleteUserMutation.mutate(userDelete.id)}
-            >
+            <AlertDialogAction onClick={() => deleteUserMutation.mutate(userDelete.id)}>
               Confirmar
             </AlertDialogAction>
           </AlertDialogFooter>

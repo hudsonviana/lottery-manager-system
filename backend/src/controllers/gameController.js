@@ -147,7 +147,7 @@ export const updateGame = async (req, res) => {
     return res.status(400).json({ errors: body.error.errors });
   }
 
-  const updatedGame = await gameService.update(body.data, { playerId, id });
+  const updatedGame = await gameService.update(body.data, id);
 
   if (updatedGame?.error) {
     return res.status(500).json({ error: updatedGame.error });
@@ -164,11 +164,11 @@ export const deleteGame = async (req, res) => {
     return res.status(403).json({ error: 'Acesso negado' });
   }
 
-  const deletedGame = await gameService.destroy({ playerId, id });
+  const deletedGame = await gameService.destroy(id);
 
   if (deletedGame.error) {
     return res.status(500).json({ error: deletedGame.error });
   }
 
-  res.json({ game: deletedGame, auth });
+  res.json({ deletedGame });
 };

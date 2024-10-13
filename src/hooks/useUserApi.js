@@ -34,10 +34,7 @@ const useUserApi = () => {
   };
 
   const changePassword = async (id, passData) => {
-    const response = await authApiClient.post(
-      `/auth/${id}/changepassword`,
-      passData
-    );
+    const response = await authApiClient.post(`/auth/${id}/changepassword`, passData);
     return response.data;
   };
 
