@@ -224,12 +224,23 @@ const CreateGameModal = () => {
       <DialogContent className="sm:max-w-[700px]">
         <DialogHeader>
           <DialogTitle>Cadastrar novo jogo</DialogTitle>
-          <DialogDescription>Insira os dados do novo jogo.</DialogDescription>
+          <DialogDescription className="flex items-center justify-between">
+            <span>
+              Insira abaixo os dados do novo jogo ou importe um comprovante ao lado:
+            </span>
+            <Input
+              id="file"
+              type="file"
+              name="file"
+              onChange={handleFileChange}
+              className="w-full"
+            />
+          </DialogDescription>
         </DialogHeader>
 
         <div className="grid gap-4 py-4">
           <div className="flex justify-between">
-            <div className="flex justify-between gap-2">
+            <div className="flex justify-between gap-3">
               <div className="grid items-center gap-1">
                 <Label htmlFor="lotteryType" className="text-left">
                   Loteria
@@ -319,13 +330,6 @@ const CreateGameModal = () => {
                   readOnly
                 />
               </div>
-            </div>
-
-            <div className="grid w-60 items-center gap-1">
-              <Label htmlFor="file" className="text-left">
-                Importar
-              </Label>
-              <Input id="file" type="file" name="file" onChange={handleFileChange} />
             </div>
           </div>
 
