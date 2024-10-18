@@ -15,13 +15,9 @@ import { useMutation } from '@tanstack/react-query';
 import useUserApi from '@/hooks/useUserApi';
 import { handleError } from '@/helpers/handleError';
 import { toast } from '@/hooks/use-toast';
-import { Loader2 } from 'lucide-react';
+import LoadingLabel from './LoadingLabel';
 
-const ChangePasswordModal = ({
-  id,
-  isChangePassModalOpen,
-  setIsChangePassModalOpen,
-}) => {
+const ChangePasswordModal = ({ id, isChangePassModalOpen, setIsChangePassModalOpen }) => {
   const [passwordData, setPasswordData] = useState({
     currentPassword: '',
     newPassword: '',
@@ -72,10 +68,7 @@ const ChangePasswordModal = ({
   const canSave = [...Object.values(passwordData)].every(Boolean);
 
   return (
-    <Dialog
-      open={isChangePassModalOpen}
-      onOpenChange={setIsChangePassModalOpen}
-    >
+    <Dialog open={isChangePassModalOpen} onOpenChange={setIsChangePassModalOpen}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Atualizar senha</DialogTitle>
@@ -140,10 +133,7 @@ const ChangePasswordModal = ({
             onClick={handleChangePassButtonClick}
           >
             {changePasswordMutation.isPending ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Aguarde
-              </>
+              <LoadingLabel label={'Salvando'} />
             ) : (
               'Confirmar'
             )}

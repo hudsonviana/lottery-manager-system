@@ -2,7 +2,7 @@ import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import useGameApi from '@/hooks/useGameApi';
 import { useAuth } from '@/hooks/useAuth';
-import { Loader2 } from 'lucide-react';
+import LoadingLabel from '@/components/LoadingLabel';
 
 const Game = () => {
   const { id } = useParams();
@@ -18,8 +18,7 @@ const Game = () => {
   if (isPending) {
     return (
       <div className="flex items-center container mx-auto py-0">
-        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-        Carregando...
+        <LoadingLabel label={'Carregando...'} />
       </div>
     );
   }

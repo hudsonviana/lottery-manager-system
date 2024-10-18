@@ -291,7 +291,7 @@ const BettingSlip = ({ setNewGameData, importedGameNumbers, action, resetAction 
           )}
 
           <div className="ms-1.5 font-medium absolute inset-x-0 bottom-0 mb-2.5">
-            Valor total da aposta:
+            Valor total das apostas:
             <span className="ms-2">
               {totalPryce.toLocaleString('pt-BR', {
                 style: 'currency',

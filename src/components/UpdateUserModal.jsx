@@ -11,7 +11,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { Check, ChevronsUpDown, Loader2 } from 'lucide-react';
+import { Check, ChevronsUpDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
   Command,
@@ -21,16 +21,13 @@ import {
   CommandItem,
   CommandList,
 } from '@/components/ui/command';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import useUserApi from '@/hooks/useUserApi';
 import { handleError } from '@/helpers/handleError';
 import { toast } from '@/hooks/use-toast';
 import { USER_ROLES } from '@/consts/Enums';
+import LoadingLabel from './LoadingLabel';
 
 const UpdateUserModal = ({
   user,
@@ -148,9 +145,8 @@ const UpdateUserModal = ({
                     className="w-[200px] justify-between"
                   >
                     {userUpdateData.role
-                      ? USER_ROLES.find(
-                          (role) => role.value === userUpdateData.role
-                        )?.label
+                      ? USER_ROLES.find((role) => role.value === userUpdateData.role)
+                          ?.label
                       : 'Selecione o perfil...'}
                     <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                   </Button>
@@ -167,9 +163,7 @@ const UpdateUserModal = ({
                             value={role.value}
                             onSelect={(currentValue) => {
                               const selectedRole =
-                                currentValue === userUpdateData.role
-                                  ? ''
-                                  : currentValue;
+                                currentValue === userUpdateData.role ? '' : currentValue;
                               setUserUpdateData((prevData) => ({
                                 ...prevData,
                                 role: selectedRole,
@@ -213,10 +207,7 @@ const UpdateUserModal = ({
             onClick={handleUpdateButtonClick}
           >
             {updateUserMutation.isPending ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Aguarde
-              </>
+              <LoadingLabel label={'Salvando'} />
             ) : (
               'Salvar modificações'
             )}

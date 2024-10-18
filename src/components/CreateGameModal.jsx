@@ -13,7 +13,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { HiOutlinePlusCircle } from 'react-icons/hi';
-import { Check, ChevronsUpDown, Loader2 } from 'lucide-react';
+import { Check, ChevronsUpDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
   Command,
@@ -32,6 +32,7 @@ import { toast } from '@/hooks/use-toast';
 import { LOTTERY_TYPE } from '@/consts/Enums';
 import { useAuth } from '@/hooks/useAuth';
 import BettingSlip from './BettingSlip';
+import LoadingLabel from './LoadingLabel';
 
 const newGameDataInitialState = {
   gameNumbers: '',
@@ -346,7 +347,7 @@ const CreateGameModal = () => {
 
           <div className="flex gap-3">
             <Button onClick={() => handleActions('onExclude')} variant="destructive">
-              Excluir
+              Excluir tudo
             </Button>
 
             <DialogClose asChild>
@@ -366,10 +367,7 @@ const CreateGameModal = () => {
               onClick={handleSaveButtonClick}
             >
               {createGameMutation.isPending ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Aguarde
-                </>
+                <LoadingLabel label={'Salvando'} />
               ) : (
                 'Salvar'
               )}

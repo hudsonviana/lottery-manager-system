@@ -4,7 +4,6 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import useUserApi from '@/hooks/useUserApi';
 import useGameApi from '@/hooks/useGameApi';
 import { useAuth } from '@/hooks/useAuth';
-import { Loader2 } from 'lucide-react';
 import DataTable, { sortingHeader } from '@/components/DataTable';
 import formatDate from '@/helpers/formatDate';
 import translateGameResult from '@/helpers/translateGameResult';
@@ -26,6 +25,7 @@ import {
 import { AlertDescription } from '@/components/ui/alert';
 import { handleError } from '@/helpers/handleError';
 import { useToast } from '@/hooks/use-toast';
+import LoadingLabel from '@/components/LoadingLabel';
 
 const Games = () => {
   const { toast, dismiss } = useToast();
@@ -73,8 +73,7 @@ const Games = () => {
   if (isPending) {
     return (
       <div className="flex items-center container mx-auto py-0">
-        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-        Carregando...
+        <LoadingLabel label={'Carregando...'} />
       </div>
     );
   }

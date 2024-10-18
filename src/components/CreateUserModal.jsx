@@ -13,7 +13,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { HiOutlinePlusCircle } from 'react-icons/hi';
-import { Check, ChevronsUpDown, Loader2 } from 'lucide-react';
+import { Check, ChevronsUpDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
   Command,
@@ -23,16 +23,13 @@ import {
   CommandItem,
   CommandList,
 } from '@/components/ui/command';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import useUserApi from '@/hooks/useUserApi';
 import { handleError } from '@/helpers/handleError';
 import { toast } from '@/hooks/use-toast';
 import { USER_ROLES } from '@/consts/Enums';
+import LoadingLabel from './LoadingLabel';
 
 const CreateUserModal = () => {
   const [open, setOpen] = useState(false);
@@ -101,9 +98,7 @@ const CreateUserModal = () => {
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Cadastrar novo usuário</DialogTitle>
-          <DialogDescription>
-            Insira os dados do novo usuário.
-          </DialogDescription>
+          <DialogDescription>Insira os dados do novo usuário.</DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
           <div className="grid grid-cols-4 items-center gap-4">
@@ -156,8 +151,7 @@ const CreateUserModal = () => {
                   className="w-[200px] justify-between"
                 >
                   {newUserData.role
-                    ? USER_ROLES.find((role) => role.value === newUserData.role)
-                        ?.label
+                    ? USER_ROLES.find((role) => role.value === newUserData.role)?.label
                     : 'Selecione o perfil...'}
                   <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                 </Button>
@@ -174,9 +168,7 @@ const CreateUserModal = () => {
                           value={role.value}
                           onSelect={(currentValue) => {
                             const selectedRole =
-                              currentValue === newUserData.role
-                                ? ''
-                                : currentValue;
+                              currentValue === newUserData.role ? '' : currentValue;
                             setNewUserData((prevData) => ({
                               ...prevData,
                               role: selectedRole,
@@ -219,10 +211,7 @@ const CreateUserModal = () => {
             onClick={handleSaveButtonClick}
           >
             {createUserMutation.isPending ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Aguarde
-              </>
+              <LoadingLabel label={'Salvando'} />
             ) : (
               'Salvar'
             )}

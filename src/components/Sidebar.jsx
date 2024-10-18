@@ -18,7 +18,7 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2 } from 'lucide-react';
+import LoadingLabel from './LoadingLabel';
 
 const linkClass =
   'flex items-center gap-2 px-3 py-2 hover:bg-neutral-700 hover:no-underline rounded-sm text-base';
@@ -28,9 +28,7 @@ const SidebarLink = ({ item }) => {
     <NavLink
       to={item.path}
       className={({ isActive }) =>
-        `${linkClass} ${
-          isActive ? 'bg-neutral-600 text-white' : 'text-sky-400'
-        }`
+        `${linkClass} ${isActive ? 'bg-neutral-600 text-white' : 'text-sky-400'}`
       }
       end
     >
@@ -87,21 +85,13 @@ const Sidebar = () => {
             <span className="text-xl">
               <HiOutlineLogout />
             </span>
-            {isPending ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Saindo
-              </>
-            ) : (
-              'Sair'
-            )}
+            {isPending ? <LoadingLabel label={'Saindo'} /> : 'Sair'}
           </AlertDialogTrigger>
           <AlertDialogContent>
             <AlertDialogHeader>
               <AlertDialogTitle>Tem certeza que deseja sair?</AlertDialogTitle>
               <AlertDialogDescription>
-                Ao sair, será necessário fazer o login novamente para acessar o
-                sistema.
+                Ao sair, será necessário fazer o login novamente para acessar o sistema.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>

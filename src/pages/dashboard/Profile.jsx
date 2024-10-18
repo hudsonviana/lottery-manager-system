@@ -6,7 +6,7 @@ import UpdateUserModal from '@/components/UpdateUserModal';
 import ChangePasswordModal from '@/components/ChangePasswordModal';
 import { useQuery } from '@tanstack/react-query';
 import useUserApi from '@/hooks/useUserApi';
-import { Loader2 } from 'lucide-react';
+import LoadingLabel from '@/components/LoadingLabel';
 
 const Profile = () => {
   const { auth } = useAuth();
@@ -28,8 +28,7 @@ const Profile = () => {
   if (isPending) {
     return (
       <div className="flex items-center container mx-auto py-0">
-        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-        Carregando...
+        <LoadingLabel label={'Carregando...'} />
       </div>
     );
   }

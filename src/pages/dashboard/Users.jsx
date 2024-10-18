@@ -3,14 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import formatDate from '@/helpers/formatDate';
 import translateRole from '@/helpers/translateRole';
 import DataTable, { sortingHeader } from '@/components/DataTable';
-import { Loader2 } from 'lucide-react';
 import CreateUserModal from '@/components/CreateUserModal';
 import UpdateUserModal from '@/components/UpdateUserModal';
 import useUserApi from '@/hooks/useUserApi';
 import { useState } from 'react';
 import UserActions from '@/components/UserActions';
 import { useToast } from '@/hooks/use-toast';
-
 import {
   AlertDialog,
   AlertDialogAction,
@@ -23,6 +21,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { AlertDescription } from '@/components/ui/alert';
 import { handleError } from '@/helpers/handleError';
+import LoadingLabel from '@/components/LoadingLabel';
 
 // import generateRandomUsers from '@/mock/generateRandomUsers';
 // const users = generateRandomUsers(89);
@@ -68,8 +67,7 @@ const Users = () => {
   if (isPending) {
     return (
       <div className="flex items-center container mx-auto py-0">
-        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-        Carregando...
+        <LoadingLabel label={'Carregando...'} />
       </div>
     );
   }

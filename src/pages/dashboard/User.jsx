@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import translateRole from '@/helpers/translateRole';
 import { Button } from '@/components/ui/button';
 import useUserApi from '@/hooks/useUserApi';
-import { Loader2 } from 'lucide-react';
+import LoadingLabel from '@/components/LoadingLabel';
 
 const User = () => {
   const navigate = useNavigate();
@@ -24,8 +24,7 @@ const User = () => {
   if (isPending) {
     return (
       <div className="flex items-center container mx-auto py-0">
-        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-        Carregando...
+        <LoadingLabel label={'Carregando...'} />
       </div>
     );
   }
@@ -44,8 +43,7 @@ const User = () => {
         <h4 className="mr-1">Email:</h4> <span>{user.email}</span>
       </div>
       <div className="flex flex-row">
-        <h4 className="mr-1">Perfil:</h4>{' '}
-        <span>{translateRole(user.role)}</span>
+        <h4 className="mr-1">Perfil:</h4> <span>{translateRole(user.role)}</span>
       </div>
 
       <Button onClick={() => navigate(-1)}>Voltar</Button>

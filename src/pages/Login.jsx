@@ -12,7 +12,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2 } from 'lucide-react';
+import LoadingLabel from '@/components/LoadingLabel';
 
 const Login = () => {
   const [formData, setFormData] = useState({ email: '', password: '' });
@@ -64,11 +64,7 @@ const Login = () => {
         className="md:w-2/4 w-full"
         // style={{ backgroundImage: 'url(/login.jpg)' }}
       >
-        <img
-          src="/login.jpg"
-          alt="Minha Figura"
-          className="w-full h-full object-cover"
-        />
+        <img src="/login.jpg" alt="Minha Figura" className="w-full h-full object-cover" />
       </aside>
       <div className="grid place-content-center w-2/4">
         <form className="w-[400px]" onSubmit={handleFormSubmit}>
@@ -103,14 +99,7 @@ const Login = () => {
           </CardContent>
           <CardFooter className="flex flex-col gap-3">
             <Button type="submit" className="w-full" disabled={isPending}>
-              {isPending ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Aguarde
-                </>
-              ) : (
-                'Entrar'
-              )}
+              {isPending ? <LoadingLabel label={'Aguarde'} /> : 'Entrar'}
             </Button>
             <CardDescription>
               Não tem cadastro?{' '}
