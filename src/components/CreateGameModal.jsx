@@ -47,17 +47,14 @@ const parseHTML = (htmlString) => {
   const doc = parser.parseFromString(htmlString, 'text/html');
 
   // Extract game numbers
-  const gameA = Array.from(doc.querySelectorAll('h2'))
-    .find((h) => h.textContent?.includes('Aposta A'))
-    ?.textContent?.match(/\d+/g);
-  const gameB =
+  const extractNumbers = (label) =>
     Array.from(doc.querySelectorAll('h2'))
-      .find((h) => h.textContent?.includes('Aposta B'))
+      .find((h) => h.textContent?.includes(label))
       ?.textContent?.match(/\d+/g) || [];
-  const gameC =
-    Array.from(doc.querySelectorAll('h2'))
-      .find((h) => h.textContent?.includes('Aposta C'))
-      ?.textContent?.match(/\d+/g) || [];
+
+  const gameA = extractNumbers('Aposta A');
+  const gameB = extractNumbers('Aposta B');
+  const gameC = extractNumbers('Aposta C');
 
   // Extract ticket price
   const totalCell = Array.from(doc.querySelectorAll('td')).find((td) =>
@@ -70,21 +67,14 @@ const parseHTML = (htmlString) => {
 
   // Extract contest number and draw date
   let contestNumber = null;
-  const h2Elements = doc.querySelectorAll('h2');
-  h2Elements.forEach((h) => {
+  doc.querySelectorAll('h2').forEach((h) => {
     const match = h.textContent.match(/CONCURSO (\d+)/);
-    if (match) {
-      contestNumber = parseInt(match[1], 10);
-    }
+    if (match) contestNumber = parseInt(match[1], 10);
   });
 
   // Create the final object
   return {
-    gameNumbers: {
-      gameA,
-      gameB,
-      gameC,
-    },
+    gameNumbers: { gameA, gameB, gameC },
     ticketPrice,
     contestNumber,
     lotteryType: 'MEGA_SENA',
@@ -103,9 +93,8 @@ const CreateGameModal = () => {
 
   const createGameMutation = useMutation({
     mutationFn: (gameData) => addGame(auth.user.id, gameData),
-    onSuccess: ({ newGame }) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['games'] });
-      console.log('newGame:', newGame);
       handleCancelButtonClick();
       toast({
         className: 'bg-green-200 text-green-800 border-green-300',
@@ -147,7 +136,7 @@ const CreateGameModal = () => {
         ...prev,
         drawDate:
           contestData.data?.status === 500
-            ? 'Data indefinida'
+            ? 'Indefinida'
             : contestData.data?.dataProximoConcurso,
       }));
     }
@@ -173,6 +162,22 @@ const CreateGameModal = () => {
     }));
   };
 
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const htmlString = e.target.result;
+        const parsedData = parseHTML(htmlString);
+        setNewGameData((prev) => ({
+          ...prev,
+          ...parsedData,
+        }));
+      };
+      reader.readAsText(file);
+    }
+  };
+
   const handleSaveButtonClick = () => {
     createGameMutation.mutate(newGameData);
   };
@@ -181,26 +186,6 @@ const CreateGameModal = () => {
     setModalOpen(false);
     setAction(null);
     setNewGameData(newGameDataInitialState);
-  };
-
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const htmlString = e.target.result;
-        const { contestNumber, gameNumbers, lotteryType, ticketPrice } =
-          parseHTML(htmlString);
-        setNewGameData((prev) => ({
-          ...prev,
-          contestNumber,
-          gameNumbers,
-          lotteryType,
-          ticketPrice,
-        }));
-      };
-      reader.readAsText(file);
-    }
   };
 
   const handleActions = (actionType) => {
@@ -326,7 +311,7 @@ const CreateGameModal = () => {
                   name="drawDate"
                   className="cursor-not-allowed"
                   value={newGameData.drawDate}
-                  size={4}
+                  size={8}
                   readOnly
                 />
               </div>

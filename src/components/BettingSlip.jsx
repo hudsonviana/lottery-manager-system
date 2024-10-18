@@ -94,6 +94,7 @@ const BettingSlip = ({ setNewGameData, importedGameNumbers, action, resetAction 
 
   const handleBetNumberClick = (num) => {
     setBetNumber(num);
+    setSelectedDozens([]);
   };
 
   const handleRemoveBet = (e) => {
@@ -129,10 +130,6 @@ const BettingSlip = ({ setNewGameData, importedGameNumbers, action, resetAction 
       }));
     }
   };
-
-  useEffect(() => {
-    setSelectedDozens([]);
-  }, [betNumber]);
 
   useEffect(() => {
     if (!action) return;
