@@ -153,7 +153,7 @@ export const updateGame = async (req, res) => {
     return res.status(500).json({ error: updatedGame.error });
   }
 
-  res.json({ game: updatedGame, auth });
+  res.json({ updatedGame });
 };
 
 export const deleteGame = async (req, res) => {

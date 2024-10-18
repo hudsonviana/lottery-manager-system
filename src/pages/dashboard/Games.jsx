@@ -26,6 +26,7 @@ import { AlertDescription } from '@/components/ui/alert';
 import { handleError } from '@/helpers/handleError';
 import { useToast } from '@/hooks/use-toast';
 import LoadingLabel from '@/components/LoadingLabel';
+import UpdateGameModal from '@/components/UpdateGameModal';
 
 const Games = () => {
   const { toast, dismiss } = useToast();
@@ -33,6 +34,8 @@ const Games = () => {
   const { auth } = useAuth();
   const [isDeleteAlertOpen, setIsDeleteAlertOpen] = useState(false);
   const [gameDelete, setGameDelete] = useState({});
+  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
+  const [gameUpdate, setGameUpdate] = useState({});
 
   const { fetchUserGames } = useUserApi();
   const { deleteGame } = useGameApi();
@@ -86,6 +89,25 @@ const Games = () => {
     setIsDeleteAlertOpen(true);
   };
 
+  const handleUpdateGameAction = (game) => {
+    dismiss();
+
+    const { contestNumber, drawDate, lotteryType } = game.draw;
+
+    const gameUpdateFiltered = {
+      ...game,
+      contestNumber,
+      drawDate: formatDate(drawDate, { withTime: false }),
+      lotteryType,
+    };
+
+    const { result, createdAt, updatedAt, draw, ...gameDataToUpdate } =
+      gameUpdateFiltered;
+
+    setGameUpdate(gameDataToUpdate);
+    setIsUpdateModalOpen(true);
+  };
+
   const columns = [
     {
       header: (info) => sortingHeader({ label: 'Concurso', column: info.column }),
@@ -134,7 +156,7 @@ const Games = () => {
           <GameActions
             game={game}
             onView={() => navigate(game.id)}
-            onUpdate={() => console.log(game.id)}
+            onUpdate={() => handleUpdateGameAction(game)}
             onDelete={() => handleDeleteGameAction(game)}
           />
         );
@@ -144,6 +166,12 @@ const Games = () => {
 
   return (
     <div className="container mx-auto py-0">
+      <UpdateGameModal
+        game={gameUpdate}
+        isUpdateModalOpen={isUpdateModalOpen}
+        setIsUpdateModalOpen={setIsUpdateModalOpen}
+      />
+
       <DataTable
         data={data?.userGames?.games}
         columns={columns}

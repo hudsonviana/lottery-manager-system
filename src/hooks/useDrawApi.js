@@ -12,9 +12,7 @@ const useDrawApi = () => {
     if (prevContest === true) contestNumber = Number(contestNumber) - 1;
 
     try {
-      const response = await lotteryApiClient.get(
-        `/${lotteryType}/${contestNumber}`
-      );
+      const response = await lotteryApiClient.get(`/${lotteryType}/${contestNumber}`);
       return response.data;
     } catch (error) {
       return error.response;
