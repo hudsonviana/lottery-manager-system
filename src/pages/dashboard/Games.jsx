@@ -166,11 +166,13 @@ const Games = () => {
 
   return (
     <div className="container mx-auto py-0">
-      <UpdateGameModal
-        game={gameUpdate}
-        isUpdateModalOpen={isUpdateModalOpen}
-        setIsUpdateModalOpen={setIsUpdateModalOpen}
-      />
+      {isUpdateModalOpen && (
+        <UpdateGameModal
+          game={gameUpdate}
+          isUpdateModalOpen={isUpdateModalOpen}
+          setIsUpdateModalOpen={setIsUpdateModalOpen}
+        />
+      )}
 
       <DataTable
         data={data?.userGames?.games}

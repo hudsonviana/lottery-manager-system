@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -11,8 +12,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { Check, ChevronsUpDown } from 'lucide-react';
-import { cn } from '@/lib/utils';
 import {
   Command,
   CommandEmpty,
@@ -22,15 +21,15 @@ import {
   CommandList,
 } from '@/components/ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import useGameApi from '@/hooks/useGameApi';
-// import useDrawApi from '@/hooks/useDrawApi';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { handleError } from '@/helpers/handleError';
+import { cn } from '@/lib/utils';
 import { toast } from '@/hooks/use-toast';
-import { LOTTERY_TYPE } from '@/consts/Enums';
 import { useAuth } from '@/hooks/useAuth';
+import useGameApi from '@/hooks/useGameApi';
+import { handleError } from '@/helpers/handleError';
+import { LOTTERY_TYPE } from '@/consts/Enums';
 import BettingSlip from './BettingSlip';
 import LoadingLabel from './LoadingLabel';
+import { Check, ChevronsUpDown } from 'lucide-react';
 
 const UpdateGameModal = ({ game, isUpdateModalOpen, setIsUpdateModalOpen }) => {
   const { auth } = useAuth();

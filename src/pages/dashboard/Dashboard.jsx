@@ -5,16 +5,14 @@ import {
   DASHBOARD_SIDEBAR_LINKS,
   DASHBOARD_SIDEBAR_BOTTOM_LINKS,
 } from '@/consts/Navigation';
+import LoadingLabel from '@/components/LoadingLabel';
 
 const Dashboard = ({ isLoading = false }) => {
   const location = useLocation();
 
   // Function to find the label based on the current path
   const getCurrentLabel = () => {
-    const allLinks = [
-      ...DASHBOARD_SIDEBAR_LINKS,
-      ...DASHBOARD_SIDEBAR_BOTTOM_LINKS,
-    ];
+    const allLinks = [...DASHBOARD_SIDEBAR_LINKS, ...DASHBOARD_SIDEBAR_BOTTOM_LINKS];
     const currentLink = allLinks.find(
       (link) => link.path === location.pathname.replace('/dashboard/', '')
     );
@@ -27,7 +25,7 @@ const Dashboard = ({ isLoading = false }) => {
       <div className="flex-1">
         <Header label={getCurrentLabel()} />
         <div className="p-4">
-          {isLoading ? <p>Carregando...</p> : <Outlet />}
+          {isLoading ? <LoadingLabel label={'Carregando...'} /> : <Outlet />}
         </div>
       </div>
     </div>
