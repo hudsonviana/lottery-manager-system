@@ -11,27 +11,10 @@ export const getAllGames = async (req, res) => {
     return res.status(500).json({ error: games.error });
   }
 
-  res.json({ games, auth });
+  res.json({ games });
 };
 
 export const getGame = async (req, res) => {
-  const auth = req.auth;
-  const { id } = req.params;
-
-  const game = await gameService.findOne({ id });
-
-  if (!game) {
-    return res.status(404).json({ error: 'Jogo não encontrado' });
-  }
-
-  if (game?.error) {
-    return res.status(500).json({ error: game.error });
-  }
-
-  res.json({ game, auth });
-};
-
-export const getUserGame = async (req, res) => {
   const auth = req.auth;
   const { playerId, id } = req.params;
 
@@ -42,14 +25,14 @@ export const getUserGame = async (req, res) => {
   const game = await gameService.findOne({ playerId, id });
 
   if (!game) {
-    return res.status(404).json({ error: 'Jogo não encontrado para o usuário' });
+    return res.status(404).json({ error: 'Jogo não encontrado' });
   }
 
   if (game?.error) {
     return res.status(500).json({ error: game.error });
   }
 
-  res.json({ game, auth });
+  res.json({ game });
 };
 
 export const addGame = async (req, res) => {
@@ -79,7 +62,7 @@ export const addGame = async (req, res) => {
     gameNumbers: gameNumbersSchema,
     ticketPrice: z.number().nonnegative().optional(),
     contestNumber: z.number().positive(),
-    drawDate: z.string().refine(validateDateFormat, { message: 'Formato de data inválido' }),
+    drawDate: z.string().refine(validateDateFormat, { message: 'Data inválida' }),
     lotteryType: z.enum(['MEGA_SENA', 'QUINA', 'LOTOFACIL', 'TIMEMANIA', 'LOTOMANIA']),
   });
 

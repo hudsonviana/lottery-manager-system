@@ -14,6 +14,7 @@ export const findAll = async () => {
         player: {
           omit: {
             password: true,
+            refreshToken: true,
             createdAt: true,
             updatedAt: true,
           },
@@ -38,6 +39,7 @@ export const findOne = async ({ id, playerId }) => {
         player: {
           omit: {
             password: true,
+            refreshToken: true,
             createdAt: true,
             updatedAt: true,
           },

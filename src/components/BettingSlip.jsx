@@ -1,7 +1,7 @@
 import { Label } from '@/components/ui/label';
 import { useEffect, useState } from 'react';
 import { toast, useToast } from '@/hooks/use-toast';
-import { HiXCircle } from 'react-icons/hi';
+import { FaTimes, FaTimesCircle } from 'react-icons/fa';
 
 const gamesConfirmedInitialState = {
   gameA: [],
@@ -52,6 +52,8 @@ const Dozen = ({ num, isEnabled, setSelectedDozens, betNumber }) => {
   }, [betNumber]);
 
   const handleDozenClick = () => {
+    if (betNumber === 0) showAlert('Selecione quantos números desesa para a aposta');
+
     if (isSelected || isEnabled) {
       setIsSelected((prevState) => !prevState);
       setSelectedDozens(isSelected ? removeDozen(num) : selectDozen(num));
@@ -93,6 +95,7 @@ const BettingSlip = ({ setNewGameData, importedGameNumbers, action, resetAction 
   const isEnabled = selectedDozens.length < betNumber;
 
   const handleBetNumberClick = (num) => {
+    dismiss();
     setBetNumber(num);
     setSelectedDozens([]);
   };
@@ -256,39 +259,23 @@ const BettingSlip = ({ setNewGameData, importedGameNumbers, action, resetAction 
         <Label htmlFor="betts" className="text-left">
           Confira suas apostas
         </Label>
-        <div className="gap-1 bg-green-100 pt-5 ps-2 h-full relative">
-          {gamesConfirmed.gameA.length !== 0 && (
-            <div className="flex items-center space-x-1 mb-5">
-              <button id="gameA" onClick={handleRemoveBet}>
-                <HiXCircle size={20} color="red" />
-              </button>
-              <span className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                A: <span className="font-normal">{gamesConfirmed.gameA.join(' - ')}</span>
-              </span>
-            </div>
-          )}
 
-          {gamesConfirmed.gameB.length !== 0 && (
-            <div className="flex items-center space-x-1 mb-5">
-              <button id="gameB" onClick={handleRemoveBet}>
-                <HiXCircle size={20} color="red" />
-              </button>
-              <span className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                B: <span className="font-normal">{gamesConfirmed.gameB.join(' - ')}</span>
-              </span>
+        <div id="betts" className="gap-1 bg-green-100 pt-5 ps-2 h-full relative">
+          {Object.entries(gamesConfirmed).map((game, i) => (
+            <div key={i} className="flex items-center space-x-1 mb-5">
+              {game[1].length ? (
+                <>
+                  <button id={game[0]} onClick={handleRemoveBet}>
+                    <FaTimes size={16} color="red" />
+                  </button>
+                  <span className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                    {game[0].slice(-1)}:{' '}
+                    <span className="font-normal">{game[1].join(' - ')}</span>
+                  </span>
+                </>
+              ) : null}
             </div>
-          )}
-
-          {gamesConfirmed.gameC.length !== 0 && (
-            <div className="flex items-center space-x-1 mb-5">
-              <button id="gameC" onClick={handleRemoveBet}>
-                <HiXCircle size={20} color="red" />
-              </button>
-              <span className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                C: <span className="font-normal">{gamesConfirmed.gameC.join(' - ')}</span>
-              </span>
-            </div>
-          )}
+          ))}
 
           <div className="ms-1.5 font-medium absolute inset-x-0 bottom-0 mb-2.5">
             Valor total das apostas:
