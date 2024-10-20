@@ -310,7 +310,11 @@ const CreateGameModal = () => {
                 <Input
                   id="drawDate"
                   name="drawDate"
-                  className="cursor-not-allowed"
+                  className={`${
+                    newGameData?.drawDate === 'Indefinida'
+                      ? 'bg-red-100 text-red-600 font-semibold'
+                      : null
+                  } cursor-not-allowed`}
                   value={newGameData.drawDate}
                   size={8}
                   readOnly

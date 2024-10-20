@@ -5,13 +5,15 @@ import { useAuth } from './useAuth';
 
 const useAuthApiClient = () => {
   const refresh = useRefreshToken();
-  const { auth } = useAuth();
+  const {
+    auth: { accessToken },
+  } = useAuth();
 
   useEffect(() => {
     const requestIntercept = apiClientPrivate.interceptors.request.use(
       (config) => {
         if (!config.headers['Authorization']) {
-          config.headers['Authorization'] = `Bearer ${auth.accessToken}`;
+          config.headers['Authorization'] = `Bearer ${accessToken}`;
         }
         return config;
       },
@@ -36,7 +38,7 @@ const useAuthApiClient = () => {
       apiClientPrivate.interceptors.request.eject(requestIntercept);
       apiClientPrivate.interceptors.response.eject(responseIntercept);
     };
-  }, [auth, refresh]);
+  }, [accessToken, refresh]);
 
   return apiClientPrivate;
 };
