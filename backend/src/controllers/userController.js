@@ -1,17 +1,16 @@
 import * as userService from '../services/user.js';
+import sendEmail from '../mail/mailer.js';
 import bcrypt from 'bcrypt';
-// import crypto from 'crypto';
+import crypto from 'crypto';
 import { z } from 'zod';
 
 export const getAllUsers = async (req, res) => {
-  // const auth = req.auth;
   const users = await userService.findAll();
 
   if (users.error) {
     return res.status(500).json({ error: users.error });
   }
 
-  // res.json({ users, auth });
   res.json({ users });
 };
 
@@ -77,8 +76,8 @@ export const addUser = async (req, res) => {
     return res.status(400).json({ errors: body.error.errors });
   }
 
-  // const tempPassword = crypto.randomBytes(3).toString('hex');
-  const tempPassword = 'aabbcc';
+  const tempPassword = crypto.randomBytes(3).toString('hex');
+  // const tempPassword = 'aabbcc';
 
   const salt = await bcrypt.genSalt();
   const hashedPassword = await bcrypt.hash(tempPassword, salt);
@@ -91,7 +90,15 @@ export const addUser = async (req, res) => {
 
   const { password, refreshToken, ...userCreated } = newUser;
 
-  res.status(201).json({ user: userCreated, tempPassword });
+  res.status(201).json({ user: userCreated });
+
+  // Send email with tempPassword
+  await sendEmail({
+    to: body.data.email,
+    subject: `Bem-vindo (ou vinda) ao SGL, ${body.data.firstName}!`,
+    text: `A sua senha de acesso provisória é: ${tempPassword}`,
+    html: `<h2>Bem-vindo (ou vinda) ao SGL, ${body.data.firstName}!</h2><p style="font-size:16px;">A sua senha de acesso provisória é: <b>${tempPassword}</b></p>`,
+  });
 };
 
 export const updateUser = async (req, res) => {
