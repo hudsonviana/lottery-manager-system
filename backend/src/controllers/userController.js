@@ -59,8 +59,6 @@ export const getUserGames = async (req, res) => {
 };
 
 export const addUser = async (req, res) => {
-  // const auth = req.auth;
-
   const addUserSchema = z.object({
     firstName: z
       .string({ message: 'O nome é obrigatório' })
@@ -77,8 +75,6 @@ export const addUser = async (req, res) => {
   }
 
   const tempPassword = crypto.randomBytes(3).toString('hex');
-  // const tempPassword = 'aabbcc';
-
   const salt = await bcrypt.genSalt();
   const hashedPassword = await bcrypt.hash(tempPassword, salt);
 
@@ -92,12 +88,11 @@ export const addUser = async (req, res) => {
 
   res.status(201).json({ user: userCreated });
 
-  // Send email with tempPassword
-  await sendEmail({
+  sendEmail({
     to: body.data.email,
     subject: `Bem-vindo (ou vinda) ao SGL, ${body.data.firstName}!`,
     text: `A sua senha de acesso provisória é: ${tempPassword}`,
-    html: `<h2>Bem-vindo (ou vinda) ao SGL, ${body.data.firstName}!</h2><p style="font-size:16px;">A sua senha de acesso provisória é: <b>${tempPassword}</b></p>`,
+    html: `<h2>Bem-vindo (ou vinda) ao SGL, ${body.data.firstName}!</h2><p style="font-size:16px;">A sua senha de acesso provisória é: <b style="font-family: Consolas;font-size:18px;">${tempPassword}</b></p>`,
   });
 };
 
