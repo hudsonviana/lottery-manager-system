@@ -1,8 +1,8 @@
 import 'dotenv/config';
 import nodemailer from 'nodemailer';
 
-// const isProduction = process.env.NODE_ENV === 'production';
-const isProduction = true;
+const isProduction = process.env.NODE_ENV === 'production';
+// const isProduction = true;
 
 const transporter = nodemailer.createTransport({
   host: isProduction ? process.env.MAIL_HOST : process.env.DEV_MAIL_HOST,

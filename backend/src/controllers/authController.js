@@ -17,9 +17,10 @@ export const register = async (req, res) => {
         .string({ message: 'A senha é obrigatória' })
         .min(6, { message: 'A senha precisa ter pelo menos 6 caracteres' }),
       confirmPassword: z.string({ message: 'A confirmação de senha é obrigatória' }),
+      role: z.enum(['USER'], { message: 'Perfil inválido' }),
     })
     .refine((data) => data.password === data.confirmPassword, {
-      message: 'As senhas não coincidem',
+      message: 'As senhas informadas não coincidem',
       path: ['confirmPassword'],
     });
 
@@ -32,17 +33,17 @@ export const register = async (req, res) => {
   const salt = await bcrypt.genSalt();
   const hashedPassword = await bcrypt.hash(body.data.password, salt);
 
-  const { confirmPassword, ...userData } = body.data;
+  const { confirmPassword, ...newUserData } = body.data;
 
-  const newUser = await userService.store({ ...userData, password: hashedPassword });
+  const newUser = await userService.store({ ...newUserData, password: hashedPassword });
 
   if (newUser.error) {
     return res.status(500).json({ error: newUser.error });
   }
 
-  const { password, refreshToken, ...userRegisted } = newUser;
+  const { password, refreshToken, ...userRegistered } = newUser;
 
-  res.status(201).json({ userRegisted });
+  res.status(201).json({ userRegistered });
 };
 
 const generateAccessToken = (auth) => {

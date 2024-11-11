@@ -1,3 +1,4 @@
+import { apiClient } from '@/api/apiClient';
 import useAuthApiClient from './useAuthApiClient';
 
 const useUserApi = () => {
@@ -38,7 +39,10 @@ const useUserApi = () => {
     return response.data;
   };
 
-  // const registerUser = async (userData) => {};
+  const registerUser = async (userData) => {
+    const response = await apiClient.post('/auth/register', userData);
+    return response.data;
+  };
 
   return {
     fetchUsers,
@@ -48,6 +52,7 @@ const useUserApi = () => {
     deleteUser,
     fetchUserGames,
     changePassword,
+    registerUser,
   };
 };
 

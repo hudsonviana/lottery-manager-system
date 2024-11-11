@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { useLogin } from '@/hooks/useLogin';
+import { Link, useLocation } from 'react-router-dom';
+import useLogin from '@/hooks/useLogin.js';
 import { Button } from '@/components/ui/button';
 import {
   CardContent,
@@ -15,12 +15,10 @@ import { useToast } from '@/hooks/use-toast';
 import LoadingLabel from '@/components/LoadingLabel';
 
 const Login = () => {
-  const [formData, setFormData] = useState({ email: '', password: '' });
-  const { mutateAsync: signIn, isPending } = useLogin();
-
+  const [credentials, setCredentials] = useState({ email: '', password: '' });
   const { toast, dismiss } = useToast();
-  const navigate = useNavigate();
   const location = useLocation();
+  const signIn = useLogin();
 
   useEffect(() => {
     const showToast = () => {
@@ -37,37 +35,16 @@ const Login = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleFormSubmit = async (e) => {
-    e.preventDefault();
-
-    const { email, password } = formData;
-
-    try {
-      await signIn({ email, password });
-      dismiss();
-      navigate('/dashboard');
-    } catch ({ error }) {
-      toast({
-        className: 'bg-red-200 text-red-800 border-red-300',
-        title: 'Acesso negado!',
-        description: error.map((err, i) => <p key={i}>{err}</p>),
-      });
-    }
+    setCredentials((prev) => ({ ...prev, [name]: value }));
   };
 
   return (
     <div className="flex flex-col md:flex-row min-h-[calc(100vh-2.5rem)]">
-      <aside
-        className="md:w-2/4 w-full"
-        // style={{ backgroundImage: 'url(/login.jpg)' }}
-      >
+      <aside className="md:w-2/4 w-full">
         <img src="/login.jpg" alt="Minha Figura" className="w-full h-full object-cover" />
       </aside>
       <div className="grid place-content-center w-2/4">
-        <form className="w-[400px]" onSubmit={handleFormSubmit}>
+        <form className="w-[400px]" onSubmit={(e) => e.preventDefault()}>
           <CardHeader>
             <CardTitle>Acessar Sistema</CardTitle>
             <CardDescription>Entre com o email e senha.</CardDescription>
@@ -98,8 +75,15 @@ const Login = () => {
             </div>
           </CardContent>
           <CardFooter className="flex flex-col gap-3">
-            <Button type="submit" className="w-full" disabled={isPending}>
-              {isPending ? <LoadingLabel label={'Aguarde'} /> : 'Entrar'}
+            <Button
+              className="w-full"
+              onClick={() => {
+                dismiss();
+                signIn.mutate(credentials);
+              }}
+              disabled={signIn.isPending}
+            >
+              {signIn.isPending ? <LoadingLabel label={'Aguarde'} /> : 'Entrar'}
             </Button>
             <CardDescription>
               Não tem cadastro?{' '}

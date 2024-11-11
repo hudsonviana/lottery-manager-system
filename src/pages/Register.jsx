@@ -1,3 +1,5 @@
+import { useState } from 'react';
+import { useMutation } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import {
   CardContent,
@@ -9,8 +11,52 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Link } from 'react-router-dom';
+import { handleError } from '@/helpers/handleError';
+import useUserApi from '@/hooks/useUserApi';
+import { useToast } from '@/hooks/use-toast';
+import LoadingLabel from '@/components/LoadingLabel';
+import useLogin from '@/hooks/useLogin';
 
 const Register = () => {
+  const { registerUser } = useUserApi();
+  const { toast } = useToast();
+  const signIn = useLogin();
+
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+    role: 'USER',
+  });
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const registerUserMutation = useMutation({
+    mutationFn: registerUser,
+    onSuccess: ({ userRegistered }) => {
+      const { email, password } = formData;
+      signIn.mutate({ email, password });
+      toast({
+        className: 'bg-blue-200 text-blue-800 border-blue-300',
+        title: 'Novo usuário registrado!',
+        description: `Seja bem-vindo (ou vinda), ${userRegistered.firstName}!`,
+      });
+    },
+    onError: (err) => {
+      const { error } = handleError(err);
+      toast({
+        className: 'bg-red-200 text-red-800 border-red-300',
+        title: 'Erro ao registrar usuário!',
+        description: error.map((err, i) => <p key={i}>{err}</p>),
+      });
+    },
+  });
+
   return (
     <div className="flex min-h-[calc(100vh-2.5rem)]">
       <aside
@@ -19,12 +65,10 @@ const Register = () => {
       ></aside>
 
       <div className="grid place-content-center w-2/4">
-        <form className="w-[400px]">
+        <form className="w-[400px]" onSubmit={(e) => e.preventDefault()}>
           <CardHeader>
             <CardTitle>Criar conta</CardTitle>
-            <CardDescription>
-              Forneça os dados para criar a conta.
-            </CardDescription>
+            <CardDescription>Forneça os dados para criar a conta.</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="grid w-full items-center gap-4">
@@ -36,6 +80,7 @@ const Register = () => {
                     name="firstName"
                     placeholder="Nome"
                     required
+                    onChange={handleInputChange}
                   />
                 </div>
                 <div className="grid gap-2">
@@ -44,6 +89,7 @@ const Register = () => {
                     id="last-name"
                     name="lastName"
                     placeholder="Sobrenome"
+                    onChange={handleInputChange}
                   />
                 </div>
               </div>
@@ -54,6 +100,7 @@ const Register = () => {
                   id="email"
                   name="email"
                   placeholder="Email"
+                  onChange={handleInputChange}
                 />
               </div>
 
@@ -65,6 +112,7 @@ const Register = () => {
                     id="password"
                     name="password"
                     placeholder="Senha"
+                    onChange={handleInputChange}
                   />
                 </div>
                 <div className="flex flex-col space-y-1.5">
@@ -74,14 +122,23 @@ const Register = () => {
                     id="confirm-password"
                     name="confirmPassword"
                     placeholder="Confirmar senha"
+                    onChange={handleInputChange}
                   />
                 </div>
               </div>
             </div>
           </CardContent>
           <CardFooter className="flex flex-col gap-3">
-            <Button type="submit" className="w-full">
-              Cadastrar
+            <Button
+              className="w-full"
+              onClick={() => registerUserMutation.mutate(formData)}
+              disabled={registerUserMutation.isPending}
+            >
+              {registerUserMutation.isPending ? (
+                <LoadingLabel label={'Aguarde'} />
+              ) : (
+                'Registrar'
+              )}
             </Button>
             <CardDescription>
               Já tem cadastro?{' '}
