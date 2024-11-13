@@ -28,11 +28,11 @@ import useGameApi from '@/hooks/useGameApi';
 import useDrawApi from '@/hooks/useDrawApi';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { handleError } from '@/helpers/handleError';
-import { toast } from '@/hooks/use-toast';
 import { LOTTERY_TYPE } from '@/consts/Enums';
 import { useAuth } from '@/hooks/useAuth';
 import BettingSlip from './BettingSlip';
 import LoadingLabel from './LoadingLabel';
+import useToastAlert from '@/hooks/useToastAlert';
 
 const newGameDataInitialState = {
   gameNumbers: '',
@@ -88,6 +88,7 @@ const CreateGameModal = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [newGameData, setNewGameData] = useState(newGameDataInitialState);
   const [action, setAction] = useState(null);
+  const { toastAlert } = useToastAlert();
 
   const { addGame } = useGameApi();
   const queryClient = useQueryClient();
@@ -97,18 +98,18 @@ const CreateGameModal = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['games'] });
       handleCancelButtonClick();
-      toast({
-        className: 'bg-green-200 text-green-800 border-green-300',
+      toastAlert({
+        type: 'success',
         title: 'Jogo cadastrado!',
-        description: `Jogo criado no banco de dados com sucesso!.`,
+        message: 'Jogo salvo no banco de dados com sucesso!',
       });
     },
     onError: (err) => {
       const { error } = handleError(err);
-      toast({
-        className: 'bg-red-200 text-red-800 border-red-300',
-        title: 'Erro ao criar jogo!',
-        description: error.map((err, i) => <p key={i}>{err}</p>),
+      toastAlert({
+        type: 'danger',
+        title: 'Erro ao cadastrar jogo!',
+        message: error,
       });
     },
   });

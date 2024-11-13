@@ -13,13 +13,13 @@ import { Label } from '@/components/ui/label';
 import { Link } from 'react-router-dom';
 import { handleError } from '@/helpers/handleError';
 import useUserApi from '@/hooks/useUserApi';
-import { useToast } from '@/hooks/use-toast';
 import LoadingLabel from '@/components/LoadingLabel';
 import useLogin from '@/hooks/useLogin';
+import useToastAlert from '@/hooks/useToastAlert';
 
 const Register = () => {
   const { registerUser } = useUserApi();
-  const { toast } = useToast();
+  const { toastAlert } = useToastAlert();
   const signIn = useLogin();
 
   const [formData, setFormData] = useState({
@@ -49,10 +49,10 @@ const Register = () => {
     },
     onError: (err) => {
       const { error } = handleError(err);
-      toast({
-        className: 'bg-red-200 text-red-800 border-red-300',
+      toastAlert({
+        type: 'danger',
         title: 'Erro ao registrar usuário!',
-        description: error.map((err, i) => <p key={i}>{err}</p>),
+        message: error,
       });
     },
   });

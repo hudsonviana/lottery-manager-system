@@ -30,12 +30,14 @@ import { LOTTERY_TYPE } from '@/consts/Enums';
 import BettingSlip from './BettingSlip';
 import LoadingLabel from './LoadingLabel';
 import { Check, ChevronsUpDown } from 'lucide-react';
+import useToastAlert from '@/hooks/useToastAlert';
 
 const UpdateGameModal = ({ game, isUpdateModalOpen, setIsUpdateModalOpen }) => {
   const { auth } = useAuth();
   const [open, setOpen] = useState(false);
   const [updateGameData, setUpdateGameData] = useState({});
   const [action, setAction] = useState(null);
+  const { toastAlert } = useToastAlert(); // parei aqui
 
   useEffect(() => {
     if (isUpdateModalOpen) {
@@ -53,11 +55,11 @@ const UpdateGameModal = ({ game, isUpdateModalOpen, setIsUpdateModalOpen }) => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['games'] });
       handleCancelButtonClick();
-      toast({
-        className: 'bg-green-200 text-green-800 border-green-300',
-        title: 'Jogo atualizado!',
-        description: `Jogo atualizado no banco de dados com sucesso!.`,
-      });
+      // toast({
+      //   className: 'bg-green-200 text-green-800 border-green-300',
+      //   title: 'Jogo atualizado!',
+      //   description: `Jogo atualizado no banco de dados com sucesso!.`,
+      // });
     },
     onError: (err) => {
       const { error } = handleError(err);

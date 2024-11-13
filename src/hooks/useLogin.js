@@ -4,13 +4,13 @@ import { useMutation } from '@tanstack/react-query';
 import { jwtDecode } from 'jwt-decode';
 import { apiClientPrivate } from '@/api/apiClient';
 import { handleError } from '@/helpers/handleError';
-import { useToast } from './use-toast';
 import { useAuth } from './useAuth';
+import useToastAlert from './useToastAlert';
 
 const useLogin = () => {
-  const { setAuth } = useAuth();
-  const { toast } = useToast();
   const navigate = useNavigate();
+  const { setAuth } = useAuth();
+  const { toastAlert } = useToastAlert();
 
   return useMutation({
     mutationFn: async (credentials) => {
@@ -25,13 +25,7 @@ const useLogin = () => {
     },
     onError: (err) => {
       const { error } = handleError(err);
-      toast({
-        className: 'bg-red-200 text-red-800 border-red-300',
-        title: 'Acesso negado!',
-        description: error.map((errMsg, index) =>
-          React.createElement('p', { key: index }, errMsg)
-        ),
-      });
+      toastAlert({ type: 'danger', title: 'Acesso negado!', message: error });
     },
   });
 };

@@ -16,10 +16,10 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
-import { useToast } from '@/hooks/use-toast';
 import LoadingLabel from './LoadingLabel';
 import { HiOutlineLogout } from 'react-icons/hi';
 import { PiCloverFill } from 'react-icons/pi';
+import useToastAlert from '@/hooks/useToastAlert';
 
 const linkClass =
   'flex items-center gap-2 px-3 py-2 hover:bg-neutral-700 hover:no-underline rounded-sm text-base';
@@ -43,17 +43,17 @@ const Sidebar = () => {
   const navigate = useNavigate();
   const { auth } = useAuth();
   const { mutateAsync: signOut, isPending } = useLogout();
-  const { toast } = useToast();
+  const { toastAlert } = useToastAlert();
 
   const handleSignOutClick = async () => {
     try {
       const data = await signOut();
       navigate('/login', { state: { data } });
     } catch ({ error }) {
-      toast({
-        className: 'bg-red-200 text-red-800 border-red-300',
+      toastAlert({
+        type: 'danger',
         title: 'Algo deu errado!',
-        description: error.map((err, i) => <p key={i}>{err}</p>),
+        message: error,
       });
     }
   };

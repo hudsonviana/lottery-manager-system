@@ -1,7 +1,7 @@
 import { Label } from '@/components/ui/label';
 import { useEffect, useState } from 'react';
-import { toast, useToast } from '@/hooks/use-toast';
 import { FaTimes, FaTimesCircle } from 'react-icons/fa';
+import useToastAlert from '@/hooks/useToastAlert';
 
 const gamesConfirmedInitialState = {
   gameA: [],
@@ -15,14 +15,6 @@ const betValue = [
   { betNum: 8, value: 140 },
   { betNum: 9, value: 420 },
 ];
-
-const showAlert = (message) => {
-  return toast({
-    className: 'bg-yellow-200 text-yellow-800 border-yellow-300',
-    title: 'Alerta!',
-    description: message,
-  });
-};
 
 const getBetPryce = (betNumber) => {
   return betValue.find(({ betNum }) => betNum === betNumber)?.value || 0;
@@ -45,6 +37,7 @@ const removeDozen = (dozen) => (prevList) => prevList.filter((value) => value !=
 
 // Dozen Button
 const Dozen = ({ num, isEnabled, setSelectedDozens, betNumber }) => {
+  const { toastAlert } = useToastAlert();
   const [isSelected, setIsSelected] = useState(false);
 
   useEffect(() => {
@@ -52,7 +45,14 @@ const Dozen = ({ num, isEnabled, setSelectedDozens, betNumber }) => {
   }, [betNumber]);
 
   const handleDozenClick = () => {
-    if (betNumber === 0) showAlert('Selecione quantos números desesa para a aposta');
+    if (betNumber === 0) {
+      return toastAlert({
+        type: 'warning',
+        title: 'Alerta!',
+        message:
+          'Antes de marcar os números, selecione a quantidade de números da aposta.',
+      });
+    }
 
     if (isSelected || isEnabled) {
       setIsSelected((prevState) => !prevState);
@@ -87,7 +87,8 @@ const BetNumber = ({ num, isSelected, onClick }) => {
 };
 
 const BettingSlip = ({ setNewGameData, importedGameNumbers, action, resetAction }) => {
-  const { dismiss } = useToast();
+  // const { dismiss } = useToast();
+  const { toastAlert, dismiss } = useToastAlert();
   const [betNumber, setBetNumber] = useState(0);
   const [selectedDozens, setSelectedDozens] = useState([]);
   const [gamesConfirmed, setGamesConfirmed] = useState(gamesConfirmedInitialState);
@@ -142,15 +143,33 @@ const BettingSlip = ({ setNewGameData, importedGameNumbers, action, resetAction 
         ([_, game]) => game.length === 0
       );
 
+      dismiss();
+
       if (!gameEntry) {
-        return showAlert('São permitidas no máximo 3 apostas por jogo.');
+        return toastAlert({
+          type: 'warning',
+          title: 'Alerta!',
+          message: 'Não é possível fazer mais de 3 apostas por jogo.',
+        });
       }
 
       if (selectedDozens.length !== betNumber) {
-        return showAlert('Conclua sua aposta.');
+        return toastAlert({
+          type: 'warning',
+          title: 'Alerta!',
+          message:
+            'Conclua a aposta marcando exatamente a quantidade de números selecionada.',
+        });
       }
 
-      dismiss();
+      if (!betNumber) {
+        return toastAlert({
+          type: 'warning',
+          title: 'Alerta!',
+          message: 'Antes de confirmar, faça uma aposta.',
+        });
+      }
+
       const [gameKey] = gameEntry;
       const updatedGames = { ...gamesConfirmed, [gameKey]: selectedDozens };
 
@@ -221,7 +240,7 @@ const BettingSlip = ({ setNewGameData, importedGameNumbers, action, resetAction 
 
           <div>
             <h1 className="text-neutral-700 text-sm mb-1 ms-0.5">
-              Escolha os números para sua aposta:
+              Marque os números para sua aposta:
             </h1>
             <ul>
               {dozens.map((dozen, index) => (

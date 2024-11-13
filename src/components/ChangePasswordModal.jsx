@@ -14,10 +14,11 @@ import {
 import { useMutation } from '@tanstack/react-query';
 import useUserApi from '@/hooks/useUserApi';
 import { handleError } from '@/helpers/handleError';
-import { toast } from '@/hooks/use-toast';
 import LoadingLabel from './LoadingLabel';
+import useToastAlert from '@/hooks/useToastAlert';
 
 const ChangePasswordModal = ({ id, isChangePassModalOpen, setIsChangePassModalOpen }) => {
+  const { toastAlert } = useToastAlert();
   const [passwordData, setPasswordData] = useState({
     currentPassword: '',
     newPassword: '',
@@ -36,18 +37,18 @@ const ChangePasswordModal = ({ id, isChangePassModalOpen, setIsChangePassModalOp
     mutationFn: (passData) => changePassword(id, passData),
     onSuccess: ({ updatedUserPassword }) => {
       handleCancelButtonClick();
-      toast({
-        className: 'bg-green-200 text-green-800 border-green-300',
-        title: 'Senha alterada com sucesso!',
-        description: `A senha do usuário: ${updatedUserPassword.firstName} ${updatedUserPassword.lastName} (Email: ${updatedUserPassword.email}) foi atualizada no banco de dados.`,
+      toastAlert({
+        type: 'success',
+        title: 'Senha modificada com sucesso!',
+        message: `A senha do usuário: ${updatedUserPassword.firstName} ${updatedUserPassword.lastName} (Email: ${updatedUserPassword.email}) foi atualizada no banco de dados.`,
       });
     },
     onError: (err) => {
       const { error } = handleError(err);
-      toast({
-        className: 'bg-red-200 text-red-800 border-red-300',
-        title: 'Erro ao atualizar a senha!',
-        description: error.map((err, i) => <p key={i}>{err}</p>),
+      toastAlert({
+        type: 'danger',
+        title: 'Erro ao modificar a senha!',
+        message: error,
       });
     },
   });

@@ -27,11 +27,12 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import useUserApi from '@/hooks/useUserApi';
 import { handleError } from '@/helpers/handleError';
-import { toast } from '@/hooks/use-toast';
 import { USER_ROLES } from '@/consts/Enums';
 import LoadingLabel from './LoadingLabel';
+import useToastAlert from '@/hooks/useToastAlert';
 
 const CreateUserModal = () => {
+  const { toastAlert } = useToastAlert();
   const [open, setOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [newUserData, setNewUserData] = useState({
@@ -55,18 +56,18 @@ const CreateUserModal = () => {
     onSuccess: ({ user }) => {
       queryClient.invalidateQueries({ queryKey: ['users'] });
       handleCancelButtonClick();
-      toast({
-        className: 'bg-green-200 text-green-800 border-green-300',
+      toastAlert({
+        type: 'success',
         title: 'Usuário cadastrado!',
-        description: `O usuário: ${user.firstName} ${user.lastName} (Email: ${user.email}) foi criado no banco de dados.`,
+        message: `O usuário: ${user.firstName} ${user.lastName} (Email: ${user.email}) foi criado no banco de dados.`,
       });
     },
     onError: (err) => {
       const { error } = handleError(err);
-      toast({
-        className: 'bg-red-200 text-red-800 border-red-300',
+      toastAlert({
+        type: 'danger',
         title: 'Erro ao criar usuário!',
-        description: error.map((err, i) => <p key={i}>{err}</p>),
+        message: error,
       });
     },
   });
