@@ -11,22 +11,22 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { useToast } from '@/hooks/use-toast';
 import LoadingLabel from '@/components/LoadingLabel';
+import useToastAlert from '@/hooks/useToastAlert';
 
 const Login = () => {
   const [credentials, setCredentials] = useState({ email: '', password: '' });
-  const { toast, dismiss } = useToast();
+  const { toastAlert, dismiss } = useToastAlert();
   const location = useLocation();
   const signIn = useLogin();
 
   useEffect(() => {
     const showToast = () => {
       if (location.state?.data?.message) {
-        toast({
-          className: 'bg-blue-200 text-blue-800 border-blue-300',
-          title: 'Mensagem!',
-          description: location.state?.data?.message,
+        toastAlert({
+          type: 'primary',
+          title: 'Menssagem!',
+          message: location.state?.data?.message,
         });
       }
     };

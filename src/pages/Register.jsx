@@ -41,10 +41,10 @@ const Register = () => {
     onSuccess: ({ userRegistered }) => {
       const { email, password } = formData;
       signIn.mutate({ email, password });
-      toast({
-        className: 'bg-blue-200 text-blue-800 border-blue-300',
+      toastAlert({
+        type: 'success',
         title: 'Novo usuário registrado!',
-        description: `Seja bem-vindo (ou vinda), ${userRegistered.firstName}!`,
+        message: `Seja bem-vindo (ou vinda), ${userRegistered.firstName}!`,
       });
     },
     onError: (err) => {

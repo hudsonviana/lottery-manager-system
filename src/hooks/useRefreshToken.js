@@ -1,10 +1,10 @@
 import { apiClient } from '@/api/apiClient';
 import { useAuth } from './useAuth';
-import { useToast } from './use-toast';
+import useToastAlert from './useToastAlert';
 
 const useRefreshToken = () => {
   const { setAuth } = useAuth();
-  const { toast } = useToast();
+  const { toastAlert } = useToastAlert();
 
   const refresh = async () => {
     try {
@@ -16,10 +16,10 @@ const useRefreshToken = () => {
       return accessToken;
     } catch (error) {
       if (error?.response?.data?.error === 'Refresh Token inválido') {
-        toast({
-          className: 'bg-yellow-200 text-yellow-800 border-yellow-300',
+        toastAlert({
+          type: 'warning',
           title: 'Sessão expirada!',
-          description: 'Faça o login novamente.',
+          message: 'Sua sessão expirou. Por favor, faça login novamente para continuar.',
         });
       }
     }

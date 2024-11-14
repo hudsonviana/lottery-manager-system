@@ -25,9 +25,9 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import useUserApi from '@/hooks/useUserApi';
 import { handleError } from '@/helpers/handleError';
-import { toast } from '@/hooks/use-toast';
 import { USER_ROLES } from '@/consts/Enums';
 import LoadingLabel from './LoadingLabel';
+import useToastAlert from '@/hooks/useToastAlert';
 
 const UpdateUserModal = ({
   user,
@@ -37,6 +37,7 @@ const UpdateUserModal = ({
 }) => {
   const [open, setOpen] = useState(false);
   const [userUpdateData, setUserUpdateData] = useState({});
+  const { toastAlert } = useToastAlert();
 
   useEffect(() => {
     setUserUpdateData(user);
@@ -56,18 +57,18 @@ const UpdateUserModal = ({
     onSuccess: ({ updatedUser }) => {
       queryClient.invalidateQueries({ queryKey: ['users'] });
       handleCancelButtonClick();
-      toast({
-        className: 'bg-green-200 text-green-800 border-green-300',
-        title: 'Atualização concluída com sucesso!',
-        description: `O usuário: ${updatedUser.firstName} ${updatedUser.lastName} (Email: ${updatedUser.email}) foi atualizado no banco de dados.`,
+      toastAlert({
+        type: 'success',
+        title: 'Usuário atulizado!',
+        message: `O usuário: ${updatedUser.firstName} ${updatedUser.lastName} (Email: ${updatedUser.email}) foi atualizado no banco de dados com sucesso!`,
       });
     },
     onError: (err) => {
       const { error } = handleError(err);
-      toast({
-        className: 'bg-red-200 text-red-800 border-red-300',
+      toastAlert({
+        type: 'danger',
         title: 'Erro ao atualizar usuário!',
-        description: error.map((err, i) => <p key={i}>{err}</p>),
+        message: error,
       });
     },
   });

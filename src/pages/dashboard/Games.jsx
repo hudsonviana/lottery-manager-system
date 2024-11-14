@@ -24,12 +24,12 @@ import {
 } from '@/components/ui/alert-dialog';
 import { AlertDescription } from '@/components/ui/alert';
 import { handleError } from '@/helpers/handleError';
-import { useToast } from '@/hooks/use-toast';
 import LoadingLabel from '@/components/LoadingLabel';
 import UpdateGameModal from '@/components/UpdateGameModal';
+import useToastAlert from '@/hooks/useToastAlert';
 
 const Games = () => {
-  const { toast, dismiss } = useToast();
+  const { toastAlert, dismiss } = useToastAlert();
   const navigate = useNavigate();
   const { auth } = useAuth();
   const [isDeleteAlertOpen, setIsDeleteAlertOpen] = useState(false);
@@ -53,10 +53,10 @@ const Games = () => {
     onSuccess: () => {
       console.log(gameDelete);
       queryClient.invalidateQueries(['games']);
-      toast({
-        className: 'bg-green-200 text-green-800 border-green-300',
+      toastAlert({
+        type: 'success',
         title: 'Jogo deletado com sucesso!',
-        description: `Jogo da loteria ${translateLotteryType(
+        message: `Jogo da loteria ${translateLotteryType(
           gameDelete?.draw?.lotteryType
         )} (Concurso: ${
           gameDelete?.draw?.contestNumber
@@ -65,10 +65,10 @@ const Games = () => {
     },
     onError: (err) => {
       const { error } = handleError(err);
-      toast({
-        className: 'bg-red-200 text-red-800 border-red-300',
+      toastAlert({
+        type: 'danger',
         title: 'Erro ao deletar jogo!',
-        description: error.map((err, i) => <p key={i}>{err}</p>),
+        message: error,
       });
     },
   });

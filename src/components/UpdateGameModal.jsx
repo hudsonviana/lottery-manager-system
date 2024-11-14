@@ -22,7 +22,6 @@ import {
 } from '@/components/ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
-import { toast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
 import useGameApi from '@/hooks/useGameApi';
 import { handleError } from '@/helpers/handleError';
@@ -37,7 +36,7 @@ const UpdateGameModal = ({ game, isUpdateModalOpen, setIsUpdateModalOpen }) => {
   const [open, setOpen] = useState(false);
   const [updateGameData, setUpdateGameData] = useState({});
   const [action, setAction] = useState(null);
-  const { toastAlert } = useToastAlert(); // parei aqui
+  const { toastAlert } = useToastAlert();
 
   useEffect(() => {
     if (isUpdateModalOpen) {
@@ -55,18 +54,18 @@ const UpdateGameModal = ({ game, isUpdateModalOpen, setIsUpdateModalOpen }) => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['games'] });
       handleCancelButtonClick();
-      // toast({
-      //   className: 'bg-green-200 text-green-800 border-green-300',
-      //   title: 'Jogo atualizado!',
-      //   description: `Jogo atualizado no banco de dados com sucesso!.`,
-      // });
+      toastAlert({
+        type: 'success',
+        title: 'Jogo atualizado!',
+        message: 'Jogo atualizado no banco de dados com sucesso!',
+      });
     },
     onError: (err) => {
       const { error } = handleError(err);
-      toast({
-        className: 'bg-red-200 text-red-800 border-red-300',
+      toastAlert({
+        type: 'danger',
         title: 'Erro ao atualizar jogo!',
-        description: error.map((err, i) => <p key={i}>{err}</p>),
+        message: error,
       });
     },
   });

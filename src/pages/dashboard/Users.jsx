@@ -8,7 +8,6 @@ import UpdateUserModal from '@/components/UpdateUserModal';
 import useUserApi from '@/hooks/useUserApi';
 import { useState } from 'react';
 import UserActions from '@/components/UserActions';
-import { useToast } from '@/hooks/use-toast';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -22,12 +21,13 @@ import {
 import { AlertDescription } from '@/components/ui/alert';
 import { handleError } from '@/helpers/handleError';
 import LoadingLabel from '@/components/LoadingLabel';
+import useToastAlert from '@/hooks/useToastAlert';
 
 // import generateRandomUsers from '@/mock/generateRandomUsers';
 // const users = generateRandomUsers(89);
 
 const Users = () => {
-  const { toast, dismiss } = useToast();
+  const { toastAlert, dismiss } = useToastAlert();
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [isDeleteAlertOpen, setIsDeleteAlertOpen] = useState(false);
   const [userUpdate, setUserUpdate] = useState({});
@@ -48,18 +48,18 @@ const Users = () => {
     mutationFn: deleteUser,
     onSuccess: ({ deletedUser }) => {
       queryClient.invalidateQueries(['users']);
-      toast({
-        className: 'bg-green-200 text-green-800 border-green-300',
+      toastAlert({
+        type: 'success',
         title: 'Usuário deletado com sucesso!',
-        description: `O usuário: ${deletedUser.firstName} ${deletedUser.lastName} (Email: ${deletedUser.email}) foi deletado do banco de dados.`,
+        message: `O usuário: ${deletedUser.firstName} ${deletedUser.lastName} (Email: ${deletedUser.email}) foi deletado do banco de dados.`,
       });
     },
     onError: (err) => {
       const { error } = handleError(err);
-      toast({
-        className: 'bg-red-200 text-red-800 border-red-300',
+      toastAlert({
+        type: 'danger',
         title: 'Erro ao deletar usuário!',
-        description: error.map((err, i) => <p key={i}>{err}</p>),
+        message: error,
       });
     },
   });
