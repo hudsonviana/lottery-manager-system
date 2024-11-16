@@ -1,7 +1,5 @@
-import { PrismaClient } from '@prisma/client';
+import prisma from '../utils/prisma.js';
 import * as drawService from '../services/draw.js';
-
-const prisma = new PrismaClient();
 
 export const findAll = async () => {
   try {
