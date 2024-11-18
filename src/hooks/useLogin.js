@@ -1,27 +1,23 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
+import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
-import { apiClientPrivate } from '@/api/apiClient';
-import { handleError } from '@/helpers/handleError';
 import { useAuth } from './useAuth';
+import useUserApi from './useUserApi';
 import useToastAlert from './useToastAlert';
+import { handleError } from '@/helpers/handleError';
 
 const useLogin = () => {
   const navigate = useNavigate();
   const { setAuth } = useAuth();
   const { toastAlert } = useToastAlert();
+  const { signIn } = useUserApi();
 
   return useMutation({
-    mutationFn: async (credentials) => {
-      const response = await apiClientPrivate.post('/auth/login', credentials);
-      return response.data;
-    },
-    onSuccess: (data) => {
-      const { accessToken } = data;
+    mutationFn: (credentials) => signIn(credentials),
+    onSuccess: ({ accessToken }) => {
       const { auth } = jwtDecode(accessToken);
       setAuth({ user: auth, accessToken });
-      navigate('/dashboard');
+      navigate('/dashboard', { replace: true });
     },
     onError: (err) => {
       const { error } = handleError(err);

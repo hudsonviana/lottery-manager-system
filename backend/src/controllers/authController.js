@@ -157,7 +157,7 @@ export const logout = async (req, res) => {
       sameSite: 'strict',
     });
 
-    res.json({ logout: true, message: 'Logout realizado com sucesso' });
+    res.json({ logout: 'Aplicação encerrada com sucesso' });
   } catch (error) {
     res.status(500).json({ error: 'Erro ao realizar o Logout' });
   }

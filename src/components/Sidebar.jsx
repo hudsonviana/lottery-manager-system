@@ -1,4 +1,4 @@
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import {
   DASHBOARD_SIDEBAR_LINKS,
   DASHBOARD_SIDEBAR_BOTTOM_LINKS,
@@ -19,7 +19,6 @@ import {
 import LoadingLabel from './LoadingLabel';
 import { HiOutlineLogout } from 'react-icons/hi';
 import { PiCloverFill } from 'react-icons/pi';
-import useToastAlert from '@/hooks/useToastAlert';
 
 const linkClass =
   'flex items-center gap-2 px-3 py-2 hover:bg-neutral-700 hover:no-underline rounded-sm text-base';
@@ -40,23 +39,8 @@ const SidebarLink = ({ item }) => {
 };
 
 const Sidebar = () => {
-  const navigate = useNavigate();
   const { auth } = useAuth();
-  const { mutateAsync: signOut, isPending } = useLogout();
-  const { toastAlert } = useToastAlert();
-
-  const handleSignOutClick = async () => {
-    try {
-      const data = await signOut();
-      navigate('/login', { state: { data } });
-    } catch ({ error }) {
-      toastAlert({
-        type: 'danger',
-        title: 'Algo deu errado!',
-        message: error,
-      });
-    }
-  };
+  const signOut = useLogout();
 
   return (
     <nav className="flex flex-col bg-neutral-900 w-60 p-3 text-white">
@@ -81,12 +65,12 @@ const Sidebar = () => {
         <AlertDialog>
           <AlertDialogTrigger
             className={`text-red-500 ${linkClass}`}
-            disabled={isPending}
+            disabled={signOut.isPending}
           >
             <span>
               <HiOutlineLogout />
             </span>
-            {isPending ? <LoadingLabel label={'Saindo'} /> : 'Sair'}
+            {signOut.isPending ? <LoadingLabel label={'Saindo'} /> : 'Sair'}
           </AlertDialogTrigger>
           <AlertDialogContent>
             <AlertDialogHeader>
@@ -97,7 +81,7 @@ const Sidebar = () => {
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel>Cancelar</AlertDialogCancel>
-              <AlertDialogAction onClick={handleSignOutClick}>
+              <AlertDialogAction onClick={() => signOut.mutate(auth.user.id)}>
                 Sair do sistema
               </AlertDialogAction>
             </AlertDialogFooter>

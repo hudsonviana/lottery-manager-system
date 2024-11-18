@@ -1,24 +1,21 @@
-import { useLocation, Navigate, Outlet } from 'react-router-dom';
+import { Navigate, Outlet } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
+import useToastAlert from '@/hooks/useToastAlert';
 
 const RequireGuest = () => {
   const { auth } = useAuth();
-  const location = useLocation();
+  const { toastAlert } = useToastAlert();
 
-  return !auth?.user ? (
-    <Outlet />
-  ) : (
-    <Navigate
-      to={'/dashboard'}
-      state={{
-        from: location,
-        data: {
-          message: 'Usuário já está logado.',
-        },
-      }}
-      replace
-    />
-  );
+  if (auth?.user) {
+    toastAlert({
+      type: 'warning',
+      title: 'Alerta',
+      message: 'Usuário logado. Saia da aplicação para acessar a página solicitada.',
+    });
+    return <Navigate to={'/dashboard'} replace />;
+  }
+
+  return <Outlet />;
 };
 
 export default RequireGuest;

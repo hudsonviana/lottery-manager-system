@@ -1,4 +1,4 @@
-import { apiClient } from '@/api/apiClient';
+import { apiClient, apiClientPrivate } from '@/api/apiClient';
 import useAuthApiClient from './useAuthApiClient';
 
 const useUserApi = () => {
@@ -44,6 +44,16 @@ const useUserApi = () => {
     return response.data;
   };
 
+  const signIn = async (credentials) => {
+    const response = await apiClientPrivate.post('/auth/login', credentials);
+    return response.data;
+  };
+
+  const signOut = async (id) => {
+    const response = await apiClientPrivate.put('/auth/logout', id);
+    return response.data;
+  };
+
   return {
     fetchUsers,
     fetchUser,
@@ -53,6 +63,8 @@ const useUserApi = () => {
     fetchUserGames,
     changePassword,
     registerUser,
+    signIn,
+    signOut,
   };
 };
 

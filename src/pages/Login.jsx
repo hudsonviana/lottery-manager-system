@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import useLogin from '@/hooks/useLogin.js';
 import { Button } from '@/components/ui/button';
 import {
@@ -16,22 +16,8 @@ import useToastAlert from '@/hooks/useToastAlert';
 
 const Login = () => {
   const [credentials, setCredentials] = useState({ email: '', password: '' });
-  const { toastAlert, dismiss } = useToastAlert();
-  const location = useLocation();
+  const { dismiss } = useToastAlert();
   const signIn = useLogin();
-
-  useEffect(() => {
-    const showToast = () => {
-      if (location.state?.data?.message) {
-        toastAlert({
-          type: 'primary',
-          title: 'Menssagem!',
-          message: location.state?.data?.message,
-        });
-      }
-    };
-    showToast();
-  }, []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
