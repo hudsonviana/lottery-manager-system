@@ -59,10 +59,13 @@ const Register = () => {
 
   return (
     <div className="flex min-h-[calc(100vh-2.5rem)]">
-      <aside
+      {/* <aside
         className="grid place-content-center bg-sky-600 w-2/4 bg-cover bg-center"
         style={{ backgroundImage: 'url(/register4.jpg)' }}
-      ></aside>
+      > */}
+      <aside className="md:w-2/4 w-full">
+        <div className="bg-muted h-full"></div>
+      </aside>
 
       <div className="grid place-content-center w-2/4">
         <form className="w-[400px]" onSubmit={(e) => e.preventDefault()}>
