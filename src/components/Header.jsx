@@ -4,12 +4,13 @@
 //   HiOutlineBell,
 // } from 'react-icons/hi';
 import { useAuth } from '@/hooks/useAuth';
+import Breadcrumb from './Breadcrumb';
 
-const Header = ({ label }) => {
+const Header = () => {
   const { auth } = useAuth();
 
   return (
-    <div className="bg-white h-12 px-4 flex justify-between items-center">
+    <div className="bg-white h-11 px-4 flex justify-between items-center shadow-sm">
       <div className="relative">
         {/* <HiOutlineSearch
           fontSize={20}
@@ -20,7 +21,10 @@ const Header = ({ label }) => {
           className="text-sm focus:outline-none active:outline-none h-10 w-[24rem] border border-gray-300 rounded-sm pl-11 pr-4"
           placeholder="Search"
         /> */}
-        <h1 className="font-bold uppercase">{label}</h1>
+        {/* <h1 className="font-bold uppercase">{label}</h1> */}
+        <span>
+          <Breadcrumb />
+        </span>
       </div>
       <div className="flex items-center gap-2 mr-2">
         <span className="flex items-center">Olá, {auth?.user?.firstName}!</span>

@@ -10,8 +10,8 @@ const RequireAuth = ({ allowedRoles }) => {
   if (!auth?.user) {
     toastAlert({
       type: 'warning',
-      title: 'Alerta',
-      message: 'É necessário fazer o login para acessar a página solicitada',
+      title: 'Não autorizado!',
+      message: 'É necessário fazer o login para acessar a página solicitada.',
     });
     return <Navigate to="/login" state={{ from: location }} replace />;
   }

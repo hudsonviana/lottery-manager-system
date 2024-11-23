@@ -32,7 +32,7 @@ export const DASHBOARD_SIDEBAR_LINKS = [
   },
   {
     key: 'users',
-    label: 'Gerenciar usuários',
+    label: 'Usuários',
     path: 'users',
     roles: ['ADMIN'],
     icon: <HiOutlineUsers />,

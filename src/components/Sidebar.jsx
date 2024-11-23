@@ -20,20 +20,20 @@ import LoadingLabel from './LoadingLabel';
 import { HiOutlineLogout } from 'react-icons/hi';
 import { PiCloverFill } from 'react-icons/pi';
 
-const linkClass =
-  'flex items-center gap-2 px-3 py-2 hover:bg-neutral-700 hover:no-underline rounded-sm text-base';
+const linkStyles =
+  'flex items-center gap-2 px-3 py-2 hover:bg-neutral-100 hover:no-underline rounded-sm';
 
 const SidebarLink = ({ item }) => {
   return (
     <NavLink
       to={item.path}
       className={({ isActive }) =>
-        `${linkClass} ${isActive ? 'bg-neutral-600 text-sky-300' : 'text-white'}`
+        `${linkStyles} ${isActive ? 'bg-neutral-200 text-blue-900' : 'text-blue-950'}`
       }
       end
     >
-      <span>{item.icon}</span>
-      {item.label}
+      <span className="text-lg">{item.icon}</span>
+      <span className="text-sm font-semibold">{item.label}</span>
     </NavLink>
   );
 };
@@ -43,10 +43,10 @@ const Sidebar = () => {
   const signOut = useLogout();
 
   return (
-    <nav className="flex flex-col bg-neutral-900 w-60 p-3 text-white">
-      <div className="flex items-center gap-2 px-2 py-3">
+    <nav className="flex flex-col bg-white w-60 p-3 text-blue-950 z-10 border-e border-e-slate-200">
+      <div className="flex items-center gap-2 px-2">
         <PiCloverFill fontSize={24} color="green" />
-        <span className="text-green-300 text-lg">Gerenciador</span>
+        <span className="text-green-800 font-medium">Sistema de Loterias</span>
       </div>
 
       <div className="py-6 flex flex-1 flex-col gap-0.5">
@@ -57,14 +57,14 @@ const Sidebar = () => {
         })}
       </div>
 
-      <div className="flex flex-col gap-0.5 pt-2 border-t border-neutral-700">
+      <div className="flex flex-col gap-0.5 pt-2 border-t border-neutral-300">
         {DASHBOARD_SIDEBAR_BOTTOM_LINKS.map((item) => (
           <SidebarLink key={item.key} item={item} />
         ))}
 
         <AlertDialog>
           <AlertDialogTrigger
-            className={`text-red-500 ${linkClass}`}
+            className={`text-red-600 ${linkStyles}`}
             disabled={signOut.isPending}
           >
             <span>
