@@ -6,19 +6,34 @@ import {
 
 const allLinks = [...DASHBOARD_SIDEBAR_LINKS, ...DASHBOARD_SIDEBAR_BOTTOM_LINKS];
 
-const getPathlable = (pathNames) =>
-  pathNames.filter(Boolean).map(
-    (pathName) =>
-      allLinks.find((link) => link.path.replace('/', '') === pathName) || {
-        label: pathName,
-        path: pathName,
-      }
-  );
+const getPaths = (pathNames) => {
+  const paths = [];
+  pathNames.filter(Boolean).forEach((pathName, index) => {
+    const link = allLinks.find((link) => link.path.replace('/', '') === pathName);
+
+    if (link) {
+      // Use the link's label for known paths
+      paths.push({
+        label: link.label,
+        path: `/${pathNames.slice(1, index + 1).join('/')}`,
+      });
+    } else {
+      // Generate a descriptive label for unknown paths (e.g., ID)
+      const previousLabel = paths[paths.length - 1]?.label || 'Path';
+      paths.push({
+        label: `${previousLabel.slice(0, -1)} ID: ${pathName}`,
+        path: `/${pathNames.slice(1, index + 1).join('/')}`,
+      });
+    }
+  });
+
+  return paths;
+};
 
 const Breadcrumb = () => {
   const location = useLocation();
   const pathNames = location.pathname.split('/');
-  const paths = getPathlable(pathNames);
+  const paths = getPaths(pathNames);
 
   return (
     <nav className="flex items-center" aria-label="Breadcrumb">

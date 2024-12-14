@@ -1,6 +1,6 @@
 import { Label } from '@/components/ui/label';
 import { useEffect, useState } from 'react';
-import { FaTimes, FaTimesCircle } from 'react-icons/fa';
+import { FaTimes } from 'react-icons/fa';
 import useToastAlert from '@/hooks/useToastAlert';
 
 const gamesConfirmedInitialState = {
