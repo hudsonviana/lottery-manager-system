@@ -58,6 +58,31 @@ export const getUserGames = async (req, res) => {
   res.json({ userGames });
 };
 
+export const getUserDraws = async (req, res) => {
+  const auth = req.auth;
+  const { id } = req.params;
+
+  if (auth.id !== id) {
+    return res.status(403).json({ error: 'Acesso negado' });
+  }
+
+  const userWithDraws = await userService.findDrawsByUser({ id });
+
+  if (!userWithDraws) {
+    return res.status(404).json({ error: 'Sorteios não encontrados' });
+  }
+
+  if (userWithDraws?.error) {
+    return res.status(500).json({ error: userWithDraws.error });
+  }
+
+  const userDraws = Array.from(
+    new Map(userWithDraws.games.map(({ draw }) => [draw.id, draw])).values()
+  );
+
+  res.json({ userDraws });
+};
+
 export const addUser = async (req, res) => {
   const addUserSchema = z.object({
     firstName: z

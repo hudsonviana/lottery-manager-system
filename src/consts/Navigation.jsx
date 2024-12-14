@@ -6,6 +6,8 @@ import {
   HiOutlineCog,
   HiOutlineBookmark,
   HiOutlineIdentification,
+  HiOutlineTicket,
+  HiOutlineStar,
 } from 'react-icons/hi';
 
 export const DASHBOARD_SIDEBAR_LINKS = [
@@ -28,7 +30,7 @@ export const DASHBOARD_SIDEBAR_LINKS = [
     label: 'Jogos',
     path: 'games',
     roles: ['USER', 'ADMIN'],
-    icon: <HiOutlineBookmark />,
+    icon: <HiOutlineTicket />,
   },
   {
     key: 'users',
@@ -36,6 +38,13 @@ export const DASHBOARD_SIDEBAR_LINKS = [
     path: 'users',
     roles: ['ADMIN'],
     icon: <HiOutlineUsers />,
+  },
+  {
+    key: 'contests',
+    label: 'Concursos',
+    path: 'contests',
+    roles: ['USER', 'ADMIN'],
+    icon: <HiOutlineStar />,
   },
   {
     key: 'admin',

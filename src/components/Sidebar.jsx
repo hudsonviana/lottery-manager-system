@@ -46,7 +46,7 @@ const Sidebar = () => {
     <nav className="flex flex-col bg-white w-60 p-3 text-blue-950 z-10 border-e border-e-slate-200">
       <div className="flex items-center gap-2 px-2">
         <PiCloverFill fontSize={24} color="green" />
-        <span className="text-green-800 font-medium">Sistema de Loterias</span>
+        <span className="text-green-800 font-bold">Sistema de Loterias</span>
       </div>
 
       <div className="py-6 flex flex-1 flex-col gap-0.5">

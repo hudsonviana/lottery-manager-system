@@ -3,18 +3,18 @@ import { isUUID, parseDate, validateDateFormat } from '../utils/drawHelpers.js';
 import { z } from 'zod';
 
 export const getAllDraws = async (req, res) => {
-  const auth = req.auth;
+  // const auth = req.auth;
   const draws = await drawService.findAll();
 
   if (draws.error) {
     return res.status(500).json({ error: draws.error });
   }
 
-  res.json({ draws, auth });
+  res.json({ draws });
 };
 
 export const getDraw = async (req, res) => {
-  const auth = req.auth;
+  // const auth = req.auth;
   const { identifier } = req.params;
 
   const searchParams = isUUID(identifier)
@@ -31,7 +31,7 @@ export const getDraw = async (req, res) => {
     return res.status(500).json({ error: draw.error });
   }
 
-  res.json({ draw, auth });
+  res.json({ draw });
 };
 
 export const getDrawGames = async (req, res) => {
@@ -56,7 +56,7 @@ export const getDrawGames = async (req, res) => {
 };
 
 export const addDraw = async (req, res) => {
-  const auth = req.auth;
+  // const auth = req.auth;
 
   const prizeSchema = z.object({
     descricaoFaixa: z.string(),
@@ -99,11 +99,11 @@ export const addDraw = async (req, res) => {
     return res.status(500).json({ error: newDraw.error });
   }
 
-  res.status(201).json({ draw: newDraw, auth });
+  res.status(201).json({ draw: newDraw});
 };
 
 export const updateDraw = async (req, res) => {
-  const auth = req.auth;
+  // const auth = req.auth;
 
   const { identifier } = req.params;
 
@@ -167,11 +167,11 @@ export const updateDraw = async (req, res) => {
     return res.status(500).json({ error: updatedDraw.error });
   }
 
-  res.json({ draw: updatedDraw, auth });
+  res.json({ draw: updatedDraw });
 };
 
 export const deleteDraw = async (req, res) => {
-  const auth = req.auth;
+  // const auth = req.auth;
 
   const { identifier } = req.params;
 
@@ -185,5 +185,5 @@ export const deleteDraw = async (req, res) => {
     return res.status(500).json({ error: deletedDraw.error });
   }
 
-  res.json({ draw: deletedDraw, auth });
+  res.json({ draw: deletedDraw });
 };

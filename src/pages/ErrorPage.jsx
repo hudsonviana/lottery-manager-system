@@ -29,7 +29,7 @@ const ErrorPage = () => {
       )}
 
       <div className="flex flex-row mt-5 gap-4">
-        <Button onClick={() => navigate('/')}>Página inicial</Button>
+        <Button onClick={() => navigate('/dashboard')}>Página inicial</Button>
         <Button onClick={() => navigate(-1)} variant="outline">
           Voltar
         </Button>
