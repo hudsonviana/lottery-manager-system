@@ -12,18 +12,12 @@ const getPaths = (pathNames) => {
     const link = allLinks.find((link) => link.path.replace('/', '') === pathName);
 
     if (link) {
-      // Use the link's label for known paths
-      paths.push({
-        label: link.label,
-        path: link.path,
-        // path: `/${pathNames.slice(1, index + 1).join('/')}`,
-      });
+      paths.push({ label: link.label, path: link.path });
     } else {
-      // Generate a descriptive label for unknown paths (e.g., ID)
-      const previousLabel = paths[paths.length - 1]?.label || 'Path';
+      const previousLabel = paths[paths.length - 1]?.label || 'Diretório';
       paths.push({
         label: `${previousLabel.slice(0, -1)} ID: ${pathName}`,
-        path: link?.path,
+        path: `/${pathNames.slice(1, index + 2).join('/')}`,
       });
     }
   });
