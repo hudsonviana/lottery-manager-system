@@ -87,7 +87,6 @@ const BetNumber = ({ num, isSelected, onClick }) => {
 };
 
 const BettingSlip = ({ setNewGameData, importedGameNumbers, action, resetAction }) => {
-  // const { dismiss } = useToast();
   const { toastAlert, dismiss } = useToastAlert();
   const [betNumber, setBetNumber] = useState(0);
   const [selectedDozens, setSelectedDozens] = useState([]);

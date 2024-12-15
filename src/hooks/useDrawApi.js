@@ -1,5 +1,5 @@
 import lotteryApiClient from '@/api/lotteryApiClient';
-// import useAuthApiClient from './useAuthApiClient';
+import useAuthApiClient from './useAuthApiClient';
 
 const useDrawApi = () => {
   // const authApiClient = useAuthApiClient();
@@ -19,7 +19,9 @@ const useDrawApi = () => {
     }
   };
 
-  return { fetchDrawResult };
+  const fetchDrawGames = async () => {};
+
+  return { fetchDrawResult, fetchDrawGames };
 };
 
 export default useDrawApi;

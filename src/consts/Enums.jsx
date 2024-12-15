@@ -13,11 +13,11 @@ export const GAME_RESULT = [
 
 export const DRAW_STATUS = [
   { value: 'PENDING', label: 'Pendente' },
-  { value: 'DRAWN', label: 'Sorteio realizado' },
+  { value: 'DRAWN', label: 'Verificado' },
 ];
 
 export const LOTTERY_TYPE = [
-  { value: 'MEGA_SENA', label: 'Mega Sena' },
+  { value: 'MEGA_SENA', label: 'Mega-sena' },
   { value: 'QUINA', label: 'Quina' },
   { value: 'LOTOFACIL', label: 'Lotofácil' },
   { value: 'TIMEMANIA', label: 'Timemania' },

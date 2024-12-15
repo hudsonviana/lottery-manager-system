@@ -76,6 +76,26 @@ export const findDrawsByUser = async ({ id, email }) => {
   }
 };
 
+export const findGamesByUserAndDraw = async ({ id, email, drawId }) => {
+  try {
+    return await prisma.user.findUnique({
+      where: { id, email },
+      select: {
+        games: {
+          where: {
+            drawId,
+          },
+          include: {
+            draw: true,
+          },
+        },
+      },
+    });
+  } catch (error) {
+    return { error: 'Ocorreu um erro ao consultar os jogos do sorteio' };
+  }
+};
+
 export const store = async (data) => {
   try {
     const existingUser = await prisma.user.findUnique({ where: { email: data.email } });

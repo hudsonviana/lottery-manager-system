@@ -26,18 +26,18 @@ export const DASHBOARD_SIDEBAR_LINKS = [
     icon: <HiOutlineIdentification />,
   },
   {
-    key: 'games',
-    label: 'Jogos',
-    path: 'games',
-    roles: ['USER', 'ADMIN'],
-    icon: <HiOutlineTicket />,
-  },
-  {
     key: 'users',
     label: 'Usuários',
     path: 'users',
     roles: ['ADMIN'],
     icon: <HiOutlineUsers />,
+  },
+  {
+    key: 'games',
+    label: 'Jogos',
+    path: 'games',
+    roles: ['USER', 'ADMIN'],
+    icon: <HiOutlineTicket />,
   },
   {
     key: 'contests',

@@ -15,14 +15,15 @@ const getPaths = (pathNames) => {
       // Use the link's label for known paths
       paths.push({
         label: link.label,
-        path: `/${pathNames.slice(1, index + 1).join('/')}`,
+        path: link.path,
+        // path: `/${pathNames.slice(1, index + 1).join('/')}`,
       });
     } else {
       // Generate a descriptive label for unknown paths (e.g., ID)
       const previousLabel = paths[paths.length - 1]?.label || 'Path';
       paths.push({
         label: `${previousLabel.slice(0, -1)} ID: ${pathName}`,
-        path: `/${pathNames.slice(1, index + 1).join('/')}`,
+        path: link?.path,
       });
     }
   });

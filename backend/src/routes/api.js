@@ -17,10 +17,11 @@ router.post('/auth/:id/changepassword', auth.authentication, authController.chan
 router.get('/users', admin.authentication, userController.getAllUsers);
 router.get('/users/:id', auth.authentication, userController.getUser);
 router.get('/users/:id/games', auth.authentication, userController.getUserGames);
+router.get('/users/:id/draws', auth.authentication, userController.getUserDraws);
+router.get('/users/:id/draws/:drawId/games', auth.authentication, userController.getUserDrawGames);
 router.post('/users', admin.authentication, userController.addUser);
 router.put('/users/:id', auth.authentication, userController.updateUser);
 router.delete('/users/:id', admin.authentication, userController.deleteUser);
-router.get('/users/:id/draws', auth.authentication, userController.getUserDraws);
 
 router.get('/draws', auth.authentication, drawController.getAllDraws);
 router.get('/draws/:identifier', auth.authentication, drawController.getDraw);
