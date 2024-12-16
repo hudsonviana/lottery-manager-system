@@ -1,3 +1,5 @@
+import findMatchingNumbers from '@/helpers/checkMatches';
+
 const formatGameName = (gameName) => {
   return gameName.replace(/^game(\w)$/, 'Aposta $1');
 };
@@ -12,6 +14,7 @@ const GameDisplay = ({ gameNumbers, drawnNumbers = [], isForDraw = false }) => {
       {Object.entries(gameNumbers).map(([gameName, numbers]) => {
         if (numbers.length > 0) {
           if (isForDraw) {
+            const matchingNumbers = findMatchingNumbers(numbers, drawnNumbers);
             return (
               <div key={gameName} className="flex">
                 <div id="principal" className="flex flex-col gap-1">
@@ -20,20 +23,31 @@ const GameDisplay = ({ gameNumbers, drawnNumbers = [], isForDraw = false }) => {
                     {numbers.map((number, i) => (
                       <div
                         key={i}
-                        className="size-10 bg-white rounded-full flex items-center justify-center border-solid border-2 border-green-600"
+                        className={`size-10 rounded-full flex items-center justify-center border-solid border-2 font-bold ${
+                          drawnNumbers.length === 0
+                            ? 'bg-white border-green-600 text-green-600'
+                            : matchingNumbers.includes(number)
+                            ? 'bg-blue-100 border-blue-600 text-blue-600'
+                            : 'bg-red-100 border-red-600 text-red-600'
+                        }`}
                       >
-                        <span class="text-green-600 font-bold">{number}</span>
+                        {number}
                       </div>
                     ))}
                   </span>
                 </div>
                 {/* Continuar dqui */}
-                <div className="ms-2 flex flex-col gap-1">
-                  <TitleLabel title={'Resultado'} />
-                  <div className="flex h-full items-center">
-                    <span className="text-green-600 font-bold">4 acertos</span>
+                {drawnNumbers.length > 0 ? (
+                  <div className="ms-2 flex flex-col gap-1">
+                    <TitleLabel title={'Resultado'} />
+                    <div className="flex h-full items-center">
+                      <span className="text-blue-600 font-bold">
+                        {matchingNumbers.length}{' '}
+                        {matchingNumbers.length > 1 ? 'acertos' : 'acerto'}
+                      </span>
+                    </div>
                   </div>
-                </div>
+                ) : null}
               </div>
             );
           }
