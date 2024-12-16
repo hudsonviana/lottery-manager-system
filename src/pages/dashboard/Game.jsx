@@ -33,8 +33,8 @@ const Game = () => {
 
   return (
     <div className="container mx-auto py-0">
-      <div className="flex gap-5 bg-white border rounded-md p-6 min-h-[calc(100vh-8rem)]">
-        <div>
+      <div className="flex gap-0 bg-white border rounded-md p-6 min-h-[calc(100vh-6rem)]">
+        <div className="w-2/3">
           <h1 className="text-xl font-semibold my-0">
             {translateLotteryType(game.draw.lotteryType)} - Concurso:{' '}
             {game.draw.contestNumber}
@@ -42,7 +42,7 @@ const Game = () => {
           <div className="text-sm mb-2">
             Aposta cadastrada em: <span>{formatDate(game.createdAt)}</span>
           </div>
-          <div className="border rounded-md w-fit p-4">
+          <div className="border rounded-md w-fit p-2">
             <GameDisplay gameNumbers={game.gameNumbers} isForDraw={true} />
             <div className="mt-4">
               <ul>

@@ -101,11 +101,7 @@ export const getUserDrawGames = async (req, res) => {
     return res.status(500).json({ error: userDrawGames.error });
   }
 
-  // const userDraws = Array.from(
-  //   new Map(userWithDraws.games.map(({ draw }) => [draw.id, draw])).values()
-  // );
-
-  res.json({ userDrawGames });
+  res.json(userDrawGames);
 };
 
 export const addUser = async (req, res) => {

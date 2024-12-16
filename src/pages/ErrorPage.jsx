@@ -15,14 +15,12 @@ const ErrorPage = () => {
 
       <h1 className="mb-5">Sinto muito, ocorreu um erro.</h1>
 
-      {error.status && (
-        <span className="text-lg font-bold mb-5">{error.status}</span>
-      )}
+      {error.status && <span className="text-lg font-bold mb-5">{error.status}</span>}
 
       {error.status === 404 ? (
         <p>
-          A URL <span className="font-mono">{location.pathname}</span> não foi
-          encontrada no servidor.
+          A URL <span className="font-mono">{location.pathname}</span> não foi encontrada
+          no servidor.
         </p>
       ) : (
         <p className="italic">{error.statusText || error.message}</p>
