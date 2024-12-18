@@ -5,19 +5,32 @@ const formatGameName = (gameName) => {
 };
 
 const TitleLabel = ({ title }) => {
-  return <span className="bg-slate-200 w-full text-sm font-semibold">{title}</span>;
+  return <span className="bg-slate-200 w-full text-sm font-semibold px-1">{title}</span>;
 };
 
 const getNumberClassNames = (drawnNumbers, matchingNumbers, number) => {
   const idleNumberStyles = 'bg-white border-green-600 text-green-600';
   const matchedNumberStyles = 'bg-blue-100 border-blue-600 text-blue-600';
-  const missedNumberStyles = 'bg-red-100 border-red-600 text-red-600';
+  const missedNumberStyles = 'bg-orange-100 border-orange-600 text-orange-600';
 
   if (drawnNumbers.length === 0) {
     return idleNumberStyles;
   }
 
   return matchingNumbers.includes(number) ? matchedNumberStyles : missedNumberStyles;
+};
+
+const getDrawResultClassNames = (hits) => {
+  const defaultStyles =
+    'text-gray-600 bg-white rounded px-1 font-semibold whitespace-nowrap';
+
+  const prizeStyles = {
+    4: 'text-white bg-blue-600 rounded px-1 font-semibold whitespace-nowrap',
+    5: 'text-white bg-green-600 rounded px-1 font-semibold whitespace-nowrap',
+    6: 'text-white bg-red-600 rounded px-1 font-semibold whitespace-nowrap',
+  };
+
+  return prizeStyles[hits] || defaultStyles;
 };
 
 const GameDisplay = ({ gameNumbers, drawnNumbers = [], isForDraw = false }) => {
@@ -46,15 +59,15 @@ const GameDisplay = ({ gameNumbers, drawnNumbers = [], isForDraw = false }) => {
                     ))}
                   </span>
                 </div>
-                {/* Continuar dqui */}
+                {/* Draw result */}
                 {drawnNumbers.length > 0 ? (
                   <div className="ms-2 flex flex-col gap-1">
                     <TitleLabel title={'Resultado'} />
                     <div className="flex h-full items-center relative">
-                      <span className="text-red-600 font-bold invisible whitespace-nowrap">
+                      <span className="text-gray-600 bg-white rounded px-1 font-semibold whitespace-nowrap invisible">
                         9 acertos
                       </span>
-                      <span className="text-blue-600 font-bold absolute whitespace-nowrap">
+                      <span className={`${getDrawResultClassNames(hits)} absolute`}>
                         {hits} {hits > 1 ? 'acertos' : 'acerto'}
                       </span>
                     </div>
