@@ -8,9 +8,9 @@ import DataTable, { sortingHeader } from '@/components/DataTable';
 import formatDate from '@/helpers/formatDate';
 import translateGameResult from '@/helpers/translateGameResult';
 import translateLotteryType from '@/helpers/translateLotteryType';
-import GameDisplay from '@/components/GameDisplay';
 import CreateGameModal from '@/components/CreateGameModal';
 import GameActions from '@/components/GameActions';
+import GameNumbersTableRow from '@/components/GameNumbersTableRow';
 
 import {
   AlertDialog,
@@ -126,7 +126,7 @@ const Games = () => {
     {
       header: (info) => sortingHeader({ label: 'Apostas', column: info.column }),
       accessorKey: 'gameNumbers',
-      cell: (info) => <GameDisplay gameNumbers={info.getValue()} />,
+      cell: (info) => <GameNumbersTableRow gameNumbers={info.getValue()} />,
     },
     {
       header: (info) => sortingHeader({ label: 'Custo do jogo', column: info.column }),
@@ -204,7 +204,9 @@ const Games = () => {
                 </li>
                 <li className="flex gap-1">
                   <div className="font-medium min-w-12">Apostas:</div>
-                  <span>{<GameDisplay gameNumbers={gameDelete?.gameNumbers} />}</span>
+                  <span>
+                    {<GameNumbersTableRow gameNumbers={gameDelete?.gameNumbers} />}
+                  </span>
                 </li>
               </ul>
             </AlertDescription>

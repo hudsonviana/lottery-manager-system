@@ -43,7 +43,7 @@ const Game = () => {
             Aposta cadastrada em: <span>{formatDate(game.createdAt)}</span>
           </div>
           <div className="border rounded-md w-fit p-2">
-            <GameDisplay gameNumbers={game.gameNumbers} isForDraw={true} />
+            <GameDisplay gameData={game} />
             <div className="mt-4">
               <ul>
                 {/* <li>

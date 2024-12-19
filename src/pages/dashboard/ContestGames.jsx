@@ -5,7 +5,6 @@ import LoadingLabel from '@/components/LoadingLabel';
 import useUserApi from '@/hooks/useUserApi';
 import GameDisplay from '@/components/GameDisplay';
 import translateLotteryType from '@/helpers/translateLotteryType';
-import { formatDate } from 'date-fns';
 import translateGameResult from '@/helpers/translateGameResult';
 
 const ContestGames = () => {
@@ -125,17 +124,8 @@ const ContestGames = () => {
           {games.map((game) => (
             <div key={game.id} className="flex">
               <div className="p-2 my-2 border border-slate-300 rounded-md">
-                <GameDisplay
-                  isForDraw={true}
-                  gameNumbers={game.gameNumbers}
-                  drawnNumbers={game.draw.drawnNumbers}
-                />
+                <GameDisplay gameData={game} />
               </div>
-              {/* {game.draw.drawnNumbers.length !== 0 ? (
-                <div className="p-2 my-2 border rounded-md">
-                  <span className="me-2 text-sm font-semibold">Resultado</span>
-                </div>
-              ) : null} */}
             </div>
           ))}
         </div>

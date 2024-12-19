@@ -33,53 +33,48 @@ const getDrawResultClassNames = (hits) => {
   return prizeStyles[hits] || defaultStyles;
 };
 
-const GameDisplay = ({ gameNumbers, drawnNumbers = [], isForDraw = false }) => {
+const GameDisplay = ({ gameData }) => {
+  const gameNumbers = gameData.gameNumbers;
+  const drawnNumbers = gameData.draw.drawnNumbers;
+
   return (
-    <div className={isForDraw ? 'flex flex-col gap-3' : 'py-0'}>
+    <div className="flex flex-col gap-3">
       {Object.entries(gameNumbers).map(([gameName, numbers]) => {
         if (numbers.length > 0) {
-          if (isForDraw) {
-            const [matchingNumbers, hits] = findMatchingNumbers(numbers, drawnNumbers);
-            return (
-              <div key={gameName} className="flex">
-                <div id="principal" className="flex flex-col gap-1">
-                  <TitleLabel title={formatGameName(gameName)} />
-                  <span className="flex gap-2">
-                    {numbers.map((number, i) => (
-                      <div
-                        key={i}
-                        className={`size-10 rounded-full flex items-center justify-center border-solid border-2 font-bold ${getNumberClassNames(
-                          drawnNumbers,
-                          matchingNumbers,
-                          number
-                        )}`}
-                      >
-                        {number}
-                      </div>
-                    ))}
-                  </span>
-                </div>
-                {/* Draw result */}
-                {drawnNumbers.length > 0 ? (
-                  <div className="ms-2 flex flex-col gap-1">
-                    <TitleLabel title={'Resultado'} />
-                    <div className="flex h-full items-center relative">
-                      <span className="text-gray-600 bg-white rounded px-1 font-semibold whitespace-nowrap invisible">
-                        9 acertos
-                      </span>
-                      <span className={`${getDrawResultClassNames(hits)} absolute`}>
-                        {hits} {hits > 1 ? 'acertos' : 'acerto'}
-                      </span>
-                    </div>
-                  </div>
-                ) : null}
-              </div>
-            );
-          }
+          const [matchingNumbers, hits] = findMatchingNumbers(numbers, drawnNumbers);
           return (
-            <div key={gameName}>
-              <span className="me-2">{formatGameName(gameName)}:</span>
-              <span>{numbers.length > 0 ? numbers.join(' - ') : ''}</span>
+            <div key={gameName} className="flex">
+              <div id="principal" className="flex flex-col gap-1">
+                <TitleLabel title={formatGameName(gameName)} />
+                <span className="flex gap-2">
+                  {numbers.map((number, i) => (
+                    <div
+                      key={i}
+                      className={`size-10 rounded-full flex items-center justify-center border-solid border-2 font-bold ${getNumberClassNames(
+                        drawnNumbers,
+                        matchingNumbers,
+                        number
+                      )}`}
+                    >
+                      {number}
+                    </div>
+                  ))}
+                </span>
+              </div>
+              {/* Draw result */}
+              {drawnNumbers.length > 0 ? (
+                <div className="ms-2 flex flex-col gap-1">
+                  <TitleLabel title={'Resultado'} />
+                  <div className="flex h-full items-center relative">
+                    <span className="text-gray-600 bg-white rounded px-1 font-semibold whitespace-nowrap invisible">
+                      9 acertos
+                    </span>
+                    <span className={`${getDrawResultClassNames(hits)} absolute`}>
+                      {hits} {hits > 1 ? 'acertos' : 'acerto'}
+                    </span>
+                  </div>
+                </div>
+              ) : null}
             </div>
           );
         }
