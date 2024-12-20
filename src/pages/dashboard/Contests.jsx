@@ -4,12 +4,12 @@ import useUserApi from '@/hooks/useUserApi';
 import { useQuery } from '@tanstack/react-query';
 import DataTable, { sortingHeader } from '@/components/DataTable';
 import formatDate from '@/helpers/formatDate';
-import DrawDisplay from '@/components/DrawDisplay';
 import translateDrawStatus from '@/helpers/translateDrawStatus';
 import DrawActions from '@/components/DrawActions';
 import translateLotteryType from '@/helpers/translateLotteryType';
 import PrizeDisplay from '@/components/PrizeDisplay';
 import { useNavigate } from 'react-router-dom';
+import DrawnNumbersTableRow from '@/components/DrawnNumbersTableRow';
 
 const Contests = () => {
   const navigate = useNavigate();
@@ -55,7 +55,7 @@ const Contests = () => {
       header: (info) =>
         sortingHeader({ label: 'Dezenas sorteadas', column: info.column }),
       accessorKey: 'drawnNumbers',
-      cell: (info) => <DrawDisplay drawnNumbers={info.getValue()} />,
+      cell: (info) => <DrawnNumbersTableRow drawnNumbers={info.getValue()} />,
     },
     {
       header: (info) => sortingHeader({ label: 'Premiação', column: info.column }),

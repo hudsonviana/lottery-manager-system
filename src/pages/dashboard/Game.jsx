@@ -42,7 +42,7 @@ const Game = () => {
           <div className="text-sm mb-2">
             Aposta cadastrada em: <span>{formatDate(game.createdAt)}</span>
           </div>
-          <div className="border rounded-md w-fit p-2">
+          <div className="w-fit">
             <GameDisplay gameData={game} />
             <div className="mt-4">
               <ul>

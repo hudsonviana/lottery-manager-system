@@ -6,6 +6,8 @@ import useUserApi from '@/hooks/useUserApi';
 import GameDisplay from '@/components/GameDisplay';
 import translateLotteryType from '@/helpers/translateLotteryType';
 import translateGameResult from '@/helpers/translateGameResult';
+import formatDate from '@/helpers/formatDate';
+import DrawDisplay from '@/components/DrawDisplay';
 
 const ContestGames = () => {
   const { drawId } = useParams();
@@ -32,7 +34,7 @@ const ContestGames = () => {
     {
       id: '6f37c9d3-79fa-4b25-93fc-67a27c7b9c5e',
       gameNumbers: {
-        gameA: ['01', '12', '23', '24', '39', '56'],
+        gameA: ['01', '04', '08', '32', '12', '23', '24', '39', '56'],
         gameB: [],
         gameC: [],
       },
@@ -113,21 +115,43 @@ const ContestGames = () => {
   const games = teste;
 
   return (
-    <div className="container mx-auto py-0">
-      <div className="flex gap-5 bg-white border rounded-md p-6 min-h-[calc(100vh-6rem)]">
-        <div>
-          <h1 className="font-semibold my-0">
+    <div className="container mx-auto py-0 w-100">
+      <div className="flex gap-5 bg-white border rounded-md p-6 h-[calc(100vh-6rem)]">
+        {/* Jogos */}
+        <div id="games" className="overflow-auto w-full">
+          <h1 className="font-semibold mb-2  bg-white z-10">
             Relação de jogos da {translateLotteryType(games[0].draw.lotteryType)} -
             Concurso: {games[0].draw.contestNumber}
           </h1>
 
-          {games.map((game) => (
-            <div key={game.id} className="flex">
-              <div className="p-2 my-2 border border-slate-300 rounded-md">
+          {games.map((game, index) => (
+            <div key={game.id} className="flex mb-1">
+              <div>
+                <span className="text-sm mb-0 font-semibold text-gray-500 italic">
+                  {index + 1}. Jogo realizado em: {formatDate(game.createdAt)}
+                </span>
                 <GameDisplay gameData={game} />
               </div>
             </div>
           ))}
+        </div>
+
+        {/* Resultado */}
+        <div id="results" className="w-9/12 h-auto sticky top-0">
+          <h1 className="font-semibold mb-2">
+            Resultado do sorteio {translateLotteryType(games[0].draw.lotteryType)} -
+            Concurso: {games[0].draw.contestNumber}
+          </h1>
+
+          {games[0].draw.drawnNumbers.length > 0 ? (
+            <div>
+              <span className="text-sm mb-0 font-semibold text-gray-500 italic">
+                Sorteio realizado em:{' '}
+                {formatDate(games[0].draw.drawDate, { withTime: false })}
+              </span>
+              <DrawDisplay drawnNumbers={games[0].draw.drawnNumbers} />
+            </div>
+          ) : null}
         </div>
       </div>
     </div>

@@ -25,7 +25,7 @@ const getDrawResultClassNames = (hits) => {
     4: `text-white bg-blue-600 ${baseStyles}`,
     5: `text-white bg-green-600 ${baseStyles}`,
     6: `text-white bg-red-600 ${baseStyles}`,
-    default: `text-gray-600 bg-white ${baseStyles}`,
+    default: `text-gray-500 bg-white ${baseStyles}`,
   };
 
   return styles[hits] || styles.default;
@@ -78,26 +78,28 @@ const GameDisplay = ({ gameData }) => {
   const drawnNumbers = gameData.draw.drawnNumbers;
 
   return (
-    <div className="flex flex-col gap-3">
-      {Object.entries(gameNumbers).map(([gameName, numbers]) => {
-        if (numbers.length > 0) {
-          const [matchingNumbers, hits] = findMatchingNumbers(numbers, drawnNumbers);
+    <div className="p-2 my-2 border border-slate-300 rounded-md mt-0">
+      <div className="flex flex-col gap-3">
+        {Object.entries(gameNumbers).map(([gameName, numbers]) => {
+          if (numbers.length > 0) {
+            const [matchingNumbers, hits] = findMatchingNumbers(numbers, drawnNumbers);
 
-          return (
-            <div key={gameName} className="flex">
-              <GameNumbers
-                gameName={gameName}
-                numbers={numbers}
-                drawnNumbers={drawnNumbers}
-                matchingNumbers={matchingNumbers}
-              />
+            return (
+              <div key={gameName} className="flex">
+                <GameNumbers
+                  gameName={gameName}
+                  numbers={numbers}
+                  drawnNumbers={drawnNumbers}
+                  matchingNumbers={matchingNumbers}
+                />
 
-              {drawnNumbers.length > 0 ? <DrawResult hits={hits} /> : null}
-            </div>
-          );
-        }
-        return null;
-      })}
+                {drawnNumbers.length > 0 ? <DrawResult hits={hits} /> : null}
+              </div>
+            );
+          }
+          return null;
+        })}
+      </div>
     </div>
   );
 };
