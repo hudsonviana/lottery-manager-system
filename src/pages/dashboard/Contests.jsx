@@ -57,11 +57,11 @@ const Contests = () => {
       accessorKey: 'drawnNumbers',
       cell: (info) => <DrawnNumbersTableRow drawnNumbers={info.getValue()} />,
     },
-    {
-      header: (info) => sortingHeader({ label: 'Premiação', column: info.column }),
-      accessorKey: 'prize',
-      cell: (info) => <PrizeDisplay prize={info.getValue()} />,
-    },
+    // {
+    //   header: (info) => sortingHeader({ label: 'Premiação', column: info.column }),
+    //   accessorKey: 'prize',
+    //   cell: (info) => <PrizeDisplay prize={info.getValue()} />,
+    // },
     {
       header: (info) => sortingHeader({ label: 'Acumulado', column: info.column }),
       accessorKey: 'accumulated',

@@ -3,11 +3,13 @@ import { useQuery } from '@tanstack/react-query';
 import { useAuth } from '@/hooks/useAuth';
 import LoadingLabel from '@/components/LoadingLabel';
 import useUserApi from '@/hooks/useUserApi';
-import GameDisplay from '@/components/GameDisplay';
 import translateLotteryType from '@/helpers/translateLotteryType';
 import translateGameResult from '@/helpers/translateGameResult';
 import formatDate from '@/helpers/formatDate';
+import GameDisplay from '@/components/GameDisplay';
 import DrawDisplay from '@/components/DrawDisplay';
+import PrizeDisplay from '@/components/PrizeDisplay';
+import CheckDrawResult from '@/components/CheckDrawResult';
 
 const ContestGames = () => {
   const { drawId } = useParams();
@@ -111,15 +113,15 @@ const ContestGames = () => {
     },
   ];
 
-  // const { games } = data;
-  const games = teste;
+  const { games } = data;
+  // const games = teste;
 
   return (
     <div className="container mx-auto py-0 w-100">
       <div className="flex gap-5 bg-white border rounded-md p-6 h-[calc(100vh-6rem)]">
         {/* Jogos */}
         <div id="games" className="overflow-auto w-full">
-          <h1 className="font-semibold mb-2  bg-white z-10">
+          <h1 className="font-semibold mb-2  bg-white z-10 sticky top-0">
             Relação de jogos da {translateLotteryType(games[0].draw.lotteryType)} -
             Concurso: {games[0].draw.contestNumber}
           </h1>
@@ -137,7 +139,10 @@ const ContestGames = () => {
         </div>
 
         {/* Resultado */}
-        <div id="results" className="w-9/12 h-auto sticky top-0">
+        <div
+          id="results"
+          className="w-9/12 h-auto sticky top-0 ps-5 border-l-2 border-l-gray-300"
+        >
           <h1 className="font-semibold mb-2">
             Resultado do sorteio {translateLotteryType(games[0].draw.lotteryType)} -
             Concurso: {games[0].draw.contestNumber}
@@ -150,8 +155,16 @@ const ContestGames = () => {
                 {formatDate(games[0].draw.drawDate, { withTime: false })}
               </span>
               <DrawDisplay drawnNumbers={games[0].draw.drawnNumbers} />
+              {games[0].draw.accumulated ? (
+                <span className="font-semibold text-blue-700">Acumulou!</span>
+              ) : null}
+              <PrizeDisplay prize={games[0].draw.prize} />
             </div>
-          ) : null}
+          ) : (
+            <div className="mt-5">
+              <CheckDrawResult game={games[0]} />
+            </div>
+          )}
         </div>
       </div>
     </div>

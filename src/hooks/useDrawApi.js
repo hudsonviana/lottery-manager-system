@@ -15,7 +15,7 @@ const useDrawApi = () => {
       const response = await lotteryApiClient.get(`/${lotteryType}/${contestNumber}`);
       return response.data;
     } catch (error) {
-      return error.response;
+      return error;
     }
   };
 
