@@ -5,7 +5,7 @@ import LoadingLabel from './LoadingLabel';
 import useToastAlert from '@/hooks/useToastAlert';
 import { handleError } from '@/helpers/handleError';
 
-const CheckDrawResult = ({ game }) => {
+const CheckDrawResult = ({ game, isForAction = false }) => {
   const { lotteryType, contestNumber } = game.draw;
   const { fetchDrawResult, updateDraw } = useDrawApi();
   const { toastAlert } = useToastAlert();
@@ -15,6 +15,7 @@ const CheckDrawResult = ({ game }) => {
     mutationFn: ({ contestNumber, drawData }) => updateDraw({ contestNumber, drawData }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['contests', game.draw.id, 'games'] });
+      queryClient.invalidateQueries({ queryKey: ['contests'] });
       toastAlert({
         type: 'success',
         title: 'Sorteio conferido!',
@@ -61,17 +62,33 @@ const CheckDrawResult = ({ game }) => {
       }
 
       if (data.listaDezenas) {
-        const drawData = data;
-        updateDrawMutation.mutate({ contestNumber, drawData });
+        updateDrawMutation.mutate({ contestNumber, drawData: data });
       } else {
         return toastAlert({
           type: 'danger',
           title: 'Erro ao consultar o sorteio',
-          message: 'Concurso indisponível.',
+          message: 'Ocorreu um erro inesperado.',
         });
       }
     },
   });
+
+  if (isForAction) {
+    return (
+      <button
+        onClick={() => checkDrawResult.mutate()}
+        disabled={checkDrawResult.isPending || updateDrawMutation.isPending}
+      >
+        {checkDrawResult.isPending ? (
+          <LoadingLabel label={'Aguarde...'} />
+        ) : updateDrawMutation.isPending ? (
+          <LoadingLabel label={'Aguarde...'} />
+        ) : (
+          'Conferir resultado'
+        )}
+      </button>
+    );
+  }
 
   return (
     <Button

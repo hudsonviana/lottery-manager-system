@@ -7,7 +7,6 @@ import formatDate from '@/helpers/formatDate';
 import translateDrawStatus from '@/helpers/translateDrawStatus';
 import DrawActions from '@/components/DrawActions';
 import translateLotteryType from '@/helpers/translateLotteryType';
-import PrizeDisplay from '@/components/PrizeDisplay';
 import { useNavigate } from 'react-router-dom';
 import DrawnNumbersTableRow from '@/components/DrawnNumbersTableRow';
 
@@ -17,16 +16,16 @@ const Contests = () => {
   const { fetchUserDraws } = useUserApi();
 
   const { isPending, isError, data, error } = useQuery({
-    queryKey: ['draws'],
+    queryKey: ['contests'],
     queryFn: () => fetchUserDraws(auth.user.id),
     // staleTime: 1000 * 60,
   });
 
   // console.log(data);
 
-  const handleUpdateDrawAction = (draw) => {
-    console.log('autualizando', draw);
-  };
+  // const handleUpdateDrawAction = (draw) => {
+  //   console.log('autualizando', draw);
+  // };
 
   const handleDeleteDrawAction = (draw) => {
     console.log('Excluindo', draw);
@@ -57,11 +56,6 @@ const Contests = () => {
       accessorKey: 'drawnNumbers',
       cell: (info) => <DrawnNumbersTableRow drawnNumbers={info.getValue()} />,
     },
-    // {
-    //   header: (info) => sortingHeader({ label: 'Premiação', column: info.column }),
-    //   accessorKey: 'prize',
-    //   cell: (info) => <PrizeDisplay prize={info.getValue()} />,
-    // },
     {
       header: (info) => sortingHeader({ label: 'Acumulado', column: info.column }),
       accessorKey: 'accumulated',
@@ -87,7 +81,7 @@ const Contests = () => {
             draw={draw}
             onView={() => navigate(draw.id)}
             onViewGames={() => navigate(`${draw.id}/games`)}
-            onUpdate={() => handleUpdateDrawAction(draw)}
+            // onUpdate={() => handleUpdateDrawAction(draw)}
             onDelete={() => handleDeleteDrawAction(draw)}
           />
         );

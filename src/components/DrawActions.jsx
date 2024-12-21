@@ -8,8 +8,10 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { MoreHorizontal } from 'lucide-react';
+import CheckDrawResult from './CheckDrawResult';
 
 const DrawActions = ({ draw, onView, onViewGames, onUpdate, onDelete }) => {
+  console.log(draw);
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -22,11 +24,16 @@ const DrawActions = ({ draw, onView, onViewGames, onUpdate, onDelete }) => {
         <DropdownMenuLabel>Ações</DropdownMenuLabel>
         <DropdownMenuItem onClick={() => onView(draw)}>Ver concurso</DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => onViewGames(draw)}>Ver jogos</DropdownMenuItem>
+        <DropdownMenuItem onClick={() => onViewGames(draw)}>Ver todos os jogos</DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => onUpdate(draw)}>
-          Conferir sorteio
-        </DropdownMenuItem>
+        {/* <DropdownMenuItem onClick={() => onUpdate(draw)}>
+          Conferir resultado
+        </DropdownMenuItem> */}
+        {draw.drawnNumbers.length === 0 ? (
+          <DropdownMenuItem>
+            <CheckDrawResult game={{ draw }} isForAction={true} />
+          </DropdownMenuItem>
+        ) : null}
         <DropdownMenuItem onClick={() => onDelete(draw)}>
           Deletar concurso
         </DropdownMenuItem>

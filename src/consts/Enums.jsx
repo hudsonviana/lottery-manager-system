@@ -13,7 +13,7 @@ export const GAME_RESULT = [
 
 export const DRAW_STATUS = [
   { value: 'PENDING', label: 'Pendente' },
-  { value: 'DRAWN', label: 'Verificado' },
+  { value: 'DRAWN', label: 'Conferido' },
 ];
 
 export const LOTTERY_TYPE = [
