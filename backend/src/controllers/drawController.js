@@ -99,7 +99,7 @@ export const addDraw = async (req, res) => {
     return res.status(500).json({ error: newDraw.error });
   }
 
-  res.status(201).json({ draw: newDraw});
+  res.status(201).json({ draw: newDraw });
 };
 
 export const updateDraw = async (req, res) => {

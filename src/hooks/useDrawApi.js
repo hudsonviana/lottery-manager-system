@@ -2,14 +2,14 @@ import lotteryApiClient from '@/api/lotteryApiClient';
 import useAuthApiClient from './useAuthApiClient';
 
 const useDrawApi = () => {
-  // const authApiClient = useAuthApiClient();
+  const authApiClient = useAuthApiClient();
 
   const fetchDrawResult = async (
     lotteryType = 'megasena',
     contestNumber,
     { prevContest = false } = {}
   ) => {
-    if (prevContest === true) contestNumber = Number(contestNumber) - 1;
+    if (prevContest) contestNumber = Number(contestNumber) - 1;
 
     try {
       const response = await lotteryApiClient.get(`/${lotteryType}/${contestNumber}`);
@@ -19,9 +19,12 @@ const useDrawApi = () => {
     }
   };
 
-  const fetchDrawGames = async () => {};
+  const updateDraw = async ({ contestNumber, drawData }) => {
+    const response = await authApiClient.put(`/draws/${contestNumber}`, drawData);
+    return response.data;
+  };
 
-  return { fetchDrawResult, fetchDrawGames };
+  return { fetchDrawResult, updateDraw };
 };
 
 export default useDrawApi;

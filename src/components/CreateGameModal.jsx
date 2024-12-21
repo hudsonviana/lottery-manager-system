@@ -134,10 +134,19 @@ const CreateGameModal = () => {
     }
 
     if (contestData.isSuccess) {
+      if (contestData.data.code === 'ERR_NETWORK') {
+        toastAlert({
+          type: 'danger',
+          title: 'Erro de rede',
+          message:
+            'Não foi possível conectar ao servidor. Verifique sua conexão com a internet.',
+        });
+      }
+
       setNewGameData((prev) => ({
         ...prev,
         drawDate:
-          contestData.data?.status === 500
+          contestData.data?.response?.status === 500
             ? 'Indefinida'
             : contestData.data?.dataProximoConcurso,
       }));
@@ -313,7 +322,7 @@ const CreateGameModal = () => {
                   name="drawDate"
                   className={`${
                     newGameData?.drawDate === 'Indefinida'
-                      ? 'bg-red-100 text-red-600 font-semibold'
+                      ? 'text-red-600 font-semibold'
                       : null
                   } cursor-not-allowed`}
                   value={newGameData.drawDate}
