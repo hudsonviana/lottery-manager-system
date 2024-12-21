@@ -76,8 +76,15 @@ export const getUserDraws = async (req, res) => {
     return res.status(500).json({ error: userWithDraws.error });
   }
 
+  const drawCounts = userWithDraws.games.reduce((acc, { draw }) => {
+    acc[draw.id] = (acc[draw.id] || 0) + 1;
+    return acc;
+  }, {});
+
   const userDraws = Array.from(
-    new Map(userWithDraws.games.map(({ draw }) => [draw.id, draw])).values()
+    new Map(
+      userWithDraws.games.map(({ draw }) => [draw.id, { ...draw, countGames: drawCounts[draw.id] }])
+    ).values()
   );
 
   res.json({ userDraws });
