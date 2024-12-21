@@ -4,6 +4,7 @@ import useDrawApi from '@/hooks/useDrawApi';
 import LoadingLabel from './LoadingLabel';
 import useToastAlert from '@/hooks/useToastAlert';
 import { handleError } from '@/helpers/handleError';
+import { AiFillCheckCircle } from 'react-icons/ai';
 
 const CheckDrawResult = ({ game, isForAction = false }) => {
   const { lotteryType, contestNumber } = game.draw;
@@ -84,7 +85,10 @@ const CheckDrawResult = ({ game, isForAction = false }) => {
         ) : updateDrawMutation.isPending ? (
           <LoadingLabel label={'Aguarde...'} />
         ) : (
-          'Conferir resultado'
+          <span className="flex items-center">
+            <AiFillCheckCircle className="me-1 text-green-600" />
+            Conferir resultado
+          </span>
         )}
       </button>
     );
@@ -100,7 +104,7 @@ const CheckDrawResult = ({ game, isForAction = false }) => {
       ) : updateDrawMutation.isPending ? (
         <LoadingLabel label={'Salvando resultado...'} />
       ) : (
-        'Conferir sorteio'
+        'Conferir resultado'
       )}
     </Button>
   );

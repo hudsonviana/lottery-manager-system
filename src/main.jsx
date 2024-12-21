@@ -18,6 +18,7 @@ import User from './pages/dashboard/User.jsx';
 import Games from './pages/dashboard/Games.jsx';
 import Game from './pages/dashboard/Game.jsx';
 import Contests from './pages/dashboard/Contests.jsx';
+import Contest from './pages/dashboard/Contest.jsx';
 import ContestGames from './pages/dashboard/ContestGames.jsx';
 import PersistLogin from './components/PersistLogin.jsx';
 import RequireAuth from './components/RequireAuth.jsx';
@@ -61,6 +62,7 @@ const router = createBrowserRouter([
               { path: 'games', element: <Games /> },
               { path: 'games/:id', element: <Game /> },
               { path: 'contests', element: <Contests /> },
+              { path: 'contests/:drawId', element: <Contest /> },
               { path: 'contests/:drawId/games', element: <ContestGames /> },
               { path: 'settings', element: <Settings /> },
               { path: 'support', element: <Support /> },

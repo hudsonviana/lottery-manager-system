@@ -10,8 +10,7 @@ import {
 import { MoreHorizontal } from 'lucide-react';
 import CheckDrawResult from './CheckDrawResult';
 
-const DrawActions = ({ draw, onView, onViewGames, onUpdate, onDelete }) => {
-  console.log(draw);
+const DrawActions = ({ draw, onView, onViewGames, onDelete }) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -22,20 +21,22 @@ const DrawActions = ({ draw, onView, onViewGames, onUpdate, onDelete }) => {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>Ações</DropdownMenuLabel>
-        <DropdownMenuItem onClick={() => onView(draw)}>Ver concurso</DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => onViewGames(draw)}>Ver todos os jogos</DropdownMenuItem>
-        <DropdownMenuSeparator />
-        {/* <DropdownMenuItem onClick={() => onUpdate(draw)}>
-          Conferir resultado
-        </DropdownMenuItem> */}
-        {draw.drawnNumbers.length === 0 ? (
-          <DropdownMenuItem>
-            <CheckDrawResult game={{ draw }} isForAction={true} />
-          </DropdownMenuItem>
+        {draw.status === 'PENDING' ? (
+          <>
+            <DropdownMenuItem>
+              <CheckDrawResult game={{ draw }} isForAction={true} />
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+          </>
         ) : null}
+        <DropdownMenuItem onClick={() => onViewGames(draw)}>
+          Ver todos os jogos
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => onView(draw)}>
+          Dados do concurso
+        </DropdownMenuItem>
         <DropdownMenuItem onClick={() => onDelete(draw)}>
-          Deletar concurso
+          Excluir concurso
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
