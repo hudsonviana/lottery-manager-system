@@ -1,7 +1,8 @@
+import { useState } from 'react';
 import LoadingLabel from '@/components/LoadingLabel';
 import { useAuth } from '@/hooks/useAuth';
 import useUserApi from '@/hooks/useUserApi';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import DataTable, { sortingHeader } from '@/components/DataTable';
 import formatDate from '@/helpers/formatDate';
 import translateDrawStatus from '@/helpers/translateDrawStatus';
@@ -10,27 +11,69 @@ import translateLotteryType from '@/helpers/translateLotteryType';
 import { useNavigate } from 'react-router-dom';
 import DrawnNumbersTableRow from '@/components/DrawnNumbersTableRow';
 import { TbLockQuestion } from 'react-icons/tb';
+import useDrawApi from '@/hooks/useDrawApi';
 // import { MdOutlineLockClock } from 'react-icons/md';
 // import { MdHourglassEmpty } from 'react-icons/md';
 // import { FcLockLandscape } from 'react-icons/fc';
 // import { FcLock } from 'react-icons/fc';
 // import { RiLock2Line } from 'react-icons/ri';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
+import { AlertDescription } from '@/components/ui/alert';
+import useToastAlert from '@/hooks/useToastAlert';
 
 const Contests = () => {
   const navigate = useNavigate();
   const { auth } = useAuth();
   const { fetchUserDraws } = useUserApi();
+  const { deleteDraw } = useDrawApi();
+  const [drawToDelete, setDrawToDelete] = useState({});
+  const [isDeleteAlertOpen, setIsDeleteAlertOpen] = useState(false);
+  const queryClient = useQueryClient();
+  const { toastAlert, dismiss } = useToastAlert();
 
   const { isPending, isError, data, error } = useQuery({
     queryKey: ['contests'],
     queryFn: () => fetchUserDraws(auth.user.id),
-    // staleTime: 1000 * 60,
+    staleTime: 1000 * 60,
   });
 
-  const deleteDrawMutation = useMutation({});
+  const deleteDrawMutation = useMutation({
+    mutationFn: (id) => deleteDraw(id),
+    onSuccess: ({ deletedDraw }) => {
+      console.log(deletedDraw);
+      queryClient.invalidateQueries(['contests']);
+      queryClient.invalidateQueries(['games']);
+      toastAlert({
+        type: 'success',
+        title: 'Concurso deletado com sucesso!',
+        message: `O sorteio da loteria ${translateLotteryType(
+          deletedDraw.lotteryType
+        )} (Concurso: ${deletedDraw.contestNumber}) foi deletado do banco de dados.`,
+      });
+    },
+    onError: (err) => {
+      const { error } = handleError(err);
+      toastAlert({
+        type: 'danger',
+        title: 'Erro ao deletar concurso!',
+        message: error,
+      });
+    },
+  });
 
   const handleDeleteDrawAction = (draw) => {
-    console.log('Excluindo', draw);
+    dismiss();
+    setDrawToDelete(draw);
+    setIsDeleteAlertOpen(true);
   };
 
   const columns = [
@@ -118,6 +161,54 @@ const Contests = () => {
         columns={columns}
         defaultSorting={[{ id: 'contestNumber', desc: true }]}
       />
+
+      <AlertDialog open={isDeleteAlertOpen} onOpenChange={setIsDeleteAlertOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              Tem certeza que deseja deletar este concurso?
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              Se confirmada, esta ação não poderá ser desfeita. Todos os jogos associados
+              a este concurso também serão deletados.
+            </AlertDialogDescription>
+            <AlertDescription>
+              <ul className="border border-neutral-300 rounded-md p-2">
+                <li className="flex gap-1">
+                  <div className="font-medium min-w-12">Loteria:</div>
+                  <span>{translateLotteryType(drawToDelete?.lotteryType)}</span>
+                </li>
+                <li className="flex gap-1">
+                  <div className="font-medium min-w-12">Concurso:</div>
+                  <span>{drawToDelete?.contestNumber}</span>
+                </li>
+                <li className="flex gap-1">
+                  <div className="font-medium min-w-12">Sorteio realizado em:</div>
+                  <span>{formatDate(drawToDelete?.drawDate, { withTime: false })}</span>
+                </li>
+                <li className="flex gap-1">
+                  <div className="font-medium min-w-12">Dezenas sorteadas:</div>
+                  <span>
+                    {<DrawnNumbersTableRow drawnNumbers={drawToDelete?.drawnNumbers} />}
+                  </span>
+                </li>
+                <li className="flex gap-1">
+                  <div className="font-medium min-w-12">
+                    Quantidade de jogos associados:
+                  </div>
+                  <span>{drawToDelete?.countGames}</span>
+                </li>
+              </ul>
+            </AlertDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogAction onClick={() => deleteDrawMutation.mutate(drawToDelete.id)}>
+              Confirmar
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

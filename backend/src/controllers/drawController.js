@@ -185,5 +185,5 @@ export const deleteDraw = async (req, res) => {
     return res.status(500).json({ error: deletedDraw.error });
   }
 
-  res.json({ draw: deletedDraw });
+  res.json({ deletedDraw });
 };

@@ -51,7 +51,6 @@ const Games = () => {
   const deleteGameMutation = useMutation({
     mutationFn: ({ playerId, id }) => deleteGame(playerId, id),
     onSuccess: () => {
-      console.log(gameDelete);
       queryClient.invalidateQueries(['games']);
       toastAlert({
         type: 'success',
@@ -142,11 +141,11 @@ const Games = () => {
       accessorKey: 'createdAt',
       cell: (info) => formatDate(info.getValue()),
     },
-    {
-      header: (info) => sortingHeader({ label: 'Prêmio', column: info.column }),
-      accessorKey: 'result',
-      cell: (info) => translateGameResult(info.getValue()),
-    },
+    // {
+    //   header: (info) => sortingHeader({ label: 'Prêmio', column: info.column }),
+    //   accessorKey: 'result',
+    //   cell: (info) => translateGameResult(info.getValue()),
+    // },
     {
       id: 'actions',
       cell: ({ row }) => {

@@ -24,7 +24,12 @@ const useDrawApi = () => {
     return response.data;
   };
 
-  return { fetchDrawResult, updateDraw };
+  const deleteDraw = async (id) => {
+    const response = await authApiClient.delete(`/draws/${id}`);
+    return response.data;
+  };
+
+  return { fetchDrawResult, updateDraw, deleteDraw };
 };
 
 export default useDrawApi;
