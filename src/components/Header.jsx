@@ -10,7 +10,7 @@ const Header = () => {
   const { auth } = useAuth();
 
   return (
-    <div className="bg-white h-11 px-4 flex justify-between items-center shadow-sm">
+    <div className="bg-white h-11 px-4 flex justify-between items-center shadow-sm sticky top-0">
       <div className="relative">
         {/* <HiOutlineSearch
           fontSize={20}

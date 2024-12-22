@@ -50,9 +50,7 @@ export const createColumn = (label, accessorKey, cellFn) => ({
 
 const DataTable = ({ data, columns, createModal, defaultSorting }) => {
   const [sorting, setSorting] = useState(defaultSorting || []);
-  const [filtering, setFiltering] = useState(
-    localStorage.getItem('filtering') || ''
-  );
+  const [filtering, setFiltering] = useState(localStorage.getItem('filtering') || '');
 
   const table = useReactTable({
     data,
@@ -91,10 +89,7 @@ const DataTable = ({ data, columns, createModal, defaultSorting }) => {
                   <TableHead key={header.id} className="h-10 py-0">
                     {header.isPlaceholder
                       ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
+                      : flexRender(header.column.columnDef.header, header.getContext())}
                   </TableHead>
                 ))}
               </TableRow>
@@ -103,26 +98,17 @@ const DataTable = ({ data, columns, createModal, defaultSorting }) => {
           <TableBody>
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && 'selected'}
-                >
+                <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id} className="py-0.5">
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>
                   ))}
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
+                <TableCell colSpan={columns.length} className="h-24 text-center">
                   Sem resultados
                 </TableCell>
               </TableRow>
@@ -148,8 +134,7 @@ const DataTable = ({ data, columns, createModal, defaultSorting }) => {
         </div>
         <div className="flex items-center space-x-2">
           <div className="mx-5 text-neutral-500">
-            Pág {table.getState().pagination.pageIndex + 1} de{' '}
-            {table.getPageCount() || 1}
+            Pág {table.getState().pagination.pageIndex + 1} de {table.getPageCount() || 1}
           </div>
           <Button
             variant="outline"

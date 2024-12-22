@@ -4,7 +4,6 @@ import { useAuth } from '@/hooks/useAuth';
 import LoadingLabel from '@/components/LoadingLabel';
 import useUserApi from '@/hooks/useUserApi';
 import translateLotteryType from '@/helpers/translateLotteryType';
-import translateGameResult from '@/helpers/translateGameResult';
 import formatDate from '@/helpers/formatDate';
 import GameDisplay from '@/components/GameDisplay';
 import DrawDisplay from '@/components/DrawDisplay';
@@ -130,7 +129,7 @@ const ContestGames = () => {
             <div key={game.id} className="flex mb-1">
               <div>
                 <span className="text-sm mb-0 font-semibold text-gray-500 italic">
-                  {index + 1}. Jogo realizado em: {formatDate(game.createdAt)}
+                  Jogo {index + 1} - cadastrado em: {formatDate(game.createdAt)}
                 </span>
                 <GameDisplay gameData={game} />
               </div>
@@ -144,7 +143,7 @@ const ContestGames = () => {
           className="w-9/12 h-auto sticky top-0 ps-5 border-l-2 border-l-gray-300"
         >
           <h1 className="font-semibold mb-2">
-            Resultado do sorteio {translateLotteryType(games[0].draw.lotteryType)} -
+            Resultado do sorteio da {translateLotteryType(games[0].draw.lotteryType)} -
             Concurso: {games[0].draw.contestNumber}
           </h1>
 
@@ -156,7 +155,7 @@ const ContestGames = () => {
               </span>
               <DrawDisplay drawnNumbers={games[0].draw.drawnNumbers} />
               {games[0].draw.accumulated ? (
-                <span className="font-semibold text-blue-700">Acumulou!</span>
+                <div className="font-semibold text-blue-700 mb-1">Acumulou!</div>
               ) : null}
               <PrizeDisplay prize={games[0].draw.prize} />
             </div>

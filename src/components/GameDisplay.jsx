@@ -39,7 +39,7 @@ const GameNumbers = ({ gameName, numbers, drawnNumbers, matchingNumbers }) => {
   return (
     <div className="flex flex-col gap-1">
       <TitleLabel title={formatGameName(gameName)} />
-      <span className="flex gap-2">
+      <div className="flex gap-2">
         {numbers.map((number, i) => (
           <div
             key={i}
@@ -52,7 +52,7 @@ const GameNumbers = ({ gameName, numbers, drawnNumbers, matchingNumbers }) => {
             {number}
           </div>
         ))}
-      </span>
+      </div>
     </div>
   );
 };

@@ -27,8 +27,6 @@ const Contests = () => {
     // staleTime: 1000 * 60,
   });
 
-  console.log(data);
-
   const deleteDrawMutation = useMutation({});
 
   const handleDeleteDrawAction = (draw) => {

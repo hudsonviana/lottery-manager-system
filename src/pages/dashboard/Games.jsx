@@ -143,7 +143,7 @@ const Games = () => {
       cell: (info) => formatDate(info.getValue()),
     },
     {
-      header: (info) => sortingHeader({ label: 'Resultado', column: info.column }),
+      header: (info) => sortingHeader({ label: 'Prêmio', column: info.column }),
       accessorKey: 'result',
       cell: (info) => translateGameResult(info.getValue()),
     },
