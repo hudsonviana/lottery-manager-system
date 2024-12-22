@@ -51,7 +51,8 @@ const Games = () => {
   const deleteGameMutation = useMutation({
     mutationFn: ({ playerId, id }) => deleteGame(playerId, id),
     onSuccess: () => {
-      queryClient.invalidateQueries(['games']);
+      queryClient.invalidateQueries({ queryKey: ['games'] });
+      queryClient.invalidateQueries({ queryKey: ['contests'] });
       toastAlert({
         type: 'success',
         title: 'Jogo deletado com sucesso!',

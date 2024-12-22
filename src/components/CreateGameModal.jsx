@@ -97,6 +97,7 @@ const CreateGameModal = () => {
     mutationFn: (gameData) => addGame(auth.user.id, gameData),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['games'] });
+      queryClient.invalidateQueries({ queryKey: ['contests'] });
       handleCancelButtonClick();
       toastAlert({
         type: 'success',

@@ -10,13 +10,8 @@ import DrawActions from '@/components/DrawActions';
 import translateLotteryType from '@/helpers/translateLotteryType';
 import { useNavigate } from 'react-router-dom';
 import DrawnNumbersTableRow from '@/components/DrawnNumbersTableRow';
-import { TbLockQuestion } from 'react-icons/tb';
 import useDrawApi from '@/hooks/useDrawApi';
-// import { MdOutlineLockClock } from 'react-icons/md';
-// import { MdHourglassEmpty } from 'react-icons/md';
-// import { FcLockLandscape } from 'react-icons/fc';
-// import { FcLock } from 'react-icons/fc';
-// import { RiLock2Line } from 'react-icons/ri';
+import { BsQuestionCircle } from 'react-icons/bs';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -101,7 +96,7 @@ const Contests = () => {
       accessorKey: 'drawnNumbers',
       cell: (info) =>
         info.row.original.status === 'PENDING' ? (
-          <TbLockQuestion size={20} color="gray" />
+          <BsQuestionCircle size={20} color="gray" />
         ) : (
           <DrawnNumbersTableRow drawnNumbers={info.getValue()} />
         ),
@@ -111,7 +106,7 @@ const Contests = () => {
       accessorKey: 'accumulated',
       cell: (info) =>
         info.row.original.status === 'PENDING' ? (
-          <TbLockQuestion size={20} color="gray" />
+          <BsQuestionCircle size={20} color="gray" />
         ) : info.getValue() ? (
           'Sim'
         ) : (

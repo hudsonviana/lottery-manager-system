@@ -18,7 +18,7 @@ const ContestGames = () => {
   const { isPending, isError, data, error } = useQuery({
     queryKey: ['contests', drawId, 'games'],
     queryFn: () => fetchUserDrawGames(auth.user.id, drawId),
-    // staleTime: 1000 * 60 * 5,
+    staleTime: 1000 * 60 * 5,
   });
 
   if (isPending) {
