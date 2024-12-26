@@ -24,7 +24,7 @@ const Navbar = ({ onHover }) => {
   const isHomePage = location.pathname === '/';
 
   const activeLink = ({ isActive }) =>
-    `${linkStyles} ${isHomePage || isActive ? 'text-white' : 'text-sky-400'} ${
+    `${linkStyles} ${isHomePage || isActive ? 'text-white shadow-blue' : 'text-sky-400'} ${
       isActive ? 'bg-neutral-600' : ''
     }`;
 
@@ -40,7 +40,9 @@ const Navbar = ({ onHover }) => {
     >
       <div className="">
         <span className="text-sky-500 font-semibold italic border-text">SGL</span>
-        <span className="pl-4">Sistema de Gerenciamento de Loteria</span>
+        <span className={`pl-4 ${isHomePage ? 'text-transparent' : ''}`}>
+          Sistema de Gerenciamento de Loterias
+        </span>
       </div>
       <div className="flex gap-1">
         <NavLink to={'/'} className={activeLink}>

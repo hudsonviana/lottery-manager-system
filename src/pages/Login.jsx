@@ -28,7 +28,12 @@ const Login = () => {
     <div className="flex flex-col md:flex-row min-h-[calc(100vh-2.5rem)]">
       <aside className="md:w-2/4 w-full">
         {/* <img src="/login.jpg" alt="Minha Figura" className="w-full h-full object-cover" /> */}
-        <div className="bg-muted h-full"></div>
+        <div className="h-full ">
+          <div
+            style={{ backgroundImage: 'url("/bolas_mega_sena-transformed.png")' }}
+            className="opacity-60"
+          ></div>
+        </div>
       </aside>
       <div className="grid place-content-center w-2/4">
         <form className="w-[400px]" onSubmit={(e) => e.preventDefault()}>
