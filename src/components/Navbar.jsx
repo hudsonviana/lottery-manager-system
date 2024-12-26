@@ -1,16 +1,45 @@
-import { NavLink } from 'react-router-dom';
+import { useState } from 'react';
+import { NavLink, useLocation } from 'react-router-dom';
 
-const linkClass =
-  'flex items-center px-3 h-8 hover:bg-neutral-700 hover:no-underline rounded-sm text-base';
+const linkStyles =
+  'flex items-center px-3 h-8 hover:bg-neutral-700 hover:no-underline rounded-sm text-base font-semibold';
 
-const activeLink = ({ isActive }) =>
-  `${linkClass} ${isActive ? 'bg-neutral-600 text-white' : 'text-sky-400'}`;
+// const activeLink = ({ isActive }) =>
+//   `${linkStyles} ${isActive ? 'bg-neutral-600 text-white' : 'text-sky-400'}`;
 
-const Navbar = () => {
+const Navbar = ({ onHover }) => {
+  const [isHovered, setIsHovered] = useState(false);
+  const location = useLocation();
+
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+    onHover(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+    onHover(false);
+  };
+
+  const isHomePage = location.pathname === '/';
+
+  const activeLink = ({ isActive }) =>
+    `${linkStyles} ${isHomePage || isActive ? 'text-white' : 'text-sky-400'} ${
+      isActive ? 'bg-neutral-600' : ''
+    }`;
+
   return (
-    <nav className="bg-neutral-900 text-white h-10 px-4 flex justify-between items-center">
-      <div>
-        <span className="text-sky-500 font-semibold italic">SGL</span>
+    <nav
+      className={`${
+        isHomePage ? 'bg-transparent text-white' : 'bg-neutral-900 text-white'
+      } h-10 px-4 flex justify-between items-center sticky top-0 z-10 ${
+        isHovered ? 'navbar-hover' : ''
+      }`}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
+      <div className="">
+        <span className="text-sky-500 font-semibold italic border-text">SGL</span>
         <span className="pl-4">Sistema de Gerenciamento de Loteria</span>
       </div>
       <div className="flex gap-1">

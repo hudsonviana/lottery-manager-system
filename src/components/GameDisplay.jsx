@@ -6,7 +6,7 @@ const formatGameName = (gameName) => {
 
 const getNumberClassNames = (drawnNumbers, matchingNumbers, number) => {
   const styles = {
-    idle: 'bg-white border-green-600 text-green-600',
+    idle: 'bg-white border-sky-600 text-sky-600',
     matched: 'bg-blue-100 border-blue-600 text-blue-600',
     missed: 'bg-orange-100 border-orange-600 text-orange-600',
   };
