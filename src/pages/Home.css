@@ -59,12 +59,12 @@ a.btn {
 
 .hero:hover {
   transform: scale(1.1);
-  opacity: 0.4;
+  opacity: 0.5;
 }
 
 .hero-hover .hero {
   transform: scale(1.1);
-  opacity: 0.3;
+  opacity: 0.5;
 }
 
 .shadow-blue {

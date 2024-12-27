@@ -1,21 +1,8 @@
-const Hero = ({
-  title = 'Sistema de Apostas',
-  subtitle = 'Sistema de Gerenciamento de Apostas em Loterias',
-}) => {
+const Hero = () => {
   return (
     <section className="hero-container">
       <div className="hero"></div>
       <div className="hero-stuff flex gap-28">
-        {/* <div>
-          <h1>Loterias Federais</h1>
-          <a
-            href="https://loterias.caixa.gov.br/Paginas/default.aspx"
-            target="_blank"
-            className="btn"
-          >
-            Saiba mais
-          </a>
-        </div> */}
         <div className="w-96 ms-52">
           <div className="text-5xl text-white font-semibold shadow-blue">
             Sistema de Gerenciamento de Loterias

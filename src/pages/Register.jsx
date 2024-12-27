@@ -59,12 +59,16 @@ const Register = () => {
 
   return (
     <div className="flex min-h-[calc(100vh-2.5rem)]">
-      {/* <aside
-        className="grid place-content-center bg-sky-600 w-2/4 bg-cover bg-center"
-        style={{ backgroundImage: 'url(/register4.jpg)' }}
-      > */}
-      <aside className="md:w-2/4 w-full">
-        <div className="bg-muted h-full"></div>
+      <aside className="w-full bg-black">
+        <div
+          className="bg-muted h-full bg-cover opacity-60"
+          style={{
+            backgroundImage: 'url(/globo-sorteio-em-curso2-transformed.png)',
+            backgroundPosition: 'left',
+            backgroundRepeat: 'no-repeat',
+            backgroundSize: '120%',
+          }}
+        ></div>
       </aside>
 
       <div className="grid place-content-center w-2/4">
