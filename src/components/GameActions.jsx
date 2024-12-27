@@ -22,7 +22,7 @@ const GameActions = ({ game, onView, onUpdate, onDelete }) => {
         <DropdownMenuLabel>Ações</DropdownMenuLabel>
         <DropdownMenuItem onClick={() => onView(game)}>Visualizar jogo</DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => onUpdate(game)}>Atualizar jogo</DropdownMenuItem>
+        <DropdownMenuItem onClick={() => onUpdate(game)}>Editar jogo</DropdownMenuItem>
         <DropdownMenuItem onClick={() => onDelete(game)}>Deletar jogo</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

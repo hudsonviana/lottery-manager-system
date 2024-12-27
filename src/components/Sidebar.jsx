@@ -21,19 +21,19 @@ import { HiOutlineLogout } from 'react-icons/hi';
 import { PiCloverFill } from 'react-icons/pi';
 
 const linkStyles =
-  'flex items-center gap-2 px-3 py-2 hover:bg-neutral-100 hover:no-underline rounded-sm';
+  'flex items-center gap-2 px-3 py-2 hover:bg-neutral-100 hover:text-blue-900 hover:no-underline rounded-sm font-semibold';
 
 const SidebarLink = ({ item }) => {
   return (
     <NavLink
       to={item.path}
       className={({ isActive }) =>
-        `${linkStyles} ${isActive ? 'bg-neutral-200 text-blue-900' : 'text-blue-950'}`
+        `${linkStyles} ${isActive ? 'bg-neutral-300 text-blue-900' : 'text-white'}`
       }
       end
     >
       <span className="text-lg">{item.icon}</span>
-      <span className="text-sm font-semibold">{item.label}</span>
+      <span className="text-sm">{item.label}</span>
     </NavLink>
   );
 };
@@ -43,10 +43,10 @@ const Sidebar = () => {
   const signOut = useLogout();
 
   return (
-    <nav className="flex flex-col bg-white w-60 p-3 text-blue-950 z-10 border-e border-e-slate-200">
+    <nav className="flex flex-col bg-gray-800 w-60 p-3 text-white z-10 border-e border-e-slate-200">
       <div className="flex items-center gap-2 px-2">
-        <PiCloverFill fontSize={24} color="green" />
-        <span className="text-green-800 font-bold">Sistema de Loterias</span>
+        <PiCloverFill fontSize={24} className="text-green-500" />
+        <span className="text-green-500 font-bold">Sistema de Loterias</span>
       </div>
 
       <div className="py-6 flex flex-1 flex-col gap-0.5">
@@ -64,7 +64,7 @@ const Sidebar = () => {
 
         <AlertDialog>
           <AlertDialogTrigger
-            className={`text-red-600 ${linkStyles}`}
+            className={`text-red-500 ${linkStyles}`}
             disabled={signOut.isPending}
           >
             <span>

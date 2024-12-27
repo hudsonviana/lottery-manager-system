@@ -25,7 +25,7 @@ const UserActions = ({ user, onView, onUpdate, onDelete }) => {
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={() => onUpdate(user)}>
-          Atualizar usuário
+          Editar usuário
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => onDelete(user)}>
           Deletar usuário
