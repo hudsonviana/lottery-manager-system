@@ -1,7 +1,10 @@
 const Hero = () => {
   return (
     <section className="hero-container">
-      <div className="hero"></div>
+      <div
+        className="hero"
+        style={{ backgroundImage: 'url(/lottery-4-transformed-hight-qualitty-2.png)' }}
+      ></div>
       <div className="hero-stuff flex gap-28">
         <div className="w-96 ms-52">
           <div className="text-5xl text-white font-semibold shadow-blue">
