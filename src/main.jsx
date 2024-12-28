@@ -5,6 +5,7 @@ import { AuthProvider } from './contexts/AuthProvider.jsx';
 import MainLayout from './pages/layouts/MainLayout.jsx';
 import Home from './pages/Home.jsx';
 import Login from './pages/Login.jsx';
+import Logout, { checkIsFromShutdown } from './pages/Logout.jsx';
 import Register from './pages/Register.jsx';
 import ErrorPage from './pages/ErrorPage.jsx';
 import Dashboard from './pages/dashboard/Dashboard.jsx';
@@ -47,6 +48,11 @@ const router = createBrowserRouter([
               { path: '/login', element: <Login /> },
               { path: '/register', element: <Register /> },
             ],
+          },
+          {
+            path: '/logout/:token?',
+            element: <Logout />,
+            loader: checkIsFromShutdown,
           },
         ],
       },

@@ -1,12 +1,15 @@
 import { Router } from 'express';
 import * as admin from '../middlewares/admin.js';
 import * as auth from '../middlewares/auth.js';
+import * as appController from '../controllers/appController.js';
 import * as authController from '../controllers/authController.js';
 import * as userController from '../controllers/userController.js';
 import * as drawController from '../controllers/drawController.js';
 import * as gameController from '../controllers/gameController.js';
 
 const router = Router();
+
+router.post('/app/shutdown', appController.shutdownApplication);
 
 router.post('/auth/register', authController.register);
 router.post('/auth/login', authController.login);

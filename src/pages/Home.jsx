@@ -1,24 +1,14 @@
-import { format, getYear } from 'date-fns';
-import { pt } from 'date-fns/locale';
 import Footer from '@/components/Footer';
 import Hero from '@/components/Hero';
 import HomeCard from '@/components/HomeCard';
 import { HiOutlineCog } from 'react-icons/hi';
 import { FaChartLine } from 'react-icons/fa';
 import { MdWorkspacePremium } from 'react-icons/md';
-import { BsCashCoin } from 'react-icons/bs';
 import { MdEditCalendar } from 'react-icons/md';
 
 import './Home.css';
 
 const Home = () => {
-  const currentDate = new Date();
-  const currentYear = getYear(currentDate);
-
-  const formattedDate = format(currentDate, "eeee, dd 'de' MMMM 'de' yyyy", {
-    locale: pt,
-  });
-
   return (
     <>
       <Hero title="SGL" className="-z-20 bg-green-300" />
@@ -56,7 +46,7 @@ const Home = () => {
         </div>
       </section>
 
-      <Footer currentYear={currentYear} />
+      <Footer />
     </>
   );
 };

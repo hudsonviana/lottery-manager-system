@@ -74,7 +74,9 @@ const Sidebar = () => {
           </AlertDialogTrigger>
           <AlertDialogContent>
             <AlertDialogHeader>
-              <AlertDialogTitle>Tem certeza que deseja sair?</AlertDialogTitle>
+              <AlertDialogTitle>
+                Tem certeza que deseja sair da área logada?
+              </AlertDialogTitle>
               <AlertDialogDescription>
                 Ao sair, será necessário fazer o login novamente para acessar o sistema.
               </AlertDialogDescription>
@@ -82,7 +84,7 @@ const Sidebar = () => {
             <AlertDialogFooter>
               <AlertDialogCancel>Cancelar</AlertDialogCancel>
               <AlertDialogAction onClick={() => signOut.mutate(auth.user.id)}>
-                Sair do sistema
+                Sair
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>

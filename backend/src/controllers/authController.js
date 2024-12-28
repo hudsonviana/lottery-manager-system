@@ -2,7 +2,6 @@ import 'dotenv/config';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { z } from 'zod';
-import { exec } from 'child_process';
 
 import * as userService from '../services/user.js';
 
@@ -215,21 +214,5 @@ export const changePassword = async (req, res) => {
   res.json({ updatedUserPassword });
 };
 
-export const shutdownApplication = async (req, res) => {
-  console.log('---> Encerrando o sistema <---');
-
-  exec('taskkill /F /IM node.exe', (error, stdout, stderr) => {
-    if (error) {
-      console.error('Erro ao encerrar o processo Node.js:', error);
-      res.status(500).send('Erro ao encerrar o processo Node.js.');
-    }
-  });
-
-  setTimeout(() => {
-    process.exit(0); // Encerra o processo backend
-  }, 1000);
-};
-
 // export const forgotPassword = async (req, res, next) => {};
 // export const resetPassword = async (req, res, next) => {};
-
