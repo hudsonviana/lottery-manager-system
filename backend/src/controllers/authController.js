@@ -5,6 +5,8 @@ import { z } from 'zod';
 
 import * as userService from '../services/user.js';
 
+const isProduction = process.env.NODE_ENV === 'production';
+
 export const register = async (req, res) => {
   const registerUserSchema = z
     .object({
@@ -91,7 +93,7 @@ export const login = async (req, res) => {
 
   res.cookie('refreshToken', refreshToken, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
+    secure: isProduction,
     sameSite: 'strict',
     maxAge: 1 * 24 * 60 * 60 * 1000, // 1 dia em milissegundos
   });
@@ -153,7 +155,7 @@ export const logout = async (req, res) => {
 
     res.clearCookie('refreshToken', {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
+      secure: isProduction,
       sameSite: 'strict',
     });
 

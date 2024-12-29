@@ -25,9 +25,6 @@ import {
 const linkStyles =
   'flex items-center px-3 h-8 hover:bg-neutral-700 hover:no-underline rounded-sm text-base font-semibold';
 
-// const activeLink = ({ isActive }) =>
-//   `${linkStyles} ${isActive ? 'bg-neutral-600 text-white' : 'text-sky-400'}`;
-
 const Navbar = ({ onHover }) => {
   const [isHovered, setIsHovered] = useState(false);
   const location = useLocation();
@@ -98,9 +95,9 @@ const Navbar = ({ onHover }) => {
       onMouseLeave={handleMouseLeave}
     >
       <div className="">
-        <span className="text-sky-500 font-semibold italic border-text">SGL</span>
+        <span className="text-sky-500 font-semibold italic border-text">SiGALF</span>
         <span className={`pl-4 ${isHomePage ? 'text-transparent' : ''}`}>
-          Sistema de Gerenciamento de Loterias
+          Sistema de Gerenciamento de Apostas na Loteria Federal
         </span>
       </div>
       <div className="flex gap-3 items-center">
@@ -128,7 +125,7 @@ const Navbar = ({ onHover }) => {
                 Tem certeza que deseja fechar a aplicação?
               </AlertDialogTitle>
               <AlertDialogDescription>
-                Ao confirmar, será necessário iniciar o SGL novamente por meio do
+                Ao confirmar, será necessário iniciar o SiGALF novamente por meio do
                 aplicativo na área de trabalho.
               </AlertDialogDescription>
             </AlertDialogHeader>

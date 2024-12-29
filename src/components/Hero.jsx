@@ -8,7 +8,7 @@ const Hero = () => {
       <div className="hero-stuff flex gap-28">
         <div className="w-96 ms-52">
           <div className="text-5xl text-white font-semibold shadow-blue">
-            Sistema de Gerenciamento de Loterias
+            Sistema de Gerenciamento de Apostas na Loteria Federal
           </div>
           <div>
             <div className="text-gray-100 font-medium my-6 shadow-blue">

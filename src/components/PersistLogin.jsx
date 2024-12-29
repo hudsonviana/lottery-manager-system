@@ -2,7 +2,7 @@ import { Outlet } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import useRefreshToken from '@/hooks/useRefreshToken';
 import { useAuth } from '@/hooks/useAuth';
-import Dashboard from '@/pages/dashboard/Dashboard';
+import LoadingLabel from './LoadingLabel';
 
 const PersistLogin = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -23,7 +23,15 @@ const PersistLogin = () => {
     !auth?.accessToken ? verifyRefreshToken() : setIsLoading(false);
   }, []);
 
-  return <>{isLoading ? <Dashboard isLoading={true} /> : <Outlet />}</>;
+  if (isLoading) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <LoadingLabel label={''} loaderIconSize="h-12 w-12" />
+      </div>
+    );
+  }
+
+  return <Outlet />;
 };
 
 export default PersistLogin;

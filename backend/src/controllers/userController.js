@@ -143,9 +143,9 @@ export const addUser = async (req, res) => {
 
   sendEmail({
     to: body.data.email,
-    subject: `Bem-vindo (ou vinda) ao SGL, ${body.data.firstName}!`,
+    subject: `Bem-vindo (ou vinda) ao SiGALF, ${body.data.firstName}!`,
     text: `A sua senha de acesso provisória é: ${tempPassword}`,
-    html: `<h2>Bem-vindo (ou vinda) ao SGL, ${body.data.firstName}!</h2><p style="font-size:16px;">A sua senha de acesso provisória é: <b style="font-family: Consolas;font-size:18px;">${tempPassword}</b></p>`,
+    html: `<h2>Bem-vindo (ou vinda) ao SiGALF, ${body.data.firstName}!</h2><p style="font-size:16px;">A sua senha de acesso provisória é: <b style="font-family: Consolas;font-size:18px;">${tempPassword}</b></p>`,
   });
 };
 

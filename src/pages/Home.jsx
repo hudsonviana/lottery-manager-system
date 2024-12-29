@@ -11,7 +11,7 @@ import './Home.css';
 const Home = () => {
   return (
     <>
-      <Hero title="SGL" className="-z-20 bg-green-300" />
+      <Hero title="SiGALF" className="-z-20 bg-green-300" />
 
       <section className="px-40 py-24 z-50 bg-white -translate-y-10">
         <div className="flex flex-row mt-10">
@@ -23,7 +23,7 @@ const Home = () => {
             </span>
           </div>
           <div className="text-justify text-neutral-600">
-            O <span className="font-semibold italic">SGL</span> oferece uma maneira
+            O <span className="font-semibold italic">SiGALF</span> oferece uma maneira
             eficiente e prática para que apostadores possam registrar, acompanhar e
             gerenciar suas apostas realizadas na loteria Federal. Acompanhe todas as suas
             apostas em um só lugar e confira os resultados com uma visão clara e

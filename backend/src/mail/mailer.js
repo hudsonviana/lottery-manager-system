@@ -2,7 +2,6 @@ import 'dotenv/config';
 import nodemailer from 'nodemailer';
 
 const isProduction = process.env.NODE_ENV === 'production';
-// const isProduction = true;
 
 const transporter = nodemailer.createTransport({
   host: isProduction ? process.env.MAIL_HOST : process.env.DEV_MAIL_HOST,
@@ -22,7 +21,7 @@ const sendEmail = async ({ from, to, subject, text, html }) => {
     const info = await transporter.sendMail({
       from: from || `"${process.env.MAIL_FROM_NAME}" ${process.env.MAIL_FROM_EMAIL}`,
       to: Array.isArray(to) ? to.join(',') : to,
-      subject: subject || 'SGL - sem assunto',
+      subject: subject || 'SiGALF',
       text: text || '',
       html: html || '',
     });

@@ -9,10 +9,10 @@ import cookieParser from 'cookie-parser';
 import siteRoutes from './routes/site.js';
 import apiRoutes from './routes/api.js';
 
-const isProductionEnv = process.env.NODE_ENV === 'production';
+const isProduction = process.env.NODE_ENV === 'production';
 
-// const clientOrigin = `http://localhost:${isProductionEnv ? 3000 : 4173}`; //is reverted //npm run preview
-const clientOrigin = `http://localhost:${isProductionEnv ? 4173 : 3000}`; //correct  //npm run client
+// const clientOrigin = `http://localhost:${isProduction ? 3000 : 4173}`; //is reverted //npm run preview
+const clientOrigin = `http://localhost:${isProduction ? 4173 : 3000}`; //correct  //npm run client
 
 const corsOptions = {
   origin: clientOrigin,
@@ -35,7 +35,7 @@ const runServer = (port, server) => {
 
 const regularServer = http.createServer(app);
 
-if (isProductionEnv) {
+if (isProduction) {
   const options = {
     key: fs.readFileSync(process.env.SSL_KEY),
     cert: fs.readFileSync(process.env.SSL_CERT),
