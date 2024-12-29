@@ -50,7 +50,7 @@ const router = createBrowserRouter([
             ],
           },
           {
-            path: '/logout/:token?',
+            path: '/logout/:token?/:key?',
             element: <Logout />,
             loader: checkIsFromShutdown,
           },

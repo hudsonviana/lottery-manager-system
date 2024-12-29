@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
-import { Button } from './ui/button';
 import { GrClose } from 'react-icons/gr';
 import { useMutation } from '@tanstack/react-query';
 import useAppApi from '@/hooks/useAppApi';
@@ -62,10 +61,14 @@ const Navbar = ({ onHover }) => {
     mutationFn: (options) => shutdownApp(options),
     onError: async (err) => {
       if (err.code === 'ERR_NETWORK') {
-        // navigate('/logout', {
-        //   replace: true,
-        //   state: { fromShutdown: true },
-        // });
+        const randomKey = generateRandomString();
+        const secretKey = new TextEncoder().encode(randomKey);
+        const payload = { frontendPort, backendPort };
+        const token = await new jose.SignJWT(payload)
+          .setProtectedHeader({ alg: 'HS256' })
+          .sign(secretKey);
+
+        navigate(`/logout/${token}/${randomKey}`, { replace: true });
 
         return toastAlert({
           type: 'warning',
@@ -121,18 +124,7 @@ const Navbar = ({ onHover }) => {
         <NavLink to={'/register'} className={activeLink}>
           Cadastro
         </NavLink>
-        {/* <Button
-          variant="ghost"
-          className="px-3 h-8 rounded-sm hover:bg-red-500 hover:text-white"
-          onClick={() =>
-            shutdownAppMutation.mutate({
-              ports: [frontendPort, backendPort],
-              killNode: false,
-            })
-          }
-        >
-          <GrClose />
-        </Button> */}
+
         <AlertDialog>
           <AlertDialogTrigger
             variant="ghost"
@@ -153,7 +145,7 @@ const Navbar = ({ onHover }) => {
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel>Cancelar</AlertDialogCancel>
-              {/* <AlertDialogAction
+              <AlertDialogAction
                 onClick={() =>
                   shutdownAppMutation.mutate({
                     ports: [frontendPort, backendPort],
@@ -162,8 +154,8 @@ const Navbar = ({ onHover }) => {
                 }
               >
                 Fechar aplicação
-              </AlertDialogAction> */}
-              <AlertDialogAction
+              </AlertDialogAction>
+              {/* <AlertDialogAction
                 onClick={async () => {
                   const randomKey = generateRandomString();
                   const secretKey = new TextEncoder().encode(randomKey);
@@ -172,14 +164,11 @@ const Navbar = ({ onHover }) => {
                     .setProtectedHeader({ alg: 'HS256' })
                     .sign(secretKey);
 
-                  navigate(`/logout/${token}`, {
-                    replace: true,
-                    state: { key: randomKey },
-                  });
+                  navigate(`/logout/${token}/${randomKey}`, { replace: true });
                 }}
               >
                 Teste Fechar
-              </AlertDialogAction>
+              </AlertDialogAction> */}
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>

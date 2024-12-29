@@ -2,13 +2,10 @@ import { useNavigate, useLoaderData } from 'react-router-dom';
 import * as jose from 'jose';
 import { useEffect } from 'react';
 
-export const checkIsFromShutdown = async ({ params, location }) => {
-  const { token } = params;
-  const key = location.state?.key;
+export const checkIsFromShutdown = async ({ params }) => {
+  const { token, key } = params;
 
-  if (!token || !key) {
-    return false;
-  }
+  if (!token || !key) return false;
 
   const secretKey = new TextEncoder().encode(key);
 
