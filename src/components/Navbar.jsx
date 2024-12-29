@@ -1,13 +1,14 @@
 import { useState } from 'react';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
-import { GrClose } from 'react-icons/gr';
 import { useMutation } from '@tanstack/react-query';
+import * as jose from 'jose';
+import { GrClose } from 'react-icons/gr';
 import useAppApi from '@/hooks/useAppApi';
 import { frontendPort, backendPort } from '@/api/apiClient';
 import { handleError } from '@/helpers/handleError';
 import useToastAlert from '@/hooks/useToastAlert';
 import LoadingLabel from './LoadingLabel';
-import * as jose from 'jose';
+import useDate from '@/hooks/useDate';
 
 import {
   AlertDialog,
@@ -44,6 +45,7 @@ const Navbar = ({ onHover }) => {
   const location = useLocation();
   const { toastAlert } = useToastAlert();
   const navigate = useNavigate();
+  const { writtenOutDate } = useDate();
 
   const handleMouseEnter = () => {
     setIsHovered(true);
@@ -61,14 +63,16 @@ const Navbar = ({ onHover }) => {
     mutationFn: (options) => shutdownApp(options),
     onError: async (err) => {
       if (err.code === 'ERR_NETWORK') {
-        const randomKey = generateRandomString();
-        const secretKey = new TextEncoder().encode(randomKey);
+        // const randomKey = generateRandomString();
+        // const secretKey = new TextEncoder().encode(randomKey);
+        const secretKey = new TextEncoder().encode(writtenOutDate);
         const payload = { frontendPort, backendPort };
         const token = await new jose.SignJWT(payload)
           .setProtectedHeader({ alg: 'HS256' })
           .sign(secretKey);
 
-        navigate(`/logout/${token}/${randomKey}`, { replace: true });
+        // navigate(`/logout/${token}/${randomKey}`, { replace: true });
+        navigate(`/logout/${token}`, { replace: true });
 
         return toastAlert({
           type: 'warning',

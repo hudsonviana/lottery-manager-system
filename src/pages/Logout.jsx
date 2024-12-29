@@ -1,13 +1,18 @@
 import { useNavigate, useLoaderData } from 'react-router-dom';
 import * as jose from 'jose';
 import { useEffect } from 'react';
+import useDate from '@/hooks/useDate';
 
 export const checkIsFromShutdown = async ({ params }) => {
-  const { token, key } = params;
+  // const { token, key } = params;
+  const { token } = params;
+  const { writtenOutDate } = useDate();
 
-  if (!token || !key) return false;
+  // if (!token || !key) return false;
+  if (!token) return false;
 
-  const secretKey = new TextEncoder().encode(key);
+  // const secretKey = new TextEncoder().encode(key);s
+  const secretKey = new TextEncoder().encode(writtenOutDate);
 
   try {
     await jose.jwtVerify(token, secretKey);
