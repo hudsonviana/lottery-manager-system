@@ -9,7 +9,11 @@ const useDate = () => {
     locale: pt,
   });
 
-  return { currentYear, writtenOutDate };
+  const currentDateTime = format(currentDate, 'dd/MM/yyyy H:m', {
+    locale: pt,
+  });
+
+  return { currentYear, writtenOutDate, currentDateTime };
 };
 
 export default useDate;

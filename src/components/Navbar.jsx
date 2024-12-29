@@ -28,24 +28,11 @@ const linkStyles =
 // const activeLink = ({ isActive }) =>
 //   `${linkStyles} ${isActive ? 'bg-neutral-600 text-white' : 'text-sky-400'}`;
 
-const generateRandomString = () => {
-  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  let result = '';
-  const length = 8;
-
-  for (let i = 0; i < length; i++) {
-    result += characters.charAt(Math.floor(Math.random() * characters.length));
-  }
-
-  return result;
-};
-
 const Navbar = ({ onHover }) => {
   const [isHovered, setIsHovered] = useState(false);
   const location = useLocation();
   const { toastAlert } = useToastAlert();
   const navigate = useNavigate();
-  const { writtenOutDate } = useDate();
 
   const handleMouseEnter = () => {
     setIsHovered(true);
@@ -63,15 +50,13 @@ const Navbar = ({ onHover }) => {
     mutationFn: (options) => shutdownApp(options),
     onError: async (err) => {
       if (err.code === 'ERR_NETWORK') {
-        // const randomKey = generateRandomString();
-        // const secretKey = new TextEncoder().encode(randomKey);
-        const secretKey = new TextEncoder().encode(writtenOutDate);
+        const { currentDateTime } = useDate();
+        const secretKey = new TextEncoder().encode(currentDateTime);
         const payload = { frontendPort, backendPort };
         const token = await new jose.SignJWT(payload)
           .setProtectedHeader({ alg: 'HS256' })
           .sign(secretKey);
 
-        // navigate(`/logout/${token}/${randomKey}`, { replace: true });
         navigate(`/logout/${token}`, { replace: true });
 
         return toastAlert({
