@@ -17,9 +17,9 @@ model User {
   role         Role     @default(USER)
   refreshToken String?
   games        Game[]
+  groups       Group[]
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
-  groups       Group[]
 
   @@unique([firstName, lastName])
 }
@@ -33,10 +33,10 @@ model Game {
   playerId    String
   draw        Draw       @relation(fields: [drawId], references: [id], onDelete: Cascade)
   drawId      String
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
   group       Group?     @relation(fields: [groupId], references: [id])
   groupId     String?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
 }
 
 model Draw {
@@ -56,29 +56,17 @@ model Draw {
 }
 
 model Group {
-  id                String      @id @default(uuid())
-  name              String      @unique @db.VarChar(20)
-  description       String?     @db.Text
-  totalParticipants Int?
-  contribution      Float?      @default(0.0)
-  isPool            Boolean?    @default(false)
-  totalAmount       Float?      @default(0.0)
-  rules             String?
-  endDate           DateTime?
-  status            GroupStatus @default(OPEN)
-  creatorId         String
-  creator           User        @relation(fields: [creatorId], references: [id])
-  games             Game[]
-  createdAt         DateTime    @default(now())
-  updatedAt         DateTime    @updatedAt
+  id          String   @id @default(uuid())
+  name        String   @unique @db.VarChar(50)
+  description String?  @db.VarChar(255)
+  isPool      Boolean? @default(false)
+  creatorId   String
+  creator     User     @relation(fields: [creatorId], references: [id])
+  games       Game[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   @@index([name])
-}
-
-enum GroupStatus {
-  OPEN
-  CLOSED
-  COMPLETED
 }
 
 enum Role {

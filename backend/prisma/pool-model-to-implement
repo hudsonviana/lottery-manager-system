@@ -1,0 +1,24 @@
+
+
+
+model Pool {
+  id            String     @id @default(uuid())
+  groupId       String
+  group         Group      @relation(fields: [groupId], references: [id])
+  participantId String
+  participants  User       @relation(fields: [participantId], references: [id])
+  contribution  Float?     @default(0.0)
+  totalAmount   Float?     @default(0.0)
+  rules         String?
+  endDate       DateTime?
+  status        PoolStatus @default(OPEN)
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+}
+
+
+enum PoolStatus {
+  OPEN
+  CLOSED
+  COMPLETED
+}
