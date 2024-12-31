@@ -20,6 +20,7 @@ import Game from './pages/dashboard/Game.jsx';
 import Contests from './pages/dashboard/Contests.jsx';
 import Contest from './pages/dashboard/Contest.jsx';
 import ContestGames from './pages/dashboard/ContestGames.jsx';
+import Groups from './pages/dashboard/Groups.jsx';
 import PersistLogin from './components/PersistLogin.jsx';
 import RequireAuth from './components/RequireAuth.jsx';
 import RequireGuest from './components/RequireGuest.jsx';
@@ -71,6 +72,7 @@ const router = createBrowserRouter([
               { path: 'contests', element: <Contests /> },
               { path: 'contests/:drawId', element: <Contest /> },
               { path: 'contests/:drawId/games', element: <ContestGames /> },
+              { path: 'groups', element: <Groups /> },
               { path: 'settings', element: <Settings /> },
               { path: 'support', element: <Support /> },
               { path: 'unauthorized', element: <Unauthorized /> },

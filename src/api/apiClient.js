@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export const frontendPort = 4173;
+export const frontendPort = 3000;
 export const backendPort = 3333;
 
 const BASE_URL = `http://localhost:${backendPort}/api`;

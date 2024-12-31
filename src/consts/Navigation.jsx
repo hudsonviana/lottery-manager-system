@@ -47,6 +47,13 @@ export const DASHBOARD_SIDEBAR_LINKS = [
     icon: <HiOutlineStar />,
   },
   {
+    key: 'groups',
+    label: 'Grupos',
+    path: 'groups',
+    roles: ['USER', 'ADMIN'],
+    icon: <HiOutlineBookmark />,
+  },
+  {
     key: 'admin',
     label: 'Admin',
     path: 'admin',

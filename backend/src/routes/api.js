@@ -6,6 +6,7 @@ import * as authController from '../controllers/authController.js';
 import * as userController from '../controllers/userController.js';
 import * as drawController from '../controllers/drawController.js';
 import * as gameController from '../controllers/gameController.js';
+import * as groupController from '../controllers/groupController.js';
 
 const router = Router();
 
@@ -38,6 +39,12 @@ router.get('/users/:playerId/games/:id', auth.authentication, gameController.get
 router.post('/users/:playerId/games', auth.authentication, gameController.addGame);
 router.put('/users/:playerId/games/:id', auth.authentication, gameController.updateGame);
 router.delete('/users/:playerId/games/:id', auth.authentication, gameController.deleteGame);
+
+router.get('/groups', auth.authentication, groupController.getAllGroups);
+router.get('/groups/:id', auth.authentication, groupController.getGroup);
+router.post('/groups', auth.authentication, groupController.addGroup);
+router.put('/groups/:id', auth.authentication, groupController.updateGroup);
+router.delete('/groups/:id', auth.authentication, groupController.deleteGroup);
 
 export default router;
 
