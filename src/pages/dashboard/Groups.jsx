@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import formatDate from '@/helpers/formatDate';
 import { handleError } from '@/helpers/handleError';
-import translateRole from '@/helpers/translateRole';
 import DataTable, { sortingHeader } from '@/components/DataTable';
 import LoadingLabel from '@/components/LoadingLabel';
 import CreateGroupModal from '@/components/CreateGroupModal';
@@ -28,7 +27,7 @@ const Groups = () => {
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [isDeleteAlertOpen, setIsDeleteAlertOpen] = useState(false);
   const [groupUpdate, setGroupUpdate] = useState({});
-  const [userDelete, setUserDelete] = useState({});
+  const [groupDelete, setGroupDelete] = useState({});
 
   const navigate = useNavigate();
 
@@ -41,21 +40,21 @@ const Groups = () => {
     // staleTime: 1000 * 60 * 5,
   });
 
-  const deleteUserMutation = useMutation({
+  const deleteGroupMutation = useMutation({
     mutationFn: deleteGroup,
-    onSuccess: ({ deletedUser }) => {
-      queryClient.invalidateQueries(['users']);
+    onSuccess: ({ deletedGroup }) => {
+      queryClient.invalidateQueries(['groups']);
       toastAlert({
         type: 'success',
-        title: 'Usuário deletado com sucesso!',
-        message: `O usuário: ${deletedUser.firstName} ${deletedUser.lastName} (Email: ${deletedUser.email}) foi deletado do banco de dados.`,
+        title: 'Grupo deletado com sucesso!',
+        message: `O grupo: "${deletedGroup.name}" foi deletado do banco de dados.`,
       });
     },
     onError: (err) => {
       const { error } = handleError(err);
       toastAlert({
         type: 'danger',
-        title: 'Erro ao deletar usuário!',
+        title: 'Erro ao deletar grupo!',
         message: error,
       });
     },
@@ -149,33 +148,35 @@ const Groups = () => {
       <AlertDialog open={isDeleteAlertOpen} onOpenChange={setIsDeleteAlertOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Tem certeza que deseja deletar o usuário?</AlertDialogTitle>
+            <AlertDialogTitle>Tem certeza que deseja deletar o grupo?</AlertDialogTitle>
             <AlertDialogDescription>
-              Esta ação não pode ser desfeita. Isto vai deletar permanentemente o usuário
-              e remover seus dados.
+              Esta ação não pode ser desfeita. Isto vai deletar permanentemente o grupo e
+              remover seus dados.
             </AlertDialogDescription>
             <AlertDescription>
               <ul className="border border-neutral-300 rounded-md p-2">
                 <li className="flex">
-                  <div className="font-medium min-w-12">Nome:</div>
-                  <span>
-                    {userDelete.firstName} {userDelete.lastName}
-                  </span>
+                  <div className="font-medium min-w-20 me-1">Nome:</div>
+                  <span>{groupDelete.name}</span>
                 </li>
                 <li className="flex">
-                  <label className="font-medium min-w-12">Email:</label>
-                  <span>{userDelete.email}</span>
+                  <div className="font-medium min-w-20 me-1">Descrição:</div>
+                  <span>{groupDelete.description}</span>
                 </li>
                 <li className="flex">
-                  <label className="font-medium min-w-12">Perfil:</label>
-                  <span>{translateRole(userDelete.role)}</span>
+                  <div className="font-medium min-w-20 me-1">É bolão?</div>
+                  <span>{groupDelete.isPool ? 'Sim' : 'Não'}</span>
+                </li>
+                <li className="flex">
+                  <div className="font-medium min-w-20 me-1">Jogos:</div>
+                  <span>{groupDelete.games?.length}</span>
                 </li>
               </ul>
             </AlertDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancelar</AlertDialogCancel>
-            <AlertDialogAction onClick={() => deleteUserMutation.mutate(userDelete.id)}>
+            <AlertDialogAction onClick={() => deleteGroupMutation.mutate(groupDelete.id)}>
               Confirmar
             </AlertDialogAction>
           </AlertDialogFooter>
