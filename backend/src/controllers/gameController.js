@@ -64,6 +64,7 @@ export const addGame = async (req, res) => {
     contestNumber: z.number().positive(),
     drawDate: z.string().refine(validateDateFormat, { message: 'Data inválida' }),
     lotteryType: z.enum(['MEGA_SENA', 'QUINA', 'LOTOFACIL', 'TIMEMANIA', 'LOTOMANIA']),
+    groupId: z.string().optional(),
   });
 
   const body = addGameSchema.safeParse(req.body);
@@ -76,6 +77,7 @@ export const addGame = async (req, res) => {
     playerId,
     gameNumbers: body.data.gameNumbers,
     ticketPrice: body.data.ticketPrice,
+    groupId: body.data.groupId,
   };
 
   const drawData = {

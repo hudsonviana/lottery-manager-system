@@ -1,13 +1,14 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import formatDate from '@/helpers/formatDate';
+import { handleError } from '@/helpers/handleError';
 import translateRole from '@/helpers/translateRole';
 import DataTable, { sortingHeader } from '@/components/DataTable';
-import CreateUserModal from '@/components/CreateUserModal';
-import UpdateUserModal from '@/components/UpdateUserModal';
-import useUserApi from '@/hooks/useUserApi';
-import { useState } from 'react';
-import UserActions from '@/components/UserActions';
+import LoadingLabel from '@/components/LoadingLabel';
+import CreateGroupModal from '@/components/CreateGroupModal';
+import UpdateGroupModal from '@/components/UpdateGroupModal';
+import GroupActions from '@/components/GroupActions';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -19,30 +20,29 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { AlertDescription } from '@/components/ui/alert';
-import { handleError } from '@/helpers/handleError';
-import LoadingLabel from '@/components/LoadingLabel';
 import useToastAlert from '@/hooks/useToastAlert';
+import useGroupApi from '@/hooks/useGroupApi';
 
 const Groups = () => {
   const { toastAlert, dismiss } = useToastAlert();
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [isDeleteAlertOpen, setIsDeleteAlertOpen] = useState(false);
-  // const [userUpdate, setUserUpdate] = useState({});
-  // const [userDelete, setUserDelete] = useState({});
+  const [groupUpdate, setGroupUpdate] = useState({});
+  const [userDelete, setUserDelete] = useState({});
 
   const navigate = useNavigate();
 
   const queryClient = useQueryClient();
-  const { fetchUsers, deleteUser } = useUserApi();
+  const { fetchGroups, deleteGroup } = useGroupApi();
 
   const { isPending, isError, data, error } = useQuery({
-    queryKey: ['users'],
-    queryFn: fetchUsers,
-    staleTime: 1000 * 60 * 5,
+    queryKey: ['groups'],
+    queryFn: fetchGroups,
+    // staleTime: 1000 * 60 * 5,
   });
 
   const deleteUserMutation = useMutation({
-    mutationFn: deleteUser,
+    mutationFn: deleteGroup,
     onSuccess: ({ deletedUser }) => {
       queryClient.invalidateQueries(['users']);
       toastAlert({
@@ -71,15 +71,15 @@ const Groups = () => {
 
   if (isError) return <div>Ocorreu um erro: {error.message}</div>;
 
-  const handleUpdateUserAction = (user) => {
+  const handleUpdateGroupAction = (group) => {
     dismiss();
-    setUserUpdate(user);
+    setGroupUpdate(group);
     setIsUpdateModalOpen(true);
   };
 
-  const handleDeleteUserAction = (user) => {
+  const handleDeleteGroupAction = (group) => {
     dismiss();
-    setUserDelete(user);
+    setGroupDelete(group);
     setIsDeleteAlertOpen(true);
   };
 
@@ -87,16 +87,19 @@ const Groups = () => {
     {
       header: (info) => sortingHeader({ label: 'Nome', column: info.column }),
       accessorKey: 'name',
-      accessorFn: (row) => `${row.firstName} ${row.lastName}`,
     },
     {
-      header: (info) => sortingHeader({ label: 'Email', column: info.column }),
-      accessorKey: 'email',
+      header: (info) => sortingHeader({ label: 'Descrição', column: info.column }),
+      accessorKey: 'description',
     },
     {
-      header: (info) => sortingHeader({ label: 'Nível de acesso', column: info.column }),
-      accessorKey: 'role',
-      cell: (info) => translateRole(info.getValue()),
+      header: (info) => sortingHeader({ label: 'É bolão?', column: info.column }),
+      accessorKey: 'isPool',
+      cell: (info) => (info.getValue() ? 'Sim' : 'Não'),
+    },
+    {
+      header: (info) => sortingHeader({ label: 'Criador', column: info.column }),
+      accessorKey: 'creator.firstName',
     },
     {
       header: (info) => sortingHeader({ label: 'Cadastrado em', column: info.column }),
@@ -115,14 +118,14 @@ const Groups = () => {
     {
       id: 'actions',
       cell: ({ row }) => {
-        const user = row.original;
+        const group = row.original;
 
         return (
-          <UserActions
-            user={user}
-            onView={() => navigate(user.id)}
-            onUpdate={() => handleUpdateUserAction(user)}
-            onDelete={() => handleDeleteUserAction(user)}
+          <GroupActions
+            group={group}
+            onView={() => navigate(group.id)}
+            onUpdate={() => handleUpdateGroupAction(group)}
+            onDelete={() => handleDeleteGroupAction(group)}
           />
         );
       },
@@ -131,16 +134,15 @@ const Groups = () => {
 
   return (
     <div className="container mx-auto py-0">
-      <UpdateUserModal
+      <UpdateGroupModal
         isUpdateModalOpen={isUpdateModalOpen}
         setIsUpdateModalOpen={setIsUpdateModalOpen}
-        isOwnUser={false}
-        user={userUpdate}
+        group={groupUpdate}
       />
       <DataTable
         data={data}
         columns={columns}
-        createModal={<CreateUserModal />}
+        createModal={<CreateGroupModal />}
         defaultSorting={[{ id: 'createdAt', desc: true }]} // Add this line for default sorting
       />
 

@@ -28,11 +28,13 @@ export const getGroup = async (req, res) => {
 };
 
 export const addGroup = async (req, res) => {
+  const auth = req.auth;
+
   const addGroupSchema = z.object({
     name: z.string().max(50),
     description: z.string().optional(),
-    isPool: z.boolean().optional(),
-    creatorId: z.string(),
+    isPool: z.boolean(),
+    // creatorId: z.string(),
   });
 
   const body = addGroupSchema.safeParse(req.body);
@@ -41,7 +43,7 @@ export const addGroup = async (req, res) => {
     return res.status(400).json({ errors: body.error.errors });
   }
 
-  const newGroup = await groupService.store(body.data);
+  const newGroup = await groupService.store({ ...body.data, creatorId: auth.id });
 
   if (newGroup.error) {
     return res.status(500).json({ error: newGroup.error });
@@ -51,12 +53,21 @@ export const addGroup = async (req, res) => {
 };
 
 export const updateGroup = async (req, res) => {
+  const auth = req.auth;
   const { id } = req.params;
 
+  if (req.body.creator.id !== auth.id) {
+    return res
+      .status(403)
+      .json({ error: 'Não é permitido atualizar um grupo criado por outro usuário' });
+  }
+
   const updateGroupSchema = z.object({
-    name: z.string().max(50).optional(),
+    name: z
+      .string({ message: 'O nome do grupo é obrigatório' })
+      .max(50, { message: 'O nome do grupo deve ter no máximo 50 caracteres' }),
     description: z.string().optional(),
-    isPool: z.boolean().optional(),
+    isPool: z.boolean(),
   });
 
   const body = updateGroupSchema.safeParse(req.body);

@@ -6,7 +6,7 @@ import useGameApi from '@/hooks/useGameApi';
 import { useAuth } from '@/hooks/useAuth';
 import DataTable, { sortingHeader } from '@/components/DataTable';
 import formatDate from '@/helpers/formatDate';
-import translateGameResult from '@/helpers/translateGameResult';
+// import translateGameResult from '@/helpers/translateGameResult';
 import translateLotteryType from '@/helpers/translateLotteryType';
 import CreateGameModal from '@/components/CreateGameModal';
 import GameActions from '@/components/GameActions';
@@ -45,7 +45,7 @@ const Games = () => {
   const { isPending, isError, data, error } = useQuery({
     queryKey: ['games'],
     queryFn: () => fetchUserGames(auth.user.id),
-    staleTime: 1000 * 60,
+    // staleTime: 1000 * 60,
   });
 
   const deleteGameMutation = useMutation({

@@ -2,7 +2,7 @@ import 'dotenv/config';
 import { PrismaClient } from '@prisma/client';
 
 const prismaClientSingleton = () => {
-  console.log('Iniciando nova instância do PrismaClient...');
+  // console.log('Iniciando nova instância do PrismaClient...');
   return new PrismaClient();
 };
 

@@ -38,13 +38,12 @@ const Contests = () => {
   const { isPending, isError, data, error } = useQuery({
     queryKey: ['contests'],
     queryFn: () => fetchUserDraws(auth.user.id),
-    staleTime: 1000 * 60,
+    // staleTime: 1000 * 60,
   });
 
   const deleteDrawMutation = useMutation({
     mutationFn: (id) => deleteDraw(id),
     onSuccess: ({ deletedDraw }) => {
-      console.log(deletedDraw);
       queryClient.invalidateQueries(['contests']);
       queryClient.invalidateQueries(['games']);
       toastAlert({
@@ -164,8 +163,10 @@ const Contests = () => {
               Tem certeza que deseja deletar este concurso?
             </AlertDialogTitle>
             <AlertDialogDescription>
-              Se confirmada, esta ação não poderá ser desfeita. Todos os jogos associados
-              a este concurso também serão deletados.
+              Se confirmada, esta ação não poderá ser desfeita.
+              <div className="text-red-500">
+                OBS: Todos os jogos associados a este concurso também serão deletados.
+              </div>
             </AlertDialogDescription>
             <AlertDescription>
               <ul className="border border-neutral-300 rounded-md p-2">
@@ -178,19 +179,21 @@ const Contests = () => {
                   <span>{drawToDelete?.contestNumber}</span>
                 </li>
                 <li className="flex gap-1">
-                  <div className="font-medium min-w-12">Sorteio realizado em:</div>
+                  <div className="font-medium min-w-12">Data do sorteio:</div>
                   <span>{formatDate(drawToDelete?.drawDate, { withTime: false })}</span>
                 </li>
                 <li className="flex gap-1">
                   <div className="font-medium min-w-12">Dezenas sorteadas:</div>
                   <span>
-                    {<DrawnNumbersTableRow drawnNumbers={drawToDelete?.drawnNumbers} />}
+                    {drawToDelete?.drawnNumbers?.length > 0 ? (
+                      <DrawnNumbersTableRow drawnNumbers={drawToDelete?.drawnNumbers} />
+                    ) : (
+                      '[sorteio pendente]'
+                    )}
                   </span>
                 </li>
                 <li className="flex gap-1">
-                  <div className="font-medium min-w-12">
-                    Quantidade de jogos associados:
-                  </div>
+                  <div className="font-medium min-w-12">Jogos associados:</div>
                   <span>{drawToDelete?.countGames}</span>
                 </li>
               </ul>

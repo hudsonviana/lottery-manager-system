@@ -11,11 +11,11 @@ import apiRoutes from './routes/api.js';
 
 const isProduction = process.env.NODE_ENV === 'production';
 
-// const clientOrigin = `http://localhost:${isProduction ? 3000 : 4173}`; //is reverted //npm run preview
-const clientOrigin = `http://localhost:${isProduction ? 4173 : 3000}`; //correct  //npm run client 
+// const clientServer = isProduction ? 4173 : 3000; //npm run preview
+const clientServer = 3000; // npm run client
 
 const corsOptions = {
-  origin: clientOrigin,
+  origin: `http://localhost:${clientServer}`,
   credentials: true,
 };
 

@@ -2,7 +2,20 @@ import prisma from '../utils/prisma.js';
 
 export const findAll = async () => {
   try {
-    return await prisma.group.findMany();
+    return await prisma.group.findMany({
+      include: {
+        creator: {
+          omit: {
+            password: true,
+            refreshToken: true,
+          },
+        },
+        games: true,
+      },
+      omit: {
+        creatorId: true,
+      },
+    });
   } catch (error) {
     return { error: 'Ocorreu um erro ao consultar os grupos' };
   }
