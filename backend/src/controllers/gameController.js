@@ -3,7 +3,7 @@ import { validateDateFormat, parseDate } from '../utils/drawHelpers.js';
 import { z } from 'zod';
 
 export const getAllGames = async (req, res) => {
-  const auth = req.auth;
+  // const auth = req.auth;
 
   const games = await gameService.findAll();
 

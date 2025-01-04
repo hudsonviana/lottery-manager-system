@@ -55,10 +55,10 @@ export const update = async (data, id) => {
   }
 };
 
-export const destroy = async (id, creatorId) => {
+export const destroy = async (id) => {
   try {
     return await prisma.group.delete({
-      where: { id: id, creatorId: creatorId },
+      where: { id: id },
     });
   } catch (error) {
     return { error: 'Ocorreu um erro ao deletar o grupo' };
