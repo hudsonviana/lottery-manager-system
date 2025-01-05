@@ -102,17 +102,10 @@ export const deleteGroup = async (req, res) => {
       .json({ error: 'Não é permitido deletar um grupo criado por outro usuário' });
   }
 
-  const deletedGroup = await groupService.destroy(id, auth.id);
+  const [_, deletedGroup] = await groupService.destroy(id);
 
   if (deletedGroup.error) {
     return res.status(500).json({ error: deletedGroup.error });
-  }
-
-  // atualizar a tabela jogos inserindo null no groupId do grupo deletado
-  const deleteGroupIdInGames = await gameService.updateGames(deletedGroup.id);
-
-  if (deleteGroupIdInGames.error) {
-    return res.status(500).json({ error: deleteGroupIdInGames.error });
   }
 
   res.json({ deletedGroup });

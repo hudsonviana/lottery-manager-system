@@ -69,21 +69,6 @@ export const update = async (data, id) => {
   }
 };
 
-export const updateGames = async (groupId) => {
-  try {
-    return await prisma.game.updateMany({
-      where: {
-        groupId,
-      },
-      data: {
-        groupId: null,
-      },
-    });
-  } catch (error) {
-    return { error: 'Ocorreu um erro ao atualizar os jogos' };
-  }
-};
-
 export const destroy = async (id) => {
   try {
     return await prisma.game.delete({ where: { id } });

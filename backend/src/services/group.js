@@ -55,12 +55,18 @@ export const update = async (data, id) => {
   }
 };
 
-export const destroy = async (id) => {
+export const destroy = async (groupId) => {
   try {
-    return await prisma.group.delete({
-      where: { id: id },
-    });
+    return await prisma.$transaction([
+      prisma.game.updateMany({
+        where: { groupId },
+        data: { groupId: null },
+      }),
+      prisma.group.delete({
+        where: { id: groupId },
+      }),
+    ]);
   } catch (error) {
-    return { error: 'Ocorreu um erro ao deletar o grupo' };
+    return [{}, { error: 'Ocorreu um erro ao deletar o grupo' }];
   }
 };
