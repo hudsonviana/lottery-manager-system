@@ -1,17 +1,18 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import LoadingLabel from '@/components/LoadingLabel';
+import DataTable, { sortingHeader } from '@/components/DataTable';
+import DrawActions from '@/components/DrawActions';
+import DrawnNumbersTableRow from '@/components/DrawnNumbersTableRow';
 import { useAuth } from '@/hooks/useAuth';
 import useUserApi from '@/hooks/useUserApi';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import DataTable, { sortingHeader } from '@/components/DataTable';
-import formatDate from '@/helpers/formatDate';
-import translateDrawStatus from '@/helpers/translateDrawStatus';
-import DrawActions from '@/components/DrawActions';
-import translateLotteryType from '@/helpers/translateLotteryType';
-import { useNavigate } from 'react-router-dom';
-import DrawnNumbersTableRow from '@/components/DrawnNumbersTableRow';
 import useDrawApi from '@/hooks/useDrawApi';
-import { BsQuestionCircle } from 'react-icons/bs';
+import useToastAlert from '@/hooks/useToastAlert';
+import formatDate from '@/helpers/formatDate';
+import { handleError } from '@/helpers/handleError';
+import translateDrawStatus from '@/helpers/translateDrawStatus';
+import translateLotteryType from '@/helpers/translateLotteryType';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -23,7 +24,7 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { AlertDescription } from '@/components/ui/alert';
-import useToastAlert from '@/hooks/useToastAlert';
+import { BsQuestionCircle } from 'react-icons/bs';
 
 const Contests = () => {
   const navigate = useNavigate();
@@ -43,7 +44,7 @@ const Contests = () => {
 
   const deleteDrawMutation = useMutation({
     mutationFn: (id) => deleteDraw(id),
-    onSuccess: ({ deletedDraw }) => {
+    onSuccess: ({ deletedDraw, totalDeletedGames }) => {
       queryClient.invalidateQueries(['contests']);
       queryClient.invalidateQueries(['games']);
       toastAlert({
@@ -51,7 +52,11 @@ const Contests = () => {
         title: 'Concurso deletado com sucesso!',
         message: `O sorteio da loteria ${translateLotteryType(
           deletedDraw.lotteryType
-        )} (Concurso: ${deletedDraw.contestNumber}) foi deletado do banco de dados.`,
+        )} (Concurso: ${
+          deletedDraw.contestNumber
+        }) foi deletado do banco de dados, juntamente com ${
+          totalDeletedGames.count
+        } jogo(s) associado(s).`,
       });
     },
     onError: (err) => {

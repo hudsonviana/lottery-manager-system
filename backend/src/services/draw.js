@@ -73,9 +73,24 @@ export const update = async (data, { id, contestNumber }) => {
   }
 };
 
-export const destroy = async ({ id, contestNumber }) => {
+export const destroy = async (drawId, playerId) => {
   try {
-    return await prisma.draw.delete({ where: { id, contestNumber } });
+    return await prisma.$transaction(async (tx) => {
+      const totalDeletedGames = await tx.game.deleteMany({
+        where: { drawId, playerId },
+      });
+
+      const totalGamesOfDraw = await tx.game.count({
+        where: { drawId },
+      });
+
+      const deletedDraw =
+        totalGamesOfDraw === 0
+          ? await tx.draw.delete({ where: { id: drawId } })
+          : await tx.draw.findUnique({ where: { id: drawId } });
+
+      return { deletedDraw, totalDeletedGames };
+    });
   } catch (error) {
     return { error: 'Ocorreu um erro ao deletar o sorteio' };
   }

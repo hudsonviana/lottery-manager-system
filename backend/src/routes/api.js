@@ -32,7 +32,7 @@ router.get('/draws/:identifier', auth.authentication, drawController.getDraw);
 router.get('/draws/:identifier/games', admin.authentication, drawController.getDrawGames);
 router.post('/draws', auth.authentication, drawController.addDraw);
 router.put('/draws/:identifier', auth.authentication, drawController.updateDraw);
-router.delete('/draws/:identifier', auth.authentication, drawController.deleteDraw);
+router.delete('/draws/:id', auth.authentication, drawController.deleteDraw);
 
 router.get('/games', admin.authentication, gameController.getAllGames);
 router.get('/users/:playerId/games/:id', auth.authentication, gameController.getGame);

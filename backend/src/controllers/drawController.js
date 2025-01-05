@@ -171,19 +171,14 @@ export const updateDraw = async (req, res) => {
 };
 
 export const deleteDraw = async (req, res) => {
-  // const auth = req.auth;
+  const auth = req.auth;
+  const { id } = req.params;
 
-  const { identifier } = req.params;
-
-  const searchParams = isUUID(identifier)
-    ? { id: identifier }
-    : { contestNumber: parseInt(identifier) };
-
-  const deletedDraw = await drawService.destroy(searchParams);
+  const deletedDraw = await drawService.destroy(id, auth.id);
 
   if (deletedDraw.error) {
     return res.status(500).json({ error: deletedDraw.error });
   }
 
-  res.json({ deletedDraw });
+  res.json(deletedDraw);
 };

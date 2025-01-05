@@ -31,7 +31,7 @@ model Game {
   result      GameResult @default(PENDING)
   player      User       @relation(fields: [playerId], references: [id], onDelete: Cascade)
   playerId    String
-  draw        Draw       @relation(fields: [drawId], references: [id], onDelete: Cascade)
+  draw        Draw       @relation(fields: [drawId], references: [id])
   drawId      String
   group       Group?     @relation(fields: [groupId], references: [id])
   groupId     String?

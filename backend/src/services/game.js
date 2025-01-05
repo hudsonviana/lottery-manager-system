@@ -64,7 +64,10 @@ export const store = async ({ gameData, drawData }) => {
         },
       });
 
-      const newGame = await tx.game.create({ data: { ...gameData, drawId: draw.id } });
+      const newGame = await tx.game.create({
+        data: { ...gameData, drawId: draw.id },
+      });
+
       return newGame;
     });
   } catch (error) {
