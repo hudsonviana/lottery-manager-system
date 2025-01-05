@@ -1,5 +1,4 @@
 import prisma from '../utils/prisma.js';
-import * as drawService from '../services/draw.js';
 
 export const findAll = async () => {
   try {
@@ -52,11 +51,24 @@ export const findOne = async ({ id, playerId }) => {
 
 export const store = async ({ gameData, drawData }) => {
   try {
-    const draw = await drawService.store(drawData);
-    const drawId = draw.existingDraw ? draw.existingDraw.id : draw.id;
+    return await prisma.$transaction(async (tx) => {
+      const draw = await tx.draw.upsert({
+        where: {
+          contestNumber: drawData.contestNumber,
+        },
+        update: {},
+        create: {
+          contestNumber: drawData.contestNumber,
+          drawDate: drawData.drawDate,
+          lotteryType: drawData.lotteryType,
+        },
+      });
 
-    return await prisma.game.create({ data: { ...gameData, drawId } });
+      const newGame = await tx.game.create({ data: { ...gameData, drawId: draw.id } });
+      return newGame;
+    });
   } catch (error) {
+    console.error(error);
     return { error: 'Ocorreu um erro ao cadastrar o jogo' };
   }
 };
