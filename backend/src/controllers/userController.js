@@ -58,6 +58,7 @@ export const getUserGames = async (req, res) => {
   res.json({ userGames });
 };
 
+// Descartar
 export const getUserDraws = async (req, res) => {
   const auth = req.auth;
   const { id } = req.params;

@@ -59,6 +59,7 @@ export const findGamesByUser = async ({ id, email }) => {
   }
 };
 
+// Descartar
 export const findDrawsByUser = async ({ id, email }) => {
   try {
     return await prisma.user.findUnique({

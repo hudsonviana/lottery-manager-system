@@ -8,6 +8,40 @@ export const findAll = async () => {
   }
 };
 
+export const findDrawsByUser = async (playerId) => {
+  try {
+    return await prisma.draw.findMany({
+      where: {
+        games: {
+          some: {
+            playerId,
+          },
+        },
+      },
+      include: {
+        _count: {
+          select: {
+            games: {
+              where: {
+                playerId,
+              },
+            },
+          },
+        },
+      },
+      // include: {
+      //   games: {
+      //     where: {
+      //       playerId,
+      //     },
+      //   },
+      // },
+    });
+  } catch (error) {
+    return { error: 'Ocorreu um erro ao consultar os sorteios do usuário' };
+  }
+};
+
 export const findOne = async ({ id, contestNumber }) => {
   try {
     return await prisma.draw.findUnique({
@@ -51,14 +85,6 @@ export const findGamesByDraw = async ({ id, contestNumber }) => {
 
 export const store = async (data) => {
   try {
-    const existingDraw = await prisma.draw.findUnique({
-      where: { contestNumber: data.contestNumber },
-    });
-
-    if (existingDraw) {
-      return { error: 'Sorteio já cadastrado no sistema', existingDraw };
-    }
-
     return await prisma.draw.create({ data: data });
   } catch (error) {
     return { error: 'Ocorreu um erro ao cadastrar o sorteio' };
@@ -67,7 +93,10 @@ export const store = async (data) => {
 
 export const update = async (data, { id, contestNumber }) => {
   try {
-    return await prisma.draw.update({ data: data, where: { id, contestNumber } });
+    return await prisma.draw.update({
+      data: data,
+      where: { id, contestNumber },
+    });
   } catch (error) {
     return { error: 'Ocorreu um erro ao atualizar o sorteio' };
   }

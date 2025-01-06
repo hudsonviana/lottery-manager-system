@@ -34,6 +34,27 @@ export const getDraw = async (req, res) => {
   res.json({ draw });
 };
 
+export const getAllDrawsOfUser = async (req, res) => {
+  const auth = req.auth;
+  const { playerId } = req.params;
+
+  if (auth.id !== playerId) {
+    return res.status(403).json({ error: 'Acesso negado' });
+  }
+
+  const drawsOfUser = await drawService.findDrawsByUser(playerId);
+
+  if (!drawsOfUser) {
+    return res.status(404).json({ error: 'Sorteios não encontrados' });
+  }
+
+  if (drawsOfUser?.error) {
+    return res.status(500).json({ error: drawsOfUser.error });
+  }
+
+  res.json({ drawsOfUser });
+};
+
 export const getDrawGames = async (req, res) => {
   const auth = req.auth;
   const { identifier } = req.params;
