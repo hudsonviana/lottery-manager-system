@@ -29,13 +29,6 @@ export const findDrawsByUser = async (playerId) => {
           },
         },
       },
-      // include: {
-      //   games: {
-      //     where: {
-      //       playerId,
-      //     },
-      //   },
-      // },
     });
   } catch (error) {
     return { error: 'Ocorreu um erro ao consultar os sorteios do usuário' };

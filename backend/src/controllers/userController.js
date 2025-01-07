@@ -58,39 +58,6 @@ export const getUserGames = async (req, res) => {
   res.json({ userGames });
 };
 
-// Descartar
-export const getUserDraws = async (req, res) => {
-  const auth = req.auth;
-  const { id } = req.params;
-
-  if (auth.id !== id) {
-    return res.status(403).json({ error: 'Acesso negado' });
-  }
-
-  const userWithDraws = await userService.findDrawsByUser({ id });
-
-  if (!userWithDraws) {
-    return res.status(404).json({ error: 'Sorteios não encontrados' });
-  }
-
-  if (userWithDraws?.error) {
-    return res.status(500).json({ error: userWithDraws.error });
-  }
-
-  const drawCounts = userWithDraws.games.reduce((acc, { draw }) => {
-    acc[draw.id] = (acc[draw.id] || 0) + 1;
-    return acc;
-  }, {});
-
-  const userDraws = Array.from(
-    new Map(
-      userWithDraws.games.map(({ draw }) => [draw.id, { ...draw, countGames: drawCounts[draw.id] }])
-    ).values()
-  );
-
-  res.json({ userDraws });
-};
-
 export const getUserDrawGames = async (req, res) => {
   const auth = req.auth;
   const { id, drawId } = req.params;

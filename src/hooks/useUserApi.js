@@ -39,11 +39,6 @@ const useUserApi = () => {
     return response.data;
   };
 
-  const fetchUserDraws = async (id) => {
-    const response = await authApiClient.get(`/users/${id}/draws`);
-    return response.data;
-  };
-
   const changePassword = async (id, passData) => {
     const response = await authApiClient.post(`/auth/${id}/changepassword`, passData);
     return response.data;
@@ -71,7 +66,6 @@ const useUserApi = () => {
     updateUser,
     deleteUser,
     fetchUserGames,
-    fetchUserDraws,
     fetchUserDrawGames,
     changePassword,
     registerUser,

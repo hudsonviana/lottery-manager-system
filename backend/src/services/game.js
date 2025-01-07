@@ -53,25 +53,16 @@ export const store = async ({ gameData, drawData }) => {
   try {
     return await prisma.$transaction(async (tx) => {
       const draw = await tx.draw.upsert({
-        where: {
-          contestNumber: drawData.contestNumber,
-        },
+        where: { contestNumber: drawData.contestNumber },
         update: {},
-        create: {
-          contestNumber: drawData.contestNumber,
-          drawDate: drawData.drawDate,
-          lotteryType: drawData.lotteryType,
-        },
+        create: { ...drawData },
       });
 
-      const newGame = await tx.game.create({
+      return await tx.game.create({
         data: { ...gameData, drawId: draw.id },
       });
-
-      return newGame;
     });
   } catch (error) {
-    console.error(error);
     return { error: 'Ocorreu um erro ao cadastrar o jogo' };
   }
 };

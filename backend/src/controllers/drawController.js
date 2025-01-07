@@ -124,22 +124,16 @@ export const addDraw = async (req, res) => {
 };
 
 export const updateDraw = async (req, res) => {
-  // const auth = req.auth;
-
   const { identifier } = req.params;
 
   const searchParams = isUUID(identifier)
     ? { id: identifier }
     : { contestNumber: parseInt(identifier) };
 
-  // if (auth.role !== 'ADMIN' && auth.id !== id) {
-  //   return res.status(403).json({ error: 'Acesso negado' });
-  // }
-
   if (req.body.exceptionMessage) {
     return res
       .status(404)
-      .json({ error: `${req.body.message} Não foi possível obter os dados do sorteio` });
+      .json({ error: `${req.body.message}. Não foi possível obter os dados do sorteio` });
   }
 
   const prizeSchema = z.object({

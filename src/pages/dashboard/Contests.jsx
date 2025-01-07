@@ -6,7 +6,6 @@ import DataTable, { sortingHeader } from '@/components/DataTable';
 import DrawActions from '@/components/DrawActions';
 import DrawnNumbersTableRow from '@/components/DrawnNumbersTableRow';
 import { useAuth } from '@/hooks/useAuth';
-import useUserApi from '@/hooks/useUserApi';
 import useDrawApi from '@/hooks/useDrawApi';
 import useToastAlert from '@/hooks/useToastAlert';
 import formatDate from '@/helpers/formatDate';
@@ -29,8 +28,7 @@ import { BsQuestionCircle } from 'react-icons/bs';
 const Contests = () => {
   const navigate = useNavigate();
   const { auth } = useAuth();
-  const { fetchUserDraws } = useUserApi();
-  const { deleteDraw } = useDrawApi();
+  const { fetchDrawsOfUser, deleteDraw } = useDrawApi();
   const [drawToDelete, setDrawToDelete] = useState({});
   const [isDeleteAlertOpen, setIsDeleteAlertOpen] = useState(false);
   const queryClient = useQueryClient();
@@ -38,7 +36,7 @@ const Contests = () => {
 
   const { isPending, isError, data, error } = useQuery({
     queryKey: ['contests'],
-    queryFn: () => fetchUserDraws(auth.user.id),
+    queryFn: () => fetchDrawsOfUser(auth.user.id),
     // staleTime: 1000 * 60,
   });
 
@@ -119,7 +117,7 @@ const Contests = () => {
     },
     {
       header: (info) => sortingHeader({ label: 'Qtd jogos', column: info.column }),
-      accessorKey: 'countGames',
+      accessorKey: '_count.games',
     },
     {
       header: (info) => sortingHeader({ label: 'Resultado', column: info.column }),
@@ -156,7 +154,7 @@ const Contests = () => {
   return (
     <div className="container mx-auto py-0">
       <DataTable
-        data={data?.userDraws}
+        data={data?.drawsOfUser}
         columns={columns}
         defaultSorting={[{ id: 'contestNumber', desc: true }]}
       />
