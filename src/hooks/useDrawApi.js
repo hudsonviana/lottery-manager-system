@@ -24,6 +24,11 @@ const useDrawApi = () => {
     return response.data;
   };
 
+  const fetchDrawWithGamesOfUser = async (id, playerId) => {
+    const response = await authApiClient.get(`/draws/${id}/users/${playerId}/games`);
+    return response.data;
+  };
+
   const updateDraw = async ({ contestNumber, drawData }) => {
     const response = await authApiClient.put(`/draws/${contestNumber}`, drawData);
     return response.data;
@@ -34,7 +39,13 @@ const useDrawApi = () => {
     return response.data;
   };
 
-  return { fetchDrawResult, fetchDrawsOfUser, updateDraw, deleteDraw };
+  return {
+    fetchDrawResult,
+    fetchDrawWithGamesOfUser,
+    fetchDrawsOfUser,
+    updateDraw,
+    deleteDraw,
+  };
 };
 
 export default useDrawApi;

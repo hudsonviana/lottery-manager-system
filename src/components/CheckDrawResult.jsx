@@ -1,13 +1,14 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from './ui/button';
-import useDrawApi from '@/hooks/useDrawApi';
 import LoadingLabel from './LoadingLabel';
-import useToastAlert from '@/hooks/useToastAlert';
 import { handleError } from '@/helpers/handleError';
+import translateLotteryType from '@/helpers/translateLotteryType';
+import useToastAlert from '@/hooks/useToastAlert';
+import useDrawApi from '@/hooks/useDrawApi';
 import { AiFillCheckCircle } from 'react-icons/ai';
 
-const CheckDrawResult = ({ game, isForAction = false }) => {
-  const { lotteryType, contestNumber } = game.draw;
+const CheckDrawResult = ({ draw, isForAction = false }) => {
+  const { id, lotteryType, contestNumber } = draw;
   const { fetchDrawResult, updateDraw } = useDrawApi();
   const { toastAlert } = useToastAlert();
   const queryClient = useQueryClient();
@@ -15,7 +16,7 @@ const CheckDrawResult = ({ game, isForAction = false }) => {
   const updateDrawMutation = useMutation({
     mutationFn: ({ contestNumber, drawData }) => updateDraw({ contestNumber, drawData }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['contests', game.draw.id, 'games'] });
+      queryClient.invalidateQueries({ queryKey: ['contests', id, 'games'] });
       queryClient.invalidateQueries({ queryKey: ['contests'] });
       toastAlert({
         type: 'success',
@@ -56,9 +57,11 @@ const CheckDrawResult = ({ game, isForAction = false }) => {
 
       if (data.code === 'ERR_BAD_RESPONSE') {
         return toastAlert({
-          type: 'danger',
-          title: 'Erro ao consultar o sorteio',
-          message: 'Concurso indisponível.',
+          type: 'warning',
+          title: 'Resultado indisponível',
+          message: `O resultado do sorteio da ${translateLotteryType(
+            lotteryType
+          )} - concurso ${contestNumber} - não está disponível. Tente mais tarde.`,
         });
       }
 

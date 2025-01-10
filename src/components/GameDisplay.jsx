@@ -73,10 +73,7 @@ const DrawResult = ({ hits }) => {
   );
 };
 
-const GameDisplay = ({ gameData }) => {
-  const gameNumbers = gameData.gameNumbers;
-  const drawnNumbers = gameData.draw.drawnNumbers;
-
+const GameDisplay = ({ gameNumbers, drawnNumbers }) => {
   return (
     <div className="p-2 my-2 border border-slate-300 rounded-md mt-0">
       <div className="flex flex-col gap-3">

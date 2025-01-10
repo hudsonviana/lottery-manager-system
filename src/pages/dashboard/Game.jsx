@@ -16,7 +16,7 @@ const Game = () => {
   const { isPending, isError, data, error } = useQuery({
     queryKey: ['games', id],
     queryFn: () => fetchGame(auth.user.id, id),
-    staleTime: 1000 * 60 * 5,
+    // staleTime: 1000 * 60 * 5,
   });
 
   if (isPending) {
@@ -43,7 +43,10 @@ const Game = () => {
             Aposta cadastrada em: <span>{formatDate(game.createdAt)}</span>
           </div>
           <div className="w-fit">
-            <GameDisplay gameData={game} />
+            <GameDisplay
+              gameNumbers={game.gameNumbers}
+              drawnNumbers={game.draw.drawnNumbers}
+            />
             <div className="mt-4">
               <ul>
                 {/* <li>

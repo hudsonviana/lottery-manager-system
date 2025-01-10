@@ -24,7 +24,7 @@ const DrawActions = ({ draw, onView, onViewGames, onDelete }) => {
         {draw.status === 'PENDING' ? (
           <>
             <DropdownMenuItem>
-              <CheckDrawResult game={{ draw }} isForAction={true} />
+              <CheckDrawResult draw={draw} isForAction={true} />
             </DropdownMenuItem>
             <DropdownMenuSeparator />
           </>
