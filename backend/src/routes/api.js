@@ -28,6 +28,7 @@ router.delete('/users/:id', admin.authentication, userController.deleteUser);
 
 router.get('/draws', auth.authentication, drawController.getAllDraws);
 router.get('/draws/users/:playerId', auth.authentication, drawController.getAllDrawsOfUser);
+router.get('/draws/:id/users/:playerId/games', drawController.getAllGamesOfDrawAndUser);
 router.get('/draws/:identifier', auth.authentication, drawController.getDraw);
 router.get('/draws/:identifier/games', admin.authentication, drawController.getDrawGames);
 router.post('/draws', auth.authentication, drawController.addDraw);

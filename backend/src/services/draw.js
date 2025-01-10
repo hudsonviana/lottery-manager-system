@@ -35,6 +35,31 @@ export const findDrawsByUser = async (playerId) => {
   }
 };
 
+export const findGamesByDrawAndUser = async (id, playerId) => {
+  try {
+    return await prisma.draw.findUnique({
+      where: { id },
+      include: {
+        games: {
+          where: { playerId },
+          select: {
+            gameNumbers: true,
+            createdAt: true,
+            group: {
+              select: {
+                name: true,
+              },
+            },
+          },
+          orderBy: [{ group: { name: 'asc' } }, { createdAt: 'asc' }],
+        },
+      },
+    });
+  } catch (error) {
+    return { error: 'Ocorreu um erro ao consultar os jogos refente ao sorteio especificado' };
+  }
+};
+
 export const findOne = async ({ id, contestNumber }) => {
   try {
     return await prisma.draw.findUnique({

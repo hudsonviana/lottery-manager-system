@@ -55,6 +55,29 @@ export const getAllDrawsOfUser = async (req, res) => {
   res.json({ drawsOfUser });
 };
 
+export const getAllGamesOfDrawAndUser = async (req, res) => {
+  const auth = req.auth;
+  const { id, playerId } = req.params;
+
+  if (auth.id !== playerId) {
+    return res.status(403).json({ error: 'Acesso negado' });
+  }
+
+  const gamesOfDrawAndUser = await drawService.findGamesByDrawAndUser(id, playerId);
+
+  if (!gamesOfDrawAndUser) {
+    return res
+      .status(404)
+      .json({ error: 'Jogos do usuário não encontrados para o sorteio especificado' });
+  }
+
+  if (gamesOfDrawAndUser?.error) {
+    return res.status(500).json({ error: gamesOfDrawAndUser.error });
+  }
+
+  res.json({ gamesOfDrawAndUser });
+};
+
 export const getDrawGames = async (req, res) => {
   const auth = req.auth;
   const { identifier } = req.params;
