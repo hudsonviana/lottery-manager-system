@@ -56,11 +56,12 @@ model Draw {
 
 model Group {
   id          String   @id @default(uuid())
-  name        String   @unique @db.VarChar(50)
+  name        String   @unique @db.VarChar(30)
   description String?  @db.VarChar(255)
   isPool      Boolean? @default(false)
-  creatorId   String
   creator     User     @relation(fields: [creatorId], references: [id])
+  creatorId   String
+  theme       String?  @default("gray")
   games       Game[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt

@@ -5,6 +5,7 @@ const useGroupApi = () => {
 
   const fetchGroups = async () => {
     const response = await authApiClient.get('/groups');
+    console.log(response);
     return response.data.groups;
   };
 

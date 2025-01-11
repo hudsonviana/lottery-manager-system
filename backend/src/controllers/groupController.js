@@ -1,5 +1,4 @@
 import * as groupService from '../services/group.js';
-import * as gameService from '../services/game.js';
 import { z } from 'zod';
 
 export const getAllGroups = async (req, res) => {
@@ -35,7 +34,7 @@ export const addGroup = async (req, res) => {
     name: z.string().max(50),
     description: z.string().optional(),
     isPool: z.boolean(),
-    // creatorId: z.string(),
+    theme: z.enum(['gray', 'blue', 'green', 'red', 'yellow', 'purple']),
   });
 
   const body = addGroupSchema.safeParse(req.body);
@@ -69,6 +68,7 @@ export const updateGroup = async (req, res) => {
       .max(50, { message: 'O nome do grupo deve ter no máximo 50 caracteres' }),
     description: z.string().optional(),
     isPool: z.boolean(),
+    theme: z.enum(['gray', 'blue', 'green', 'red', 'yellow', 'purple']).optional(),
   });
 
   const body = updateGroupSchema.safeParse(req.body);

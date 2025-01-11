@@ -36,14 +36,13 @@ const ContestGames = () => {
 
   if (isError) return <div>Ocorreu um erro: {error.message}</div>;
 
-  // console.log(JSON.stringify(draw))
   const { games, ...drawData } = draw;
 
   return (
     <div className="container mx-auto py-0 w-100">
       <div className="flex gap-5 bg-white border rounded-md p-6 h-[calc(100vh-6rem)]">
-        {/* Jogos */}
-        <div id="games" className="overflow-auto w-full">
+        {/* Jogos realizados */}
+        <div className="overflow-auto w-full">
           <h1 className="font-semibold mb-2  bg-white z-10 sticky top-0">
             Relação de jogos da {translateLotteryType(draw.lotteryType)} - Concurso:{' '}
             {draw.contestNumber}
@@ -52,9 +51,16 @@ const ContestGames = () => {
           {draw.games.map((game, index) => (
             <div key={game.id} className="flex mb-1">
               <div>
-                <span className="text-sm mb-0 font-semibold text-gray-500 italic">
-                  Jogo {index + 1} - cadastrado em: {formatDate(game.createdAt)}
-                </span>
+                <div className="">
+                  {game.group?.name && (
+                    <span className="text-xs text-purple-700 font-medium me-2 px-1 bg-purple-200 border border-purple-400 rounded">
+                      {game.group?.name}
+                    </span>
+                  )}
+                  <span className="text-sm mb-0 font-semibold text-gray-500 italic">
+                    Jogo {index + 1} - cadastrado em: {formatDate(game.createdAt)}
+                  </span>
+                </div>
                 <GameDisplay
                   gameNumbers={game.gameNumbers}
                   drawnNumbers={draw.drawnNumbers}
@@ -64,11 +70,8 @@ const ContestGames = () => {
           ))}
         </div>
 
-        {/* Resultado */}
-        <div
-          id="results"
-          className="w-9/12 h-auto sticky top-0 ps-5 border-l-2 border-l-gray-300"
-        >
+        {/* Resultado da conferência */}
+        <div className="w-9/12 h-auto sticky top-0 ps-5 border-l-2 border-l-gray-300">
           <h1 className="font-semibold mb-2">
             Resultado do sorteio da {translateLotteryType(draw.lotteryType)} - Concurso:{' '}
             {draw.contestNumber}
