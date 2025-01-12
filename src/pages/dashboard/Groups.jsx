@@ -176,7 +176,7 @@ const Groups = () => {
                 </li>
                 <li className="flex">
                   <div className="font-medium min-w-20 me-1">Jogos:</div>
-                  <span>{groupDelete.games?.length}</span>
+                  <span>{groupDelete._count?.games}</span>
                 </li>
               </ul>
             </AlertDescription>

@@ -14,7 +14,7 @@ import { cn } from '@/lib/utils';
 import { THEME_STYLES } from '@/consts/ThemeStyles';
 
 const SelectInput = ({
-  options,
+  options = [],
   value,
   onChange,
   placeholder = 'Select an option...',

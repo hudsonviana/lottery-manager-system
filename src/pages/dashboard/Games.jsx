@@ -1,17 +1,12 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import useUserApi from '@/hooks/useUserApi';
-import useGameApi from '@/hooks/useGameApi';
-import { useAuth } from '@/hooks/useAuth';
 import DataTable, { sortingHeader } from '@/components/DataTable';
-import formatDate from '@/helpers/formatDate';
-// import translateGameResult from '@/helpers/translateGameResult';
-import translateLotteryType from '@/helpers/translateLotteryType';
+import LoadingLabel from '@/components/LoadingLabel';
+import UpdateGameModal from '@/components/UpdateGameModal';
 import CreateGameModal from '@/components/CreateGameModal';
 import GameActions from '@/components/GameActions';
 import GameNumbersTableRow from '@/components/GameNumbersTableRow';
-
 import {
   AlertDialog,
   AlertDialogAction,
@@ -23,10 +18,14 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { AlertDescription } from '@/components/ui/alert';
-import { handleError } from '@/helpers/handleError';
-import LoadingLabel from '@/components/LoadingLabel';
-import UpdateGameModal from '@/components/UpdateGameModal';
+import { useAuth } from '@/hooks/useAuth';
 import useToastAlert from '@/hooks/useToastAlert';
+import useUserApi from '@/hooks/useUserApi';
+import useGameApi from '@/hooks/useGameApi';
+import useGroupApi from '@/hooks/useGroupApi';
+import formatDate from '@/helpers/formatDate';
+import translateLotteryType from '@/helpers/translateLotteryType';
+import { handleError } from '@/helpers/handleError';
 
 const Games = () => {
   const { toastAlert, dismiss } = useToastAlert();
@@ -39,6 +38,7 @@ const Games = () => {
 
   const { fetchUserGames } = useUserApi();
   const { deleteGame } = useGameApi();
+  const { fetchGroups } = useGroupApi();
 
   const queryClient = useQueryClient();
 
@@ -72,6 +72,21 @@ const Games = () => {
       });
     },
   });
+
+  const groups = useQuery({
+    queryKey: ['groupOptions'],
+    queryFn: fetchGroups,
+    // staleTime: 1000 * 60 * 1,
+  });
+
+  const groupOptions = groups.isPending
+    ? [{ value: null, label: 'Aguarde...' }]
+    : groups.isError
+    ? [{ value: null, label: 'Erro: grupos inválidos' }]
+    : groups.data.map((group) => ({
+        value: group.id,
+        label: group.name,
+      }));
 
   if (isPending) {
     return (
@@ -142,11 +157,6 @@ const Games = () => {
       accessorKey: 'createdAt',
       cell: (info) => formatDate(info.getValue()),
     },
-    // {
-    //   header: (info) => sortingHeader({ label: 'Prêmio', column: info.column }),
-    //   accessorKey: 'result',
-    //   cell: (info) => translateGameResult(info.getValue()),
-    // },
     {
       id: 'actions',
       cell: ({ row }) => {
@@ -178,7 +188,7 @@ const Games = () => {
         data={data?.userGames?.games}
         columns={columns}
         defaultSorting={[{ id: 'contestNumber', desc: true }]}
-        createModal={<CreateGameModal />}
+        createModal={<CreateGameModal groupOptions={groupOptions} />}
       />
 
       <AlertDialog open={isDeleteAlertOpen} onOpenChange={setIsDeleteAlertOpen}>

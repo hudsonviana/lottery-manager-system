@@ -1,5 +1,6 @@
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
+import { THEME_STYLES } from '@/consts/ThemeStyles';
 import LoadingLabel from '@/components/LoadingLabel';
 import GameDisplay from '@/components/GameDisplay';
 import DrawDisplay from '@/components/DrawDisplay';
@@ -49,14 +50,16 @@ const ContestGames = () => {
           </h1>
 
           {draw.games.map((game, index) => (
-            <div key={game.id} className="flex mb-1">
+            <div key={game.id} className="flex mb-3">
               <div>
                 <div className="">
                   {game.group?.name && (
                     <span
-                      className={`text-xs font-medium me-2 px-1 border rounded text-${game.group.theme}-700 bg-${game.group.theme}-200 border-${game.group.theme}-400`}
+                      className={`text-sm font-medium me-2 px-1 border rounded ${
+                        THEME_STYLES[game.group.theme]
+                      }`}
                     >
-                      {game.group?.name}
+                      {game.group.name}
                     </span>
                   )}
                   <span className="text-sm mb-0 font-semibold text-gray-500 italic">

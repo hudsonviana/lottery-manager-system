@@ -30,6 +30,7 @@ const newGameDataInitialState = {
   contestNumber: 0,
   drawDate: '',
   lotteryType: '',
+  groupId: null,
 };
 
 const parseHTML = (htmlString) => {
@@ -72,7 +73,7 @@ const parseHTML = (htmlString) => {
   };
 };
 
-const CreateGameModal = () => {
+const CreateGameModal = ({ groupOptions }) => {
   const { auth } = useAuth();
   const [newGameData, setNewGameData] = useState(newGameDataInitialState);
   const [modalOpen, setModalOpen] = useState(false);
@@ -186,6 +187,13 @@ const CreateGameModal = () => {
     }));
   };
 
+  const handleGroupChange = (selectedGroup) => {
+    setNewGameData((prevData) => ({
+      ...prevData,
+      groupId: selectedGroup,
+    }));
+  };
+
   const handleSaveButtonClick = () => {
     createGameMutation.mutate(newGameData);
   };
@@ -233,12 +241,11 @@ const CreateGameModal = () => {
 
         <div className="grid gap-4 py-4">
           <div className="flex justify-between">
-            <div className="flex justify-between gap-3">
+            <div className="flex justify-between gap-3 w-full">
               <div className="grid items-center gap-1">
                 <Label htmlFor="lotteryType" className="text-left">
                   Loteria
                 </Label>
-                
                 <SelectInput
                   options={LOTTERY_TYPE}
                   value={newGameData.lotteryType}
@@ -279,6 +286,20 @@ const CreateGameModal = () => {
                   value={newGameData.drawDate}
                   size={8}
                   readOnly
+                />
+              </div>
+
+              <div className="grid items-center gap-1">
+                <Label htmlFor="lotteryType" className="text-left">
+                  Grupo (opcional)
+                </Label>
+                <SelectInput
+                  options={groupOptions}
+                  value={newGameData.groupId}
+                  onChange={handleGroupChange}
+                  placeholder="Selecione o grupo..."
+                  searchPlaceholder="Pesquisar grupo..."
+                  emptyMessage="Grupo não encontrado"
                 />
               </div>
             </div>

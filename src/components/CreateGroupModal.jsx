@@ -33,8 +33,6 @@ const CreateGroupModal = () => {
     // theme: 'grey',
   });
 
-  // console.log(newGroupData);
-
   const handleInputChange = (e) => {
     const { type, name } = e.target;
     const value = e.target[type === 'checkbox' ? 'checked' : 'value'];
