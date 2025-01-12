@@ -5,15 +5,13 @@ export const findAll = async () => {
     return await prisma.group.findMany({
       include: {
         creator: {
-          select: {
-            firstName: true,
-            lastName: true,
-          },
+          select: { firstName: true },
+        },
+        _count: {
+          select: { games: true },
         },
       },
-      omit: {
-        creatorId: true,
-      },
+      omit: { creatorId: true },
     });
   } catch (error) {
     return { error: 'Ocorreu um erro ao consultar os grupos' };

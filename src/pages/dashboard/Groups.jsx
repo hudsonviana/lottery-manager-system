@@ -114,6 +114,10 @@ const Groups = () => {
       ),
     },
     {
+      header: (info) => sortingHeader({ label: 'Qtde jogos', column: info.column }),
+      accessorKey: '_count.games',
+    },
+    {
       header: (info) => sortingHeader({ label: 'Cadastrado em', column: info.column }),
       accessorKey: 'createdAt',
       cell: (info) => formatDate(info.getValue()),
