@@ -5,12 +5,11 @@ export const findAll = async () => {
     return await prisma.group.findMany({
       include: {
         creator: {
-          omit: {
-            password: true,
-            refreshToken: true,
+          select: {
+            firstName: true,
+            lastName: true,
           },
         },
-        games: true,
       },
       omit: {
         creatorId: true,

@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import formatDate from '@/helpers/formatDate';
-import { handleError } from '@/helpers/handleError';
+import { THEME_STYLES } from '@/consts/ThemeStyles';
 import DataTable, { sortingHeader } from '@/components/DataTable';
 import LoadingLabel from '@/components/LoadingLabel';
 import CreateGroupModal from '@/components/CreateGroupModal';
@@ -21,6 +20,9 @@ import {
 import { AlertDescription } from '@/components/ui/alert';
 import useToastAlert from '@/hooks/useToastAlert';
 import useGroupApi from '@/hooks/useGroupApi';
+import formatDate from '@/helpers/formatDate';
+import translateGroupTheme from '@/helpers/translateGroupTheme';
+import { handleError } from '@/helpers/handleError';
 
 const Groups = () => {
   const { toastAlert, dismiss } = useToastAlert();
@@ -39,6 +41,8 @@ const Groups = () => {
     queryFn: fetchGroups,
     // staleTime: 1000 * 60 * 5,
   });
+
+  console.log(data);
 
   const deleteGroupMutation = useMutation({
     mutationFn: deleteGroup,
@@ -101,19 +105,28 @@ const Groups = () => {
       accessorKey: 'creator.firstName',
     },
     {
+      header: (info) => sortingHeader({ label: 'Tema', column: info.column }),
+      accessorKey: 'theme',
+      cell: (info) => (
+        <span className={`border rounded w-full px-2 ${THEME_STYLES[info.getValue()]}`}>
+          {translateGroupTheme(info.getValue())}
+        </span>
+      ),
+    },
+    {
       header: (info) => sortingHeader({ label: 'Cadastrado em', column: info.column }),
       accessorKey: 'createdAt',
       cell: (info) => formatDate(info.getValue()),
     },
-    {
-      header: (info) =>
-        sortingHeader({
-          label: 'Última autlização',
-          column: info.column,
-        }),
-      accessorKey: 'updatedAt',
-      cell: (info) => formatDate(info.getValue()),
-    },
+    // {
+    //   header: (info) =>
+    //     sortingHeader({
+    //       label: 'Última autlização',
+    //       column: info.column,
+    //     }),
+    //   accessorKey: 'updatedAt',
+    //   cell: (info) => formatDate(info.getValue()),
+    // },
     {
       id: 'actions',
       cell: ({ row }) => {
