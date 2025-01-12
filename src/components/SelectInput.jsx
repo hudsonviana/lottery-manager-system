@@ -11,6 +11,7 @@ import {
   CommandList,
 } from '@/components/ui/command';
 import { cn } from '@/lib/utils';
+import { THEME_STYLES } from '@/consts/ThemeStyles';
 
 const SelectInput = ({
   options,
@@ -20,6 +21,7 @@ const SelectInput = ({
   searchPlaceholder = 'Search...',
   emptyMessage = 'No options found.',
   className = '',
+  withStyles = false,
 }) => {
   const [open, setOpen] = useState(false);
 
@@ -62,7 +64,15 @@ const SelectInput = ({
                         value === option.value ? 'opacity-100' : 'opacity-0'
                       )}
                     />
-                    {option.label}
+                    <span
+                      className={
+                        withStyles
+                          ? `border rounded w-full px-2 ${THEME_STYLES[option.value]}`
+                          : null
+                      }
+                    >
+                      {option.label}
+                    </span>
                   </CommandItem>
                 ))}
               </CommandGroup>

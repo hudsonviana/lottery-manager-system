@@ -54,7 +54,7 @@ const ContestGames = () => {
                 <div className="">
                   {game.group?.name && (
                     <span
-                      className={`text-xs text-${game.group.theme}-700 font-medium me-2 px-1 bg-${game.group.theme}-200 border border-${game.group.theme}-400 rounded`}
+                      className={`text-xs font-medium me-2 px-1 border rounded text-${game.group.theme}-700 bg-${game.group.theme}-200 border-${game.group.theme}-400`}
                     >
                       {game.group?.name}
                     </span>

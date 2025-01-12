@@ -1,5 +1,6 @@
 import React from 'react';
 import { useToast } from './use-toast';
+import { THEME_STYLES } from '@/consts/ThemeStyles';
 import {
   FiCheckCircle,
   FiAlertTriangle,
@@ -7,14 +8,6 @@ import {
   FiInfo,
   FiMinusCircle,
 } from 'react-icons/fi';
-
-const CLASS_MAP = {
-  blue: 'bg-blue-200 text-blue-800 border-blue-300',
-  gray: 'bg-gray-200 text-gray-800 border-gray-300',
-  red: 'bg-red-200 text-red-800 border-red-300',
-  green: 'bg-green-200 text-green-800 border-green-300',
-  yellow: 'bg-yellow-200 text-yellow-800 border-yellow-300',
-};
 
 const getColorIcon = (type) => {
   const types = {
@@ -33,7 +26,7 @@ const useToastAlert = () => {
   const toastAlert = ({ type, title, message }) => {
     const [color, icon] = getColorIcon(type);
 
-    const className = CLASS_MAP[color];
+    const className = THEME_STYLES[color];
 
     const description = Array.isArray(message)
       ? message.map((msg, index) => React.createElement('p', { key: index }, `• ${msg}`))

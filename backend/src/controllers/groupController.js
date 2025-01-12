@@ -71,7 +71,7 @@ export const updateGroup = async (req, res) => {
       .max(50, { message: 'O nome do grupo deve ter no máximo 50 caracteres' }),
     description: z.string().optional(),
     isPool: z.boolean(),
-    theme: z.enum(['gray', 'blue', 'green', 'red', 'yellow', 'purple']).optional(),
+    theme: z.enum(['gray', 'blue', 'green', 'red', 'yellow', 'purple', 'orange']).optional(),
   });
 
   const body = updateGroupSchema.safeParse(req.body);

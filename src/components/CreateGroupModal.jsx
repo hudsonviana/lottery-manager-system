@@ -166,6 +166,7 @@ const CreateGroupModal = () => {
               placeholder="Selecione o tema..."
               searchPlaceholder="Pesquisar tema..."
               emptyMessage="Tema não encontrado."
+              withStyles={true}
             />
           </div>
         </div>
