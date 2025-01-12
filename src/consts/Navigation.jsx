@@ -4,10 +4,10 @@ import {
   HiOutlineUsers,
   HiOutlineQuestionMarkCircle,
   HiOutlineCog,
-  HiOutlineBookmark,
   HiOutlineIdentification,
   HiOutlineTicket,
   HiOutlineStar,
+  HiOutlineTag,
 } from 'react-icons/hi';
 
 export const DASHBOARD_SIDEBAR_LINKS = [
@@ -51,7 +51,7 @@ export const DASHBOARD_SIDEBAR_LINKS = [
     label: 'Grupos',
     path: 'groups',
     roles: ['USER', 'ADMIN'],
-    icon: <HiOutlineBookmark />,
+    icon: <HiOutlineTag />,
   },
   {
     key: 'admin',

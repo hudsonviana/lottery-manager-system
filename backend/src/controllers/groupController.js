@@ -31,10 +31,13 @@ export const addGroup = async (req, res) => {
   const auth = req.auth;
 
   const addGroupSchema = z.object({
-    name: z.string().max(50),
+    name: z.string().min(2).max(30),
     description: z.string().optional(),
     isPool: z.boolean(),
-    theme: z.enum(['gray', 'blue', 'green', 'red', 'yellow', 'purple']),
+    theme: z
+      .enum(['gray', 'blue', 'green', 'red', 'yellow', 'purple', 'orange'])
+      .optional()
+      .default('gray'),
   });
 
   const body = addGroupSchema.safeParse(req.body);

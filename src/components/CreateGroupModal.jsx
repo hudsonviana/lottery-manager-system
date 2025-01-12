@@ -20,6 +20,8 @@ import useToastAlert from '@/hooks/useToastAlert';
 import useGroupApi from '@/hooks/useGroupApi';
 import { Textarea } from './ui/textarea';
 import { RadioGroup, RadioGroupItem } from './ui/radio-group';
+import SelectInput from './SelectInput';
+import { GROUP_THEME } from '@/consts/Enums';
 
 const CreateGroupModal = () => {
   const { toastAlert } = useToastAlert();
@@ -28,12 +30,22 @@ const CreateGroupModal = () => {
     name: '',
     description: '',
     isPool: false,
+    // theme: 'grey',
   });
+
+  // console.log(newGroupData);
 
   const handleInputChange = (e) => {
     const { type, name } = e.target;
     const value = e.target[type === 'checkbox' ? 'checked' : 'value'];
     setNewGroupData((prevData) => ({ ...prevData, [name]: value }));
+  };
+
+  const handleThemeChange = (selectedTheme) => {
+    setNewGroupData((prevData) => ({
+      ...prevData,
+      theme: selectedTheme,
+    }));
   };
 
   const handleRadioClick = (e) => {
@@ -78,6 +90,7 @@ const CreateGroupModal = () => {
       name: '',
       description: '',
       isPool: false,
+      // theme: 'gray',
     });
   };
 
@@ -140,6 +153,20 @@ const CreateGroupModal = () => {
                 </div>
               </div>
             </RadioGroup>
+          </div>
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="description" className="text-right">
+              Tema
+            </Label>
+
+            <SelectInput
+              options={GROUP_THEME}
+              value={newGroupData.theme}
+              onChange={handleThemeChange}
+              placeholder="Selecione o tema..."
+              searchPlaceholder="Pesquisar tema..."
+              emptyMessage="Tema não encontrado."
+            />
           </div>
         </div>
         <DialogFooter>

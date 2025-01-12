@@ -48,6 +48,7 @@ export const findGamesByDrawAndUser = async (id, playerId) => {
             group: {
               select: {
                 name: true,
+                theme: true,
               },
             },
           },

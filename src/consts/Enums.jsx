@@ -23,3 +23,13 @@ export const LOTTERY_TYPE = [
   { value: 'TIMEMANIA', label: 'Timemania' },
   { value: 'LOTOMANIA', label: 'Lotomania' },
 ];
+
+export const GROUP_THEME = [
+  { value: 'gray', label: 'Cinza' },
+  { value: 'blue', label: 'Azul' },
+  { value: 'green', label: 'Verde' },
+  { value: 'red', label: 'Vermelho' },
+  { value: 'yellow', label: 'Amarelo' },
+  { value: 'purple', label: 'Roxo' },
+  { value: 'orange', label: 'Laranja' },
+];
