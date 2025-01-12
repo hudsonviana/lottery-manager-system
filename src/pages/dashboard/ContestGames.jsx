@@ -55,7 +55,7 @@ const ContestGames = () => {
                 <div className="">
                   {game.group?.name && (
                     <span
-                      className={`text-sm font-medium me-2 px-1 border rounded ${
+                      className={`text-sm me-2 px-1 border rounded ${
                         THEME_STYLES[game.group.theme]
                       }`}
                     >

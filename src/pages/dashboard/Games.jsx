@@ -181,6 +181,7 @@ const Games = () => {
           game={gameUpdate}
           isUpdateModalOpen={isUpdateModalOpen}
           setIsUpdateModalOpen={setIsUpdateModalOpen}
+          groupOptions={groupOptions}
         />
       )}
 

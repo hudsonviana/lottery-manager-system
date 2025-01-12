@@ -124,6 +124,7 @@ export const updateGame = async (req, res) => {
     gameNumbers: gameNumbersSchema,
     ticketPrice: z.number().nonnegative().optional(),
     result: z.enum(['WON_SIX_NUM', 'WON_FIVE_NUM', 'WON_FOUR_NUM', 'LOST', 'PENDING']).optional(),
+    groupId: z.string().optional(),
   });
 
   const body = updateGameSchema.safeParse(req.body);

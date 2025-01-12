@@ -21,7 +21,12 @@ import useGameApi from '@/hooks/useGameApi';
 import useToastAlert from '@/hooks/useToastAlert';
 import { handleError } from '@/helpers/handleError';
 
-const UpdateGameModal = ({ game, isUpdateModalOpen, setIsUpdateModalOpen }) => {
+const UpdateGameModal = ({
+  game,
+  isUpdateModalOpen,
+  setIsUpdateModalOpen,
+  groupOptions,
+}) => {
   const { auth } = useAuth();
   const [updateGameData, setUpdateGameData] = useState({});
   const [action, setAction] = useState(null);
@@ -79,6 +84,13 @@ const UpdateGameModal = ({ game, isUpdateModalOpen, setIsUpdateModalOpen }) => {
     }));
   };
 
+  const handleGroupChange = (selectedGroup) => {
+    setUpdateGameData((prevData) => ({
+      ...prevData,
+      groupId: selectedGroup,
+    }));
+  };
+
   const handleUpdateButtonClick = () => {
     updateGameMutation.mutate({
       playerId: auth.user.id,
@@ -115,7 +127,7 @@ const UpdateGameModal = ({ game, isUpdateModalOpen, setIsUpdateModalOpen }) => {
 
         <div className="grid gap-4 py-4">
           <div className="flex justify-between">
-            <div className="flex justify-between gap-3">
+            <div className="flex justify-between gap-3 w-full">
               <div className="grid items-center gap-1">
                 <Label htmlFor="lotteryType" className="text-left">
                   Loteria
@@ -158,6 +170,20 @@ const UpdateGameModal = ({ game, isUpdateModalOpen, setIsUpdateModalOpen }) => {
                   value={updateGameData.drawDate}
                   size={8}
                   disabled={true}
+                />
+              </div>
+
+              <div className="grid items-center gap-1">
+                <Label htmlFor="lotteryType" className="text-left">
+                  Grupo (opcional)
+                </Label>
+                <SelectInput
+                  options={groupOptions}
+                  value={updateGameData.groupId}
+                  onChange={handleGroupChange}
+                  placeholder="Selecione o grupo..."
+                  searchPlaceholder="Pesquisar grupo..."
+                  emptyMessage="Grupo não encontrado"
                 />
               </div>
             </div>
