@@ -42,8 +42,6 @@ const Groups = () => {
     // staleTime: 1000 * 60 * 5,
   });
 
-  console.log(data);
-
   const deleteGroupMutation = useMutation({
     mutationFn: deleteGroup,
     onSuccess: ({ deletedGroup }) => {
@@ -105,6 +103,11 @@ const Groups = () => {
       accessorKey: 'creator.firstName',
     },
     {
+      header: (info) => sortingHeader({ label: 'Qtd jogos', column: info.column }),
+      accessorKey: '_count.games',
+      cell: (info) => <div className="w-full text-center p-0 m-0">{info.getValue()}</div>,
+    },
+    {
       header: (info) => sortingHeader({ label: 'Tema', column: info.column }),
       accessorKey: 'theme',
       cell: (info) => (
@@ -114,23 +117,10 @@ const Groups = () => {
       ),
     },
     {
-      header: (info) => sortingHeader({ label: 'Qtde jogos', column: info.column }),
-      accessorKey: '_count.games',
-    },
-    {
       header: (info) => sortingHeader({ label: 'Cadastrado em', column: info.column }),
       accessorKey: 'createdAt',
       cell: (info) => formatDate(info.getValue()),
     },
-    // {
-    //   header: (info) =>
-    //     sortingHeader({
-    //       label: 'Última autlização',
-    //       column: info.column,
-    //     }),
-    //   accessorKey: 'updatedAt',
-    //   cell: (info) => formatDate(info.getValue()),
-    // },
     {
       id: 'actions',
       cell: ({ row }) => {

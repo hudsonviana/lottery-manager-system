@@ -5,7 +5,7 @@ export const findAll = async () => {
     return await prisma.group.findMany({
       include: {
         creator: {
-          select: { firstName: true },
+          select: { id: true, firstName: true },
         },
         _count: {
           select: { games: true },

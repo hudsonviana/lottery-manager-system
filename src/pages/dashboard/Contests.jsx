@@ -106,18 +106,22 @@ const Contests = () => {
     {
       header: (info) => sortingHeader({ label: 'Acumulou', column: info.column }),
       accessorKey: 'accumulated',
-      cell: (info) =>
-        info.row.original.status === 'PENDING' ? (
-          <BsQuestionCircle size={20} color="gray" />
-        ) : info.getValue() ? (
-          'Sim'
-        ) : (
-          'Não'
-        ),
+      cell: (info) => (
+        <div className="w-full text-center p-0 m-0">
+          {info.row.original.status === 'PENDING' ? (
+            <BsQuestionCircle size={20} color="gray" />
+          ) : info.getValue() ? (
+            'Sim'
+          ) : (
+            'Não'
+          )}
+        </div>
+      ),
     },
     {
       header: (info) => sortingHeader({ label: 'Qtd jogos', column: info.column }),
       accessorKey: '_count.games',
+      cell: (info) => <div className="w-full text-center p-0 m-0">{info.getValue()}</div>,
     },
     {
       header: (info) => sortingHeader({ label: 'Resultado', column: info.column }),

@@ -1,5 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { GROUP_THEME } from '@/consts/Enums';
+import LoadingLabel from './LoadingLabel';
+import SelectInput from './SelectInput';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -14,10 +17,9 @@ import {
 } from '@/components/ui/dialog';
 import { Textarea } from './ui/textarea';
 import { RadioGroup, RadioGroupItem } from './ui/radio-group';
-import { handleError } from '@/helpers/handleError';
-import LoadingLabel from './LoadingLabel';
 import useToastAlert from '@/hooks/useToastAlert';
 import useGroupApi from '@/hooks/useGroupApi';
+import { handleError } from '@/helpers/handleError';
 
 const UpdateGroupModal = ({ group, isUpdateModalOpen, setIsUpdateModalOpen }) => {
   const [groupUpdateData, setGroupUpdateData] = useState({});
@@ -31,6 +33,13 @@ const UpdateGroupModal = ({ group, isUpdateModalOpen, setIsUpdateModalOpen }) =>
     const { type, name } = e.target;
     const value = e.target[type === 'checkbox' ? 'checked' : 'value'];
     setGroupUpdateData((prevData) => ({ ...prevData, [name]: value }));
+  };
+
+  const handleThemeChange = (selectedTheme) => {
+    setGroupUpdateData((prevData) => ({
+      ...prevData,
+      theme: selectedTheme,
+    }));
   };
 
   const handleRadioClick = (e) => {
@@ -130,6 +139,21 @@ const UpdateGroupModal = ({ group, isUpdateModalOpen, setIsUpdateModalOpen }) =>
                 </div>
               </div>
             </RadioGroup>
+          </div>
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="description" className="text-right">
+              Tema
+            </Label>
+
+            <SelectInput
+              options={GROUP_THEME}
+              value={groupUpdateData.theme}
+              onChange={handleThemeChange}
+              placeholder="Selecione o tema..."
+              searchPlaceholder="Pesquisar tema..."
+              emptyMessage="Tema não encontrado."
+              withStyles={true}
+            />
           </div>
         </div>
         <DialogFooter>
