@@ -22,6 +22,7 @@ const SelectInput = ({
   emptyMessage = 'No options found.',
   className = '',
   withStyles = false,
+  disabled = false,
 }) => {
   const [open, setOpen] = useState(false);
 
@@ -34,6 +35,7 @@ const SelectInput = ({
             role="combobox"
             aria-expanded={open}
             className="w-[200px] justify-between"
+            disabled={disabled}
           >
             {value
               ? options.find((option) => option.value === value)?.label

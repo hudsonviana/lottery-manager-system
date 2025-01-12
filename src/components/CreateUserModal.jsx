@@ -1,4 +1,8 @@
 import { useState } from 'react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { USER_ROLES } from '@/consts/Enums';
+import LoadingLabel from './LoadingLabel';
+import SelectInput from './SelectInput';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -12,28 +16,13 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { HiOutlinePlusCircle } from 'react-icons/hi';
-import { Check, ChevronsUpDown } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from '@/components/ui/command';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 import useUserApi from '@/hooks/useUserApi';
-import { handleError } from '@/helpers/handleError';
-import { USER_ROLES } from '@/consts/Enums';
-import LoadingLabel from './LoadingLabel';
 import useToastAlert from '@/hooks/useToastAlert';
+import { handleError } from '@/helpers/handleError';
+import { HiOutlinePlusCircle } from 'react-icons/hi';
 
 const CreateUserModal = () => {
   const { toastAlert } = useToastAlert();
-  const [open, setOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [newUserData, setNewUserData] = useState({
     firstName: '',
@@ -46,6 +35,13 @@ const CreateUserModal = () => {
     const { type, name } = e.target;
     const value = e.target[type === 'checkbox' ? 'checked' : 'value'];
     setNewUserData((prevData) => ({ ...prevData, [name]: value }));
+  };
+
+  const handleRoleChange = (selectedRole) => {
+    setNewUserData((prevData) => ({
+      ...prevData,
+      role: selectedRole,
+    }));
   };
 
   const { addUser } = useUserApi();
@@ -143,56 +139,14 @@ const CreateUserModal = () => {
               Perfil
             </Label>
 
-            <Popover open={open} onOpenChange={setOpen}>
-              <PopoverTrigger asChild>
-                <Button
-                  variant="outline"
-                  role="combobox"
-                  aria-expanded={open}
-                  className="w-[200px] justify-between"
-                >
-                  {newUserData.role
-                    ? USER_ROLES.find((role) => role.value === newUserData.role)?.label
-                    : 'Selecione o perfil...'}
-                  <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-[200px] p-0">
-                <Command>
-                  <CommandInput placeholder="Pesquisar perfil..." />
-                  <CommandList>
-                    <CommandEmpty>Perfil não encontrado.</CommandEmpty>
-                    <CommandGroup>
-                      {USER_ROLES.map((role) => (
-                        <CommandItem
-                          key={role.value}
-                          value={role.value}
-                          onSelect={(currentValue) => {
-                            const selectedRole =
-                              currentValue === newUserData.role ? '' : currentValue;
-                            setNewUserData((prevData) => ({
-                              ...prevData,
-                              role: selectedRole,
-                            }));
-                            setOpen(false);
-                          }}
-                        >
-                          <Check
-                            className={cn(
-                              'mr-2 h-4 w-4',
-                              newUserData.role === role.value
-                                ? 'opacity-100'
-                                : 'opacity-0'
-                            )}
-                          />
-                          {role.label}
-                        </CommandItem>
-                      ))}
-                    </CommandGroup>
-                  </CommandList>
-                </Command>
-              </PopoverContent>
-            </Popover>
+            <SelectInput
+              options={USER_ROLES}
+              value={newUserData.role}
+              onChange={handleRoleChange}
+              placeholder="Selecione o perfil..."
+              searchPlaceholder="Pesquisar perfil..."
+              emptyMessage="Perfil não encontrado."
+            />
           </div>
         </div>
         <DialogFooter>

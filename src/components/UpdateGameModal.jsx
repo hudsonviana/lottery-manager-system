@@ -1,5 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { LOTTERY_TYPE } from '@/consts/Enums';
+import LoadingLabel from './LoadingLabel';
+import BettingSlip from './BettingSlip';
+import SelectInput from './SelectInput';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -12,28 +16,13 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from '@/components/ui/command';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { cn } from '@/lib/utils';
 import { useAuth } from '@/hooks/useAuth';
 import useGameApi from '@/hooks/useGameApi';
-import { handleError } from '@/helpers/handleError';
-import { LOTTERY_TYPE } from '@/consts/Enums';
-import BettingSlip from './BettingSlip';
-import LoadingLabel from './LoadingLabel';
-import { Check, ChevronsUpDown } from 'lucide-react';
 import useToastAlert from '@/hooks/useToastAlert';
+import { handleError } from '@/helpers/handleError';
 
 const UpdateGameModal = ({ game, isUpdateModalOpen, setIsUpdateModalOpen }) => {
   const { auth } = useAuth();
-  const [open, setOpen] = useState(false);
   const [updateGameData, setUpdateGameData] = useState({});
   const [action, setAction] = useState(null);
   const { toastAlert } = useToastAlert();
@@ -83,6 +72,13 @@ const UpdateGameModal = ({ game, isUpdateModalOpen, setIsUpdateModalOpen }) => {
     }));
   };
 
+  const handleLotteryChange = (selectedLottery) => {
+    setUpdateGameData((prevData) => ({
+      ...prevData,
+      lotteryType: selectedLottery,
+    }));
+  };
+
   const handleUpdateButtonClick = () => {
     updateGameMutation.mutate({
       playerId: auth.user.id,
@@ -124,63 +120,16 @@ const UpdateGameModal = ({ game, isUpdateModalOpen, setIsUpdateModalOpen }) => {
                 <Label htmlFor="lotteryType" className="text-left">
                   Loteria
                 </Label>
-                <Popover open={open} onOpenChange={setOpen}>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant="outline"
-                      role="combobox"
-                      aria-expanded={open}
-                      className="w-[200px] justify-between cursor-not-allowed"
-                      disabled={true}
-                    >
-                      {updateGameData.lotteryType
-                        ? LOTTERY_TYPE.find(
-                            (lotteryType) =>
-                              lotteryType.value === updateGameData.lotteryType
-                          )?.label
-                        : 'Selecione a loteria...'}
-                      <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-[200px] p-0">
-                    <Command>
-                      <CommandInput placeholder="Pesquisar loteria..." />
-                      <CommandList>
-                        <CommandEmpty>Loteria não encontrada.</CommandEmpty>
-                        <CommandGroup>
-                          {LOTTERY_TYPE.map((lotteryType) => (
-                            <CommandItem
-                              key={lotteryType.value}
-                              value={lotteryType.value}
-                              onSelect={(currentValue) => {
-                                const selectedLotteryType =
-                                  currentValue === updateGameData.lotteryType
-                                    ? ''
-                                    : currentValue;
-                                setUpdateGameData((prevData) => ({
-                                  ...prevData,
-                                  drawDate: '',
-                                  lotteryType: selectedLotteryType,
-                                }));
-                                setOpen(false);
-                              }}
-                            >
-                              <Check
-                                className={cn(
-                                  'mr-2 h-4 w-4',
-                                  updateGameData.lotteryType === lotteryType.value
-                                    ? 'opacity-100'
-                                    : 'opacity-0'
-                                )}
-                              />
-                              {lotteryType.label}
-                            </CommandItem>
-                          ))}
-                        </CommandGroup>
-                      </CommandList>
-                    </Command>
-                  </PopoverContent>
-                </Popover>
+
+                <SelectInput
+                  options={LOTTERY_TYPE}
+                  value={updateGameData.lotteryType}
+                  onChange={handleLotteryChange}
+                  placeholder="Selecione a loteria..."
+                  searchPlaceholder="Pesquisar loteria..."
+                  emptyMessage="Loteria não encontrada"
+                  disabled={true}
+                />
               </div>
 
               <div className="grid items-center gap-1">
