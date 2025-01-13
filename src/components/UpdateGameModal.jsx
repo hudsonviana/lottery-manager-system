@@ -32,8 +32,6 @@ const UpdateGameModal = ({
   const [action, setAction] = useState(null);
   const { toastAlert } = useToastAlert();
 
-  console.log(updateGameData);
-
   const { updateGame } = useGameApi();
   const queryClient = useQueryClient();
 

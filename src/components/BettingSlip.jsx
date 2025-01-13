@@ -3,12 +3,6 @@ import { useEffect, useState } from 'react';
 import { FaTimes } from 'react-icons/fa';
 import useToastAlert from '@/hooks/useToastAlert';
 
-const gamesConfirmedInitialState = {
-  gameA: [],
-  gameB: [],
-  gameC: [],
-};
-
 const betValue = [
   { betNum: 6, value: 5 },
   { betNum: 7, value: 35 },
@@ -90,7 +84,7 @@ const BettingSlip = ({ setNewGameData, importedGameNumbers, action, resetAction 
   const { toastAlert, dismiss } = useToastAlert();
   const [betNumber, setBetNumber] = useState(0);
   const [selectedDozens, setSelectedDozens] = useState([]);
-  const [gamesConfirmed, setGamesConfirmed] = useState(gamesConfirmedInitialState);
+  const [gamesConfirmed, setGamesConfirmed] = useState(importedGameNumbers);
 
   const isEnabled = selectedDozens.length < betNumber;
 
@@ -184,7 +178,11 @@ const BettingSlip = ({ setNewGameData, importedGameNumbers, action, resetAction 
     };
 
     const handleExclude = () => {
-      setGamesConfirmed(gamesConfirmedInitialState);
+      setGamesConfirmed({
+        gameA: [],
+        gameB: [],
+        gameC: [],
+      });
       setNewGameData((prev) => ({
         ...prev,
         gameNumbers: '',
@@ -206,10 +204,6 @@ const BettingSlip = ({ setNewGameData, importedGameNumbers, action, resetAction 
 
     resetAction();
   }, [action, resetAction, gamesConfirmed, selectedDozens, setNewGameData]);
-
-  useEffect(() => {
-    if (importedGameNumbers) setGamesConfirmed(importedGameNumbers);
-  }, [importedGameNumbers]);
 
   const totalPryce = calculateTotalPryce(gamesConfirmed);
 

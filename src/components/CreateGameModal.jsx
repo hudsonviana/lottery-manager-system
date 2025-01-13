@@ -212,7 +212,8 @@ const CreateGameModal = ({ groupOptions }) => {
     setAction(null);
   };
 
-  const canSave = [...Object.values(newGameData)].every(Boolean);
+  const { groupId, ...restGameData } = newGameData;
+  const canSave = Object.values(restGameData).every(Boolean);
 
   return (
     <Dialog open={modalOpen} onOpenChange={setModalOpen}>
@@ -308,7 +309,11 @@ const CreateGameModal = ({ groupOptions }) => {
           <div className="gap-1">
             <BettingSlip
               setNewGameData={setNewGameData}
-              importedGameNumbers={newGameData?.gameNumbers}
+              importedGameNumbers={{
+                gameA: [],
+                gameB: [],
+                gameC: [],
+              }}
               action={action}
               resetAction={resetAction}
             />
