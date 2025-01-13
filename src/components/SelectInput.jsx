@@ -55,7 +55,7 @@ const SelectInput = ({
                     key={option.value}
                     value={option.value}
                     onSelect={(currentValue) => {
-                      const selectedValue = currentValue === value ? '' : currentValue;
+                      const selectedValue = currentValue === value ? null : currentValue;
                       onChange(selectedValue);
                       setOpen(false);
                     }}

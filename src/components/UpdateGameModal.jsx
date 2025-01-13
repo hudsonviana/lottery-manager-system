@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { LOTTERY_TYPE } from '@/consts/Enums';
 import LoadingLabel from './LoadingLabel';
@@ -28,17 +28,11 @@ const UpdateGameModal = ({
   groupOptions,
 }) => {
   const { auth } = useAuth();
-  const [updateGameData, setUpdateGameData] = useState({});
+  const [updateGameData, setUpdateGameData] = useState(game);
   const [action, setAction] = useState(null);
   const { toastAlert } = useToastAlert();
 
-  useEffect(() => {
-    if (isUpdateModalOpen) {
-      setUpdateGameData(game);
-    } else {
-      setUpdateGameData({});
-    }
-  }, [isUpdateModalOpen]);
+  console.log(updateGameData);
 
   const { updateGame } = useGameApi();
   const queryClient = useQueryClient();
@@ -65,15 +59,10 @@ const UpdateGameModal = ({
   });
 
   const handleInputChange = (e) => {
-    const { type, name } = e.target;
-    const value = e.target[type === 'checkbox' ? 'checked' : 'value'];
-
-    const newValue = name === 'contestNumber' ? Number(value) : value;
-
+    const { name, value } = e.target;
     setUpdateGameData((prevData) => ({
       ...prevData,
-      drawDate: '',
-      [name]: newValue,
+      [name]: name === 'contestNumber' ? Number(value) : value,
     }));
   };
 
@@ -102,7 +91,7 @@ const UpdateGameModal = ({
   const handleCancelButtonClick = () => {
     setIsUpdateModalOpen(false);
     setAction(null);
-    setUpdateGameData({});
+    setUpdateGameData(game);
   };
 
   const handleActions = (actionType) => {
@@ -113,7 +102,8 @@ const UpdateGameModal = ({
     setAction(null);
   };
 
-  const canSave = [...Object.values(updateGameData)].every(Boolean);
+  const { groupId, ...restGameData } = updateGameData;
+  const canSave = Object.values(restGameData).every(Boolean);
 
   return (
     <Dialog open={isUpdateModalOpen} onOpenChange={setIsUpdateModalOpen}>
