@@ -37,6 +37,7 @@ export const getUser = async (req, res) => {
   res.json({ user: userData });
 };
 
+// descartar
 export const getUserGames = async (req, res) => {
   const auth = req.auth;
   const { id } = req.params;

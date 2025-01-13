@@ -55,7 +55,7 @@ export const getAllDrawsOfUser = async (req, res) => {
   res.json({ drawsOfUser });
 };
 
-export const getAllGamesOfDrawAndUser = async (req, res) => {
+export const getDrawWithGamesOfUser = async (req, res) => {
   const auth = req.auth;
   const { id, playerId } = req.params;
 

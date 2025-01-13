@@ -13,18 +13,14 @@ export const findDrawsByUser = async (playerId) => {
     return await prisma.draw.findMany({
       where: {
         games: {
-          some: {
-            playerId,
-          },
+          some: { playerId },
         },
       },
       include: {
         _count: {
           select: {
             games: {
-              where: {
-                playerId,
-              },
+              where: { playerId },
             },
           },
         },

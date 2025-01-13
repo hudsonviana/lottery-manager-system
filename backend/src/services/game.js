@@ -24,6 +24,33 @@ export const findAll = async () => {
   }
 };
 
+export const findGamesByUser = async (playerId) => {
+  try {
+    return await prisma.game.findMany({
+      where: { playerId },
+      select: {
+        gameNumbers: true,
+        ticketPrice: true,
+        createdAt: true,
+        draw: {
+          select: {
+            lotteryType: true,
+            contestNumber: true,
+            drawDate: true,
+          },
+        },
+        group: {
+          select: {
+            name: true,
+          },
+        },
+      },
+    });
+  } catch (error) {
+    return { error: 'Ocorreu um erro ao consultar os jogos do usuário' };
+  }
+};
+
 export const findOne = async ({ id, playerId }) => {
   try {
     return await prisma.game.findUnique({

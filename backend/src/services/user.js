@@ -34,6 +34,7 @@ export const findByToken = async ({ id, refreshToken }) => {
   }
 };
 
+// descartar
 export const findGamesByUser = async ({ id, email }) => {
   try {
     return await prisma.user.findUnique({

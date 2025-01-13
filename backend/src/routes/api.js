@@ -36,9 +36,10 @@ router.delete('/draws/:id', auth.authentication, drawController.deleteDraw);
 router.get(
   '/draws/:id/users/:playerId/games',
   auth.authentication,
-  drawController.getAllGamesOfDrawAndUser
+  drawController.getDrawWithGamesOfUser
 );
 
+router.get('/games/users/:playerId', auth.authentication, gameController.getAllGamesOfUser);
 router.get('/games', admin.authentication, gameController.getAllGames);
 router.get('/users/:playerId/games/:id', auth.authentication, gameController.getGame);
 router.post('/users/:playerId/games', auth.authentication, gameController.addGame);

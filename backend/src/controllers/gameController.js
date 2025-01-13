@@ -14,6 +14,23 @@ export const getAllGames = async (req, res) => {
   res.json({ games });
 };
 
+export const getAllGamesOfUser = async (req, res) => {
+  const auth = req.auth;
+  const { playerId } = req.params;
+
+  if (auth.role !== 'ADMIN' && auth.id !== playerId) {
+    return res.status(403).json({ error: 'Acesso negado' });
+  }
+
+  const gamesOfUser = await gameService.findGamesByUser(playerId);
+
+  if (gamesOfUser.error) {
+    return res.status(500).json({ error: gamesOfUser.error });
+  }
+
+  res.json(gamesOfUser);
+};
+
 export const getGame = async (req, res) => {
   const auth = req.auth;
   const { playerId, id } = req.params;

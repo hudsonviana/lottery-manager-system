@@ -48,6 +48,8 @@ const Games = () => {
     // staleTime: 1000 * 60,
   });
 
+  console.log(data) ///////////////////
+
   const deleteGameMutation = useMutation({
     mutationFn: ({ playerId, id }) => deleteGame(playerId, id),
     onSuccess: () => {
