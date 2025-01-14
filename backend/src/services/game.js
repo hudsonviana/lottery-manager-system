@@ -29,6 +29,7 @@ export const findGamesByUser = async (playerId) => {
     return await prisma.game.findMany({
       where: { playerId },
       select: {
+        id: true,
         gameNumbers: true,
         ticketPrice: true,
         createdAt: true,
@@ -41,6 +42,7 @@ export const findGamesByUser = async (playerId) => {
         },
         group: {
           select: {
+            id: true,
             name: true,
           },
         },

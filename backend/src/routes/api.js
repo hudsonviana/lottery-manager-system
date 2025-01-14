@@ -39,12 +39,12 @@ router.get(
   drawController.getDrawWithGamesOfUser
 );
 
-router.get('/games/users/:playerId', auth.authentication, gameController.getAllGamesOfUser);
 router.get('/games', admin.authentication, gameController.getAllGames);
-router.get('/users/:playerId/games/:id', auth.authentication, gameController.getGame);
-router.post('/users/:playerId/games', auth.authentication, gameController.addGame);
-router.put('/users/:playerId/games/:id', auth.authentication, gameController.updateGame);
-router.delete('/users/:playerId/games/:id', auth.authentication, gameController.deleteGame);
+router.get('/games/users/:playerId', auth.authentication, gameController.getAllGamesOfUser);
+router.get('/games/:id/users/:playerId', auth.authentication, gameController.getGame);
+router.post('/games/users/:playerId', auth.authentication, gameController.addGame);
+router.put('/games/:id/users/:playerId', auth.authentication, gameController.updateGame);
+router.delete('/games/:id/users/:playerId', auth.authentication, gameController.deleteGame);
 
 router.get('/groups', auth.authentication, groupController.getAllGroups);
 router.get('/groups/:id', auth.authentication, groupController.getGroup);

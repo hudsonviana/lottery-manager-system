@@ -20,7 +20,6 @@ import {
 import { AlertDescription } from '@/components/ui/alert';
 import { useAuth } from '@/hooks/useAuth';
 import useToastAlert from '@/hooks/useToastAlert';
-import useUserApi from '@/hooks/useUserApi';
 import useGameApi from '@/hooks/useGameApi';
 import useGroupApi from '@/hooks/useGroupApi';
 import formatDate from '@/helpers/formatDate';
@@ -36,19 +35,31 @@ const Games = () => {
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [gameUpdate, setGameUpdate] = useState({});
 
-  const { fetchUserGames } = useUserApi();
-  const { deleteGame } = useGameApi();
+  const { fetchGames, deleteGame } = useGameApi();
   const { fetchGroups } = useGroupApi();
 
   const queryClient = useQueryClient();
 
   const { isPending, isError, data, error } = useQuery({
     queryKey: ['games'],
-    queryFn: () => fetchUserGames(auth.user.id),
+    queryFn: () => fetchGames(auth.user.id),
     // staleTime: 1000 * 60,
   });
 
-  console.log(data) ///////////////////
+  const groups = useQuery({
+    queryKey: ['groupOptions'],
+    queryFn: fetchGroups,
+    // staleTime: 1000 * 60 * 1,
+  });
+
+  const groupOptions = groups.isPending
+    ? [{ value: null, label: 'Aguarde...' }]
+    : groups.isError
+    ? [{ value: null, label: 'Erro: grupos inválidos' }]
+    : groups.data.map((group) => ({
+        value: group.id,
+        label: group.name,
+      }));
 
   const deleteGameMutation = useMutation({
     mutationFn: ({ playerId, id }) => deleteGame(playerId, id),
@@ -75,21 +86,6 @@ const Games = () => {
     },
   });
 
-  const groups = useQuery({
-    queryKey: ['groupOptions'],
-    queryFn: fetchGroups,
-    // staleTime: 1000 * 60 * 1,
-  });
-
-  const groupOptions = groups.isPending
-    ? [{ value: null, label: 'Aguarde...' }]
-    : groups.isError
-    ? [{ value: null, label: 'Erro: grupos inválidos' }]
-    : groups.data.map((group) => ({
-        value: group.id,
-        label: group.name,
-      }));
-
   if (isPending) {
     return (
       <div className="flex items-center container mx-auto py-0">
@@ -109,17 +105,15 @@ const Games = () => {
   const handleUpdateGameAction = (game) => {
     dismiss();
 
-    const { contestNumber, drawDate, lotteryType } = game.draw;
-
-    const gameUpdateFiltered = {
-      ...game,
-      contestNumber,
-      drawDate: formatDate(drawDate, { withTime: false }),
-      lotteryType,
+    const gameDataToUpdate = {
+      id: game.id,
+      gameNumbers: game.gameNumbers,
+      ticketPrice: game.ticketPrice,
+      drawDate: formatDate(game.draw?.drawDate, { withTime: false }),
+      contestNumber: game.draw?.contestNumber,
+      lotteryType: game.draw?.lotteryType,
+      groupId: game.group?.id,
     };
-
-    const { result, createdAt, updatedAt, draw, ...gameDataToUpdate } =
-      gameUpdateFiltered;
 
     setGameUpdate(gameDataToUpdate);
     setIsUpdateModalOpen(true);
@@ -155,6 +149,10 @@ const Games = () => {
         }),
     },
     {
+      header: (info) => sortingHeader({ label: 'Grupo', column: info.column }),
+      accessorKey: 'group.name',
+    },
+    {
       header: (info) => sortingHeader({ label: 'Cadastrado em', column: info.column }),
       accessorKey: 'createdAt',
       cell: (info) => formatDate(info.getValue()),
@@ -188,7 +186,7 @@ const Games = () => {
       )}
 
       <DataTable
-        data={data?.userGames?.games}
+        data={data}
         columns={columns}
         defaultSorting={[{ id: 'contestNumber', desc: true }]}
         createModal={<CreateGameModal groupOptions={groupOptions} />}
