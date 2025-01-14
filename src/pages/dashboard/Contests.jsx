@@ -178,19 +178,19 @@ const Contests = () => {
             <AlertDescription>
               <ul className="border border-neutral-300 rounded-md p-2">
                 <li className="flex gap-1">
-                  <div className="font-medium min-w-12">Loteria:</div>
+                  <div className="font-medium min-w-32 me-1">Loteria:</div>
                   <span>{translateLotteryType(drawToDelete?.lotteryType)}</span>
                 </li>
                 <li className="flex gap-1">
-                  <div className="font-medium min-w-12">Concurso:</div>
+                  <div className="font-medium min-w-32 me-1">Concurso:</div>
                   <span>{drawToDelete?.contestNumber}</span>
                 </li>
                 <li className="flex gap-1">
-                  <div className="font-medium min-w-12">Data do sorteio:</div>
+                  <div className="font-medium min-w-32 me-1">Data do sorteio:</div>
                   <span>{formatDate(drawToDelete?.drawDate, { withTime: false })}</span>
                 </li>
                 <li className="flex gap-1">
-                  <div className="font-medium min-w-12">Dezenas sorteadas:</div>
+                  <div className="font-medium min-w-32 me-1">Dezenas sorteadas:</div>
                   <span>
                     {drawToDelete?.drawnNumbers?.length > 0 ? (
                       <DrawnNumbersTableRow drawnNumbers={drawToDelete?.drawnNumbers} />
@@ -200,8 +200,8 @@ const Contests = () => {
                   </span>
                 </li>
                 <li className="flex gap-1">
-                  <div className="font-medium min-w-12">Jogos associados:</div>
-                  <span>{drawToDelete?.countGames}</span>
+                  <div className="font-medium min-w-32 me-1">Jogos associados:</div>
+                  <span>{drawToDelete?._count?.games}</span>
                 </li>
               </ul>
             </AlertDescription>

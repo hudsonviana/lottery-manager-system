@@ -106,7 +106,19 @@ export const update = async (data, id) => {
 
 export const destroy = async (id) => {
   try {
-    return await prisma.game.delete({ where: { id } });
+    return await prisma.$transaction(async (tx) => {
+      const deletedGame = await tx.game.delete({ where: { id } });
+
+      const remainingGamesInDraw = await tx.game.count({
+        where: { drawId: deletedGame.drawId },
+      });
+
+      if (remainingGamesInDraw === 0) {
+        await tx.draw.delete({ where: { id: deletedGame.drawId } });
+      }
+
+      return deletedGame;
+    });
   } catch (error) {
     return { error: 'Ocorreu um erro ao deletar o jogo' };
   }

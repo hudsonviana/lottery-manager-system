@@ -36,7 +36,7 @@ const DrawActions = ({ draw, onView, onViewGames, onDelete }) => {
           Dados do concurso
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => onDelete(draw)}>
-          Excluir concurso
+          Deletar concurso
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

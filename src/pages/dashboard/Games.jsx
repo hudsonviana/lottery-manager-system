@@ -202,19 +202,19 @@ const Games = () => {
             <AlertDescription>
               <ul className="border border-neutral-300 rounded-md p-2">
                 <li className="flex gap-1">
-                  <div className="font-medium min-w-12">Jogo cadastrado em:</div>
+                  <div className="font-medium min-w-20 me-1">Cadastrado:</div>
                   <span>{formatDate(gameDelete?.createdAt)}</span>
                 </li>
                 <li className="flex gap-1">
-                  <div className="font-medium min-w-12">Loteria:</div>
+                  <div className="font-medium min-w-20 me-1">Loteria:</div>
                   <span>{translateLotteryType(gameDelete?.draw?.lotteryType)}</span>
                 </li>
                 <li className="flex gap-1">
-                  <div className="font-medium min-w-12">Concurso:</div>
+                  <div className="font-medium min-w-20 me-1">Concurso:</div>
                   <span>{gameDelete?.draw?.contestNumber}</span>
                 </li>
                 <li className="flex gap-1">
-                  <div className="font-medium min-w-12">Apostas:</div>
+                  <div className="font-medium min-w-20 me-1">Apostas:</div>
                   <span>
                     {<GameNumbersTableRow gameNumbers={gameDelete?.gameNumbers} />}
                   </span>

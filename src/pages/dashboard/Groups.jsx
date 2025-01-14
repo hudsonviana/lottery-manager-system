@@ -46,6 +46,7 @@ const Groups = () => {
     mutationFn: deleteGroup,
     onSuccess: ({ deletedGroup }) => {
       queryClient.invalidateQueries(['groups']);
+      queryClient.invalidateQueries(['games']);
       toastAlert({
         type: 'success',
         title: 'Grupo deletado com sucesso!',
