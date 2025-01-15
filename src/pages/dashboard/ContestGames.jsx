@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { THEME_STYLES } from '@/consts/ThemeStyles';
 import LoadingLabel from '@/components/LoadingLabel';
@@ -10,6 +10,12 @@ import formatDate from '@/helpers/formatDate';
 import translateLotteryType from '@/helpers/translateLotteryType';
 import { useAuth } from '@/hooks/useAuth';
 import useDrawApi from '@/hooks/useDrawApi';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 
 const ContestGames = () => {
   const { drawId } = useParams();
@@ -54,7 +60,16 @@ const ContestGames = () => {
               <div>
                 <div className="flex items-center justify-between h-8 border border-slate-300 rounded-md rounded-b-none border-b-0 bg-slate-50">
                   <span className="text-sm font-semibold italic mb-0 px-2 me-2 border-e border-e-slate-300">
-                    Jogo {index + 1} {/*- cadastrado em: {formatDate(game.createdAt)} */}
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger>
+                          <Link to={`/dashboard/games/${game.id}`}>Jogo {index + 1}</Link>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Cadastrado em: {formatDate(game.createdAt)}</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
                   </span>
                   {game.group?.name && (
                     <span

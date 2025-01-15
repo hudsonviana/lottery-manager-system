@@ -39,6 +39,7 @@ export const findGamesByDrawAndUser = async (id, playerId) => {
         games: {
           where: { playerId },
           select: {
+            id: true,
             gameNumbers: true,
             createdAt: true,
             group: {
