@@ -75,7 +75,7 @@ const DrawResult = ({ hits }) => {
 
 const GameDisplay = ({ gameNumbers, drawnNumbers }) => {
   return (
-    <div className="p-2 my-2 border border-slate-300 rounded-md mt-0">
+    <div className="border border-slate-300 rounded-md rounded-t-none p-3 mb-2 w-fit">
       <div className="flex flex-col gap-3">
         {Object.entries(gameNumbers).map(([gameName, numbers]) => {
           if (numbers.length > 0) {

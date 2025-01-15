@@ -52,7 +52,10 @@ const ContestGames = () => {
           {draw.games.map((game, index) => (
             <div key={game.id} className="flex mb-3">
               <div>
-                <div className="">
+                <div className="flex items-center justify-between h-8 border border-slate-300 rounded-md rounded-b-none border-b-0 bg-slate-50">
+                  <span className="text-sm font-semibold italic mb-0 px-2 me-2 border-e border-e-slate-300">
+                    Jogo {index + 1} {/*- cadastrado em: {formatDate(game.createdAt)} */}
+                  </span>
                   {game.group?.name && (
                     <span
                       className={`text-sm me-2 px-1 border rounded ${
@@ -62,9 +65,6 @@ const ContestGames = () => {
                       {game.group.name}
                     </span>
                   )}
-                  <span className="text-sm mb-0 font-semibold text-gray-500 italic">
-                    Jogo {index + 1} - cadastrado em: {formatDate(game.createdAt)}
-                  </span>
                 </div>
                 <GameDisplay
                   gameNumbers={game.gameNumbers}

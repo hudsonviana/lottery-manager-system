@@ -113,7 +113,7 @@ export const destroy = async (id) => {
         where: { drawId: deletedGame.drawId },
       });
 
-      if (remainingGamesInDraw === 0) {
+      if (!remainingGamesInDraw) {
         await tx.draw.delete({ where: { id: deletedGame.drawId } });
       }
 
