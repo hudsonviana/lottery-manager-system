@@ -71,7 +71,7 @@ const ContestGames = () => {
                       </Tooltip>
                     </TooltipProvider>
                   </span>
-                  {game.group?.name && (
+                  {game.group?.name ? (
                     <span
                       className={`text-sm me-2 px-1 border rounded ${
                         THEME_STYLES[game.group.theme]
@@ -79,7 +79,7 @@ const ContestGames = () => {
                     >
                       {game.group.name}
                     </span>
-                  )}
+                  ) : null}
                 </div>
                 <GameDisplay
                   gameNumbers={game.gameNumbers}

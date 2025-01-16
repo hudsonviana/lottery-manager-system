@@ -37,10 +37,11 @@ const SelectInput = ({
             className="w-[200px] justify-between"
             disabled={disabled}
           >
-            {value
-              ? options.find((option) => option.value === value)?.label
-              : placeholder}
-
+            <span className="truncate text-ellipsis">
+              {value
+                ? options.find((option) => option.value === value)?.label
+                : placeholder}
+            </span>
             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>

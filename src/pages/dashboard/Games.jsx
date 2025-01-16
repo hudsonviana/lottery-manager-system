@@ -151,11 +151,12 @@ const Games = () => {
     {
       header: (info) => sortingHeader({ label: 'Grupo', column: info.column }),
       accessorKey: 'group.name',
+      cell: (info) => <span className="text-ellipsis">{info.getValue()}</span>,
     },
     {
       header: (info) => sortingHeader({ label: 'Cadastrado em', column: info.column }),
       accessorKey: 'createdAt',
-      cell: (info) => formatDate(info.getValue()),
+      cell: (info) => <span className="truncate">{formatDate(info.getValue())}</span>,
     },
     {
       id: 'actions',

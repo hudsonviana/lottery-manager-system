@@ -9,8 +9,10 @@ const GameNumbersTableRow = ({ gameNumbers }) => {
         if (numbers.length > 0) {
           return (
             <div key={gameName}>
-              <span className="me-2">{formatGameName(gameName)}:</span>
-              <span>{numbers.length > 0 ? numbers.join(' - ') : ''}</span>
+              <span className="whitespace-nowrap me-2">{formatGameName(gameName)}:</span>
+              <span className="whitespace-nowrap">
+                {numbers.length > 0 ? numbers.join(' - ') : null}
+              </span>
             </div>
           );
         }
