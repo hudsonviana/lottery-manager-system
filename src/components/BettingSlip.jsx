@@ -1,7 +1,12 @@
-import { Label } from '@/components/ui/label';
 import { useEffect, useState } from 'react';
-import { FaTimes } from 'react-icons/fa';
+import { Label } from '@/components/ui/label';
 import useToastAlert from '@/hooks/useToastAlert';
+import { FaTimes } from 'react-icons/fa';
+import { MdDeleteForever } from 'react-icons/md';
+import { RiDeleteBin6Line } from 'react-icons/ri';
+import { RiDeleteBinLine } from 'react-icons/ri';
+import { IoTrashBinOutline } from 'react-icons/io5';
+import { FaRegTrashAlt } from 'react-icons/fa';
 
 const betValue = [
   { betNum: 6, value: 5 },
@@ -272,22 +277,26 @@ const BettingSlip = ({ setNewGameData, importedGameNumbers, action, resetAction 
           Confira suas apostas
         </Label>
 
-        <div id="betts" className="gap-1 bg-green-100 pt-5 ps-2 h-full relative">
-          {Object.entries(gamesConfirmed).map((game, i) => (
-            <div key={i} className="flex items-center space-x-1 mb-5">
-              {game[1].length ? (
-                <>
-                  <button id={game[0]} onClick={handleRemoveBet}>
-                    <FaTimes size={16} color="red" />
-                  </button>
-                  <span className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                    {game[0].slice(-1)}:{' '}
-                    <span className="font-normal">{game[1].join(' - ')}</span>
-                  </span>
-                </>
-              ) : null}
-            </div>
-          ))}
+        <div id="betts" className="gap-1 bg-green-100 p-2 h-full relative">
+          <table className="w-full text-left table-auto min-w-max">
+            <tbody>
+              {Object.entries(gamesConfirmed).map((game) =>
+                game[1].length ? (
+                  <tr key={game[0]} className="hover:bg-green-300 text-sm">
+                    <td className="px-1 py-2 font-bold w-5">{game[0].slice(-1)}</td>
+                    <td className="">{game[1].join(' - ')}</td>
+                    <td>
+                      <div className="flex items-center">
+                        <button id={game[0]} onClick={handleRemoveBet}>
+                          <FaRegTrashAlt color="red" />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ) : null
+              )}
+            </tbody>
+          </table>
 
           <div className="ms-1.5 font-medium absolute inset-x-0 bottom-0 mb-2.5">
             Valor total das apostas:

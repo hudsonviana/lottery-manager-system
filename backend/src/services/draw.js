@@ -54,7 +54,7 @@ export const findGamesByDrawAndUser = async (id, playerId) => {
       },
     });
   } catch (error) {
-    return { error: 'Ocorreu um erro ao consultar os jogos refente ao sorteio especificado' };
+    return { error: 'Ocorreu um erro ao consultar os jogos referentes ao sorteio especificado' };
   }
 };
 
