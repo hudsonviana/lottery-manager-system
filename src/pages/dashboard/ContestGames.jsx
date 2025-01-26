@@ -58,7 +58,7 @@ const ContestGames = () => {
           {draw.games.map((game, index) => (
             <div key={game.id} className="flex mb-3">
               <div>
-                <div className="flex items-center justify-between h-8 border border-slate-300 rounded-md rounded-b-none border-b-0 bg-slate-50">
+                <div className="flex items-center h-8 border border-slate-300 rounded-md rounded-b-none border-b-0 bg-slate-50">
                   <span className="text-sm font-semibold italic mb-0 px-2 me-2 border-e border-e-slate-300">
                     <TooltipProvider>
                       <Tooltip>

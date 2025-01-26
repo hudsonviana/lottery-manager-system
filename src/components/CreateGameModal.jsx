@@ -223,7 +223,7 @@ const CreateGameModal = ({ groupOptions }) => {
           Novo jogo
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[700px]">
+      <DialogContent className="sm:min-w-[720px]">
         <DialogHeader>
           <DialogTitle>Cadastrar novo jogo</DialogTitle>
           <DialogDescription className="flex items-center justify-between">

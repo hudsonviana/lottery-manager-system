@@ -105,7 +105,7 @@ const UpdateGameModal = ({
 
   return (
     <Dialog open={isUpdateModalOpen} onOpenChange={setIsUpdateModalOpen}>
-      <DialogContent className="sm:max-w-[700px]">
+      <DialogContent className="sm:min-w-[720px]">
         <DialogHeader>
           <DialogTitle>Atualizar jogo</DialogTitle>
           <DialogDescription className="flex items-center justify-between">
