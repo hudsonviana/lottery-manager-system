@@ -278,25 +278,26 @@ const BettingSlip = ({ setNewGameData, importedGameNumbers, action, resetAction 
         </Label>
 
         <div id="betts" className="gap-1 bg-green-100 p-2 h-full relative">
-          <table className="w-full text-left table-auto min-w-max">
-            <tbody>
-              {Object.entries(gamesConfirmed).map((game) =>
-                game[1].length ? (
-                  <tr key={game[0]} className="hover:bg-green-300 text-sm">
-                    <td className="px-1 py-2 font-bold w-5">{game[0].slice(-1)}</td>
-                    <td className="">{game[1].join(' - ')}</td>
-                    <td>
-                      <div className="flex items-center">
-                        <button id={game[0]} onClick={handleRemoveBet}>
-                          <FaRegTrashAlt color="red" />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ) : null
-              )}
-            </tbody>
-          </table>
+          <div className="w-full">
+            {Object.entries(gamesConfirmed).map((game) =>
+              game[1].length ? (
+                <div
+                  key={game[0]}
+                  className="flex items-center text-sm h-9 p-2 border border-green-100 rounded-md hover:bg-green-200 hover:border-green-500"
+                >
+                  <div className="font-bold size-5 me-1 bg-gray-300 text-center align-middle rounded-sm">
+                    {game[0].slice(-1)}
+                  </div>
+                  <div className="w-full">{game[1].join(' - ')}</div>
+                  <div>
+                    <button id={game[0]} onClick={handleRemoveBet}>
+                      <FaRegTrashAlt color="red" />
+                    </button>
+                  </div>
+                </div>
+              ) : null
+            )}
+          </div>
 
           <div className="ms-1.5 font-medium absolute inset-x-0 bottom-0 mb-2.5">
             Valor total das apostas:
